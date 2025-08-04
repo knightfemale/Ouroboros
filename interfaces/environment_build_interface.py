@@ -1,8 +1,8 @@
 # interfaces/environment_build_interface.py
 import subprocess
 from PySide6.QtCore import Qt
-from qfluentwidgets import PrimaryPushButton, LineEdit, InfoBar, InfoBarPosition, PushButton, ListWidget
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGridLayout, QGroupBox, QHBoxLayout, QListWidgetItem
+from qfluentwidgets import PrimaryPushButton, LineEdit, InfoBar, InfoBarPosition, PushButton
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 
 class EnvironmentBuildInterface(QWidget):
     def __init__(self, parent=None) -> None:
@@ -24,16 +24,16 @@ class EnvironmentBuildInterface(QWidget):
         
         # 环境名称标签和输入框
         env_name_layout = QHBoxLayout()
-        env_name_label = QLabel("输入环境名称:", self)
+        env_name_label = QLabel("输入环境名称：", self)
         env_name_label.setStyleSheet("font-size: 16px; color: #000000;")
         self.env_name_input = LineEdit(self)
         self.env_name_input.setPlaceholderText(".venv")
         env_name_layout.addWidget(env_name_label)
         env_name_layout.addWidget(self.env_name_input)
 
-        # Python版本标签和输入框
+        # Python 版本标签和输入框
         python_version_layout = QHBoxLayout()
-        python_version_label = QLabel("Python 版本:", self)
+        python_version_label = QLabel("输入 Python 版本：", self)
         python_version_label.setStyleSheet("font-size: 16px; color: #000000;")
         self.python_version_input = LineEdit(self)
         self.python_version_input.setPlaceholderText("3.10")
@@ -55,59 +55,49 @@ class EnvironmentBuildInterface(QWidget):
         pkg_group = QGroupBox("依赖包管理", self)
         pkg_layout = QVBoxLayout(pkg_group)
         
-        # Pip包管理
+        # pip 包管理
         pip_group = QGroupBox("pip", self)
         pip_layout = QVBoxLayout(pip_group)
         
-        pip_input_layout = QHBoxLayout()
-        self.pip_input = LineEdit(self)
-        self.pip_input.setPlaceholderText("输入pip包名")
-        pip_input_layout.addWidget(self.pip_input, 1)
+        # 添加 pip 包输入提示
+        pip_add_label = QLabel("管理 pip 包：", self)
+        pip_add_label.setStyleSheet("font-size: 16px; color: #000000;")
         
+        # 添加一个容器用于存放动态添加的输入框
+        self.pip_inputs_container = QVBoxLayout()
+        
+        pip_layout.addWidget(pip_add_label)
+        pip_layout.addLayout(self.pip_inputs_container)
+        
+        # 添加按钮布局
         pip_btn_layout = QHBoxLayout()
-        self.pip_add_btn = PushButton("+", self)
-        self.pip_add_btn.setFixedWidth(40)
-        self.pip_add_btn.clicked.connect(self.add_pip_package)
+        self.pip_add_btn = PushButton("添加", self)
+        self.pip_add_btn.setFixedWidth(100)
+        self.pip_add_btn.clicked.connect(self.add_pip_input_row)
         pip_btn_layout.addWidget(self.pip_add_btn)
+        pip_layout.addLayout(pip_btn_layout)
         
-        self.pip_remove_btn = PushButton("-", self)
-        self.pip_remove_btn.setFixedWidth(40)
-        self.pip_remove_btn.clicked.connect(self.remove_pip_package)
-        pip_btn_layout.addWidget(self.pip_remove_btn)
-        
-        pip_input_layout.addLayout(pip_btn_layout)
-        pip_layout.addLayout(pip_input_layout)
-        
-        self.pip_list = ListWidget(self)
-        self.pip_list.setMaximumHeight(150)
-        pip_layout.addWidget(self.pip_list)
-        
-        # Conda包管理
+        # conda 包管理
         conda_group = QGroupBox("conda", self)
         conda_layout = QVBoxLayout(conda_group)
         
-        conda_input_layout = QHBoxLayout()
-        self.conda_input = LineEdit(self)
-        self.conda_input.setPlaceholderText("输入conda包名")
-        conda_input_layout.addWidget(self.conda_input, 1)
+        # 添加 conda 包输入提示
+        conda_add_label = QLabel("管理 conda 包：", self)
+        conda_add_label.setStyleSheet("font-size: 16px; color: #000000;")
+
+        # 添加容器
+        self.conda_inputs_container = QVBoxLayout()
         
+        conda_layout.addWidget(conda_add_label)
+        conda_layout.addLayout(self.conda_inputs_container)
+
+        # 添加按钮布局
         conda_btn_layout = QHBoxLayout()
-        self.conda_add_btn = PushButton("+", self)
-        self.conda_add_btn.setFixedWidth(40)
-        self.conda_add_btn.clicked.connect(self.add_conda_package)
+        self.conda_add_btn = PushButton("添加", self)
+        self.conda_add_btn.setFixedWidth(100)
+        self.conda_add_btn.clicked.connect(self.add_conda_input_row)
         conda_btn_layout.addWidget(self.conda_add_btn)
-        
-        self.conda_remove_btn = PushButton("-", self)
-        self.conda_remove_btn.setFixedWidth(40)
-        self.conda_remove_btn.clicked.connect(self.remove_conda_package)
-        conda_btn_layout.addWidget(self.conda_remove_btn)
-        
-        conda_input_layout.addLayout(conda_btn_layout)
-        conda_layout.addLayout(conda_input_layout)
-        
-        self.conda_list = ListWidget(self)
-        self.conda_list.setMaximumHeight(150)
-        conda_layout.addWidget(self.conda_list)
+        conda_layout.addLayout(conda_btn_layout)
         
         pkg_layout.addWidget(pip_group)
         pkg_layout.addWidget(conda_group)
@@ -146,32 +136,6 @@ class EnvironmentBuildInterface(QWidget):
         
         self.setLayout(main_layout)
     
-    def add_pip_package(self) -> None:
-        package = self.pip_input.text().strip()
-        if package:
-            item = QListWidgetItem(package)
-            self.pip_list.addItem(item)
-            self.pip_input.clear()
-    
-    def remove_pip_package(self) -> None:
-        selected = self.pip_list.selectedItems()
-        if selected:
-            for item in selected:
-                self.pip_list.takeItem(self.pip_list.row(item))
-    
-    def add_conda_package(self) -> None:
-        package = self.conda_input.text().strip()
-        if package:
-            item = QListWidgetItem(package)
-            self.conda_list.addItem(item)
-            self.conda_input.clear()
-    
-    def remove_conda_package(self) -> None:
-        selected = self.conda_list.selectedItems()
-        if selected:
-            for item in selected:
-                self.conda_list.takeItem(self.conda_list.row(item))
-    
     def create_venv(self) -> None:
         env_name = self.get_env_name()
         python_version = self.get_python_version()
@@ -209,14 +173,38 @@ class EnvironmentBuildInterface(QWidget):
         
         self.toggle_buttons(False)
         
-        # 安装pip包
-        for i in range(self.pip_list.count()):
-            package = self.pip_list.item(i).text()
+        # 获取所有 pip 包输入框的内容
+        pip_packages = []
+        for i in range(self.pip_inputs_container.count()):
+            row_layout = self.pip_inputs_container.itemAt(i).layout()
+            if row_layout:
+                for j in range(row_layout.count()):
+                    widget = row_layout.itemAt(j).widget() # pyright: ignore[reportOptionalMemberAccess]
+                    if isinstance(widget, LineEdit):
+                        package = widget.text().strip()
+                        if package:
+                            pip_packages.append(package)
+                        break
+        
+        # 获取所有 conda 包输入框的内容
+        conda_packages = []
+        for i in range(self.conda_inputs_container.count()):
+            row_layout = self.conda_inputs_container.itemAt(i).layout()
+            if row_layout:
+                for j in range(row_layout.count()):
+                    widget = row_layout.itemAt(j).widget() # pyright: ignore[reportOptionalMemberAccess]
+                    if isinstance(widget, LineEdit):
+                        package = widget.text().strip()
+                        if package:
+                            conda_packages.append(package)
+                        break
+        
+        # 安装 pip 包
+        for package in pip_packages:
             self.install_pip_package(env_name, package)
         
-        # 安装conda包
-        for i in range(self.conda_list.count()):
-            package = self.conda_list.item(i).text()
+        # 安装 conda 包
+        for package in conda_packages:
             self.install_conda_package(env_name, package)
         
         print("✅ 依赖更新完成!\n")
@@ -333,9 +321,7 @@ class EnvironmentBuildInterface(QWidget):
         self.export_yml_btn.setEnabled(enabled)
         self.activate_btn.setEnabled(enabled)
         self.pip_add_btn.setEnabled(enabled)
-        self.pip_remove_btn.setEnabled(enabled)
         self.conda_add_btn.setEnabled(enabled)
-        self.conda_remove_btn.setEnabled(enabled)
     
     def show_error(self, message: str) -> None:
         InfoBar.error(
@@ -358,3 +344,46 @@ class EnvironmentBuildInterface(QWidget):
             duration=2000,
             parent=self
         )
+    
+    # 在类中添加新方法
+    def add_pip_input_row(self) -> None:
+        row_layout = QHBoxLayout()
+        package_input = LineEdit(self)
+        package_input.setPlaceholderText("输入 pip 包名")
+        row_layout.addWidget(package_input)
+        
+        # 添加删除按钮
+        remove_btn = PushButton("移除", self)
+        remove_btn.setFixedWidth(100)
+        remove_btn.clicked.connect(lambda: self.remove_input_row(row_layout))
+        row_layout.addWidget(remove_btn)
+        
+        self.pip_inputs_container.addLayout(row_layout)
+
+    def add_conda_input_row(self) -> None:
+        row_layout = QHBoxLayout()
+        package_input = LineEdit(self)
+        package_input.setPlaceholderText("输入 conda 包名")
+        row_layout.addWidget(package_input)
+        
+        # 添加删除按钮
+        remove_btn = PushButton("移除", self)
+        remove_btn.setFixedWidth(100)
+        remove_btn.clicked.connect(lambda: self.remove_input_row(row_layout))
+        row_layout.addWidget(remove_btn)
+        
+        self.conda_inputs_container.addLayout(row_layout)
+
+    def remove_input_row(self, row_layout: QHBoxLayout) -> None:
+        # 移除布局中的所有部件
+        while row_layout.count():
+            item = row_layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
+        
+        # 从容器布局中移除该行
+        if self.pip_inputs_container.indexOf(row_layout) != -1:
+            self.pip_inputs_container.removeItem(row_layout)
+        elif self.conda_inputs_container.indexOf(row_layout) != -1:
+            self.conda_inputs_container.removeItem(row_layout)
