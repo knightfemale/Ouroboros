@@ -15,7 +15,7 @@ class HomeInterface(QWidget):
         title = QLabel("Ouroboros - Python 项目自动化工具", self)
         title.setStyleSheet("font-size: 28px; font-weight: bold; color: #666666;")
         
-        description = QLabel("一站式解决方案：环境构建、打包部署、性能优化", self)
+        description = QLabel("一站式解决方案: 环境构建、打包部署、性能优化", self)
         description.setStyleSheet("font-size: 18px; color: #666666;")
         
         layout.addWidget(title)
