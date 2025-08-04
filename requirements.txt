@@ -1,1 +1,2 @@
+nuitka
 pyside6-fluent-widgets[full]
