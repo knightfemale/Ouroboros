@@ -1,10 +1,10 @@
 # interfaces/environment_build_interface.py
 import subprocess
 from PySide6.QtCore import Qt
-from qfluentwidgets import PrimaryPushButton, LineEdit, InfoBar, InfoBarPosition, PushButton
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QScrollArea, QFrame
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QFrame
+from qfluentwidgets import PrimaryPushButton, LineEdit, InfoBar, InfoBarPosition, PushButton, SingleDirectionScrollArea
 
-from styles.default import BACKGROUND_STYLE, TITLE_STYLE, GROUPBOX_STYLE, BUTTON_STYLE, ADD_BUTTON_STYLE,REMOVE_BUTTON_STYLE
+from styles.default import BACKGROUND_STYLE, TITLE_STYLE, GROUPBOX_STYLE, ENV_BUTTON_STYLE, ADD_BUTTON_STYLE,REMOVE_BUTTON_STYLE
 
 class EnvironmentBuildInterface(QWidget):
     def __init__(self, parent=None) -> None:
@@ -14,7 +14,7 @@ class EnvironmentBuildInterface(QWidget):
     
     def init_ui(self) -> None:
         # 创建主滚动区域
-        scroll_area = QScrollArea(self)
+        scroll_area = SingleDirectionScrollArea(self)
         scroll_area.setWidgetResizable(True)
         scroll_area.setFrameShape(QFrame.NoFrame) # pyright: ignore[reportAttributeAccessIssue]
         # 改为白色背景
@@ -49,7 +49,7 @@ class EnvironmentBuildInterface(QWidget):
         # 创建环境按钮
         create_btn_layout = QHBoxLayout()
         self.create_btn = PrimaryPushButton("创建环境", self)
-        self.create_btn.setStyleSheet(BUTTON_STYLE)
+        self.create_btn.setStyleSheet(ENV_BUTTON_STYLE)
         self.create_btn.setMinimumHeight(40)
         self.create_btn.clicked.connect(self.create_venv)
         create_btn_layout.addWidget(self.create_btn)
@@ -109,22 +109,22 @@ class EnvironmentBuildInterface(QWidget):
         action_layout = QVBoxLayout(action_group)
         
         self.activate_btn = PrimaryPushButton("激活环境", self)
-        self.activate_btn.setStyleSheet(BUTTON_STYLE)
+        self.activate_btn.setStyleSheet(ENV_BUTTON_STYLE)
         self.activate_btn.setMinimumHeight(40)
         self.activate_btn.clicked.connect(self.activate_venv)
         
         self.update_btn = PrimaryPushButton("更新依赖", self)
-        self.update_btn.setStyleSheet(BUTTON_STYLE)
+        self.update_btn.setStyleSheet(ENV_BUTTON_STYLE)
         self.update_btn.setMinimumHeight(40)
         self.update_btn.clicked.connect(self.update_package)
         
         self.export_req_btn = PrimaryPushButton("导出依赖 requirements.txt", self)
-        self.export_req_btn.setStyleSheet(BUTTON_STYLE)
+        self.export_req_btn.setStyleSheet(ENV_BUTTON_STYLE)
         self.export_req_btn.setMinimumHeight(40)
         self.export_req_btn.clicked.connect(self.export_package)
         
         self.export_yml_btn = PrimaryPushButton("导出依赖 environment.yml", self)
-        self.export_yml_btn.setStyleSheet(BUTTON_STYLE)
+        self.export_yml_btn.setStyleSheet(ENV_BUTTON_STYLE)
         self.export_yml_btn.setMinimumHeight(40)
         self.export_yml_btn.clicked.connect(self.export_environment_yml)
         

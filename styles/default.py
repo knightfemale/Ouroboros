@@ -30,7 +30,7 @@ GROUPBOX_STYLE = """
     }
 """
 
-BUTTON_STYLE = """
+ENV_BUTTON_STYLE = """
     PushButton {
         background-color: #2196f3;
         color: white;
@@ -40,6 +40,19 @@ BUTTON_STYLE = """
     }
     PushButton:pressed {
         background-color: #0d47a1;
+    }
+"""
+
+PACK_BUTTON_STYLE = """
+    PushButton {
+        background-color: #a855f7;
+        color: white;
+    }
+    PushButton:hover {
+        background-color: #9c27b0;
+    }
+    PushButton:pressed {
+        background-color: #7b1fa2;
     }
 """
 

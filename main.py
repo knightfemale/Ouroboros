@@ -24,6 +24,10 @@ class MainWindow(FluentWindow):
         
         # 添加导航项
         self.add_navigation_items()
+        
+        # 连接首页按钮信号
+        self.homeInterface.env_button.clicked.connect(lambda: self.switchTo(self.environmentBuildInterface))
+        self.homeInterface.pack_button.clicked.connect(lambda: self.switchTo(self.nuitkaPackagingInterface))
 
     def create_interface(self, text, object_name) -> QWidget:
         """创建并初始化一个界面"""
