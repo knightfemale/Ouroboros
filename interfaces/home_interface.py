@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from qfluentwidgets import PrimaryPushButton
 
-from styles.default import ENV_BUTTON_STYLE, PACK_BUTTON_STYLE
+from styles.default import indigo_style, purple_style
 
 class HomeInterface(QWidget):
     def __init__(self, parent=None) -> None:
@@ -28,12 +28,12 @@ class HomeInterface(QWidget):
         # 创建环境构建跳转按钮
         self.env_button = PrimaryPushButton("环境构建工具", self)
         self.env_button.setFixedSize(180, 60)
-        self.env_button.setStyleSheet(ENV_BUTTON_STYLE)
+        self.env_button.setStyleSheet(indigo_style.get_button_style())
         
         # 创建打包工具跳转按钮
         self.pack_button = PrimaryPushButton("打包部署工具", self)
         self.pack_button.setFixedSize(180, 60)
-        self.pack_button.setStyleSheet(PACK_BUTTON_STYLE)
+        self.pack_button.setStyleSheet(purple_style.get_button_style())
         
         # 添加按钮到布局
         button_layout.addWidget(self.env_button)

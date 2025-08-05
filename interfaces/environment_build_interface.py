@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QFrame
 from qfluentwidgets import PrimaryPushButton, LineEdit, InfoBar, InfoBarPosition, PushButton, SingleDirectionScrollArea
 
-from styles.default import BACKGROUND_STYLE, TITLE_STYLE, GROUPBOX_STYLE, ENV_BUTTON_STYLE, ADD_BUTTON_STYLE,REMOVE_BUTTON_STYLE
+from styles.default import red_style, green_style, indigo_style, BACKGROUND_STYLE, TITLE_STYLE
 
 class EnvironmentBuildInterface(QWidget):
     def __init__(self, parent=None) -> None:
@@ -31,7 +31,7 @@ class EnvironmentBuildInterface(QWidget):
         
         # 环境构建区域
         env_group = QGroupBox("环境构建", self)
-        env_group.setStyleSheet(GROUPBOX_STYLE)
+        env_group.setStyleSheet(indigo_style.get_groupbox_style())
         env_layout = QVBoxLayout(env_group)
         
         # 环境名称标签和输入框
@@ -49,7 +49,7 @@ class EnvironmentBuildInterface(QWidget):
         # 创建环境按钮
         create_btn_layout = QHBoxLayout()
         self.create_btn = PrimaryPushButton("创建环境", self)
-        self.create_btn.setStyleSheet(ENV_BUTTON_STYLE)
+        self.create_btn.setStyleSheet(indigo_style.get_button_style())
         self.create_btn.setMinimumHeight(40)
         self.create_btn.clicked.connect(self.create_venv)
         create_btn_layout.addWidget(self.create_btn)
@@ -61,12 +61,12 @@ class EnvironmentBuildInterface(QWidget):
         
         # 包管理区域
         pkg_group = QGroupBox("依赖包管理", self)
-        pkg_group.setStyleSheet(GROUPBOX_STYLE)
+        pkg_group.setStyleSheet(indigo_style.get_groupbox_style())
         pkg_layout = QVBoxLayout(pkg_group)
         
         # pip 包管理
         pip_group = QGroupBox("pip 包管理", self)
-        pip_group.setStyleSheet(GROUPBOX_STYLE)
+        pip_group.setStyleSheet(indigo_style.get_groupbox_style())
         pip_layout = QVBoxLayout(pip_group)
         
         # 添加一个容器用于存放动态添加的输入框
@@ -76,7 +76,7 @@ class EnvironmentBuildInterface(QWidget):
         # 添加按钮布局
         pip_btn_layout = QHBoxLayout()
         self.pip_add_btn = PushButton("添加", self)
-        self.pip_add_btn.setStyleSheet(ADD_BUTTON_STYLE)
+        self.pip_add_btn.setStyleSheet(green_style.get_button_style())
         self.pip_add_btn.setFixedWidth(100)
         self.pip_add_btn.clicked.connect(self.add_pip_input_row)
         pip_btn_layout.addWidget(self.pip_add_btn)
@@ -84,7 +84,7 @@ class EnvironmentBuildInterface(QWidget):
         
         # conda 包管理
         conda_group = QGroupBox("conda 包管理", self)
-        conda_group.setStyleSheet(GROUPBOX_STYLE)
+        conda_group.setStyleSheet(indigo_style.get_groupbox_style())
         conda_layout = QVBoxLayout(conda_group)
 
         # 添加容器
@@ -94,7 +94,7 @@ class EnvironmentBuildInterface(QWidget):
         # 添加按钮布局
         conda_btn_layout = QHBoxLayout()
         self.conda_add_btn = PushButton("添加", self)
-        self.conda_add_btn.setStyleSheet(ADD_BUTTON_STYLE)
+        self.conda_add_btn.setStyleSheet(green_style.get_button_style())
         self.conda_add_btn.setFixedWidth(100)
         self.conda_add_btn.clicked.connect(self.add_conda_input_row)
         conda_btn_layout.addWidget(self.conda_add_btn)
@@ -105,26 +105,26 @@ class EnvironmentBuildInterface(QWidget):
         
         # 操作按钮区域
         action_group = QGroupBox("操作", conda_group)
-        action_group.setStyleSheet(GROUPBOX_STYLE)
+        action_group.setStyleSheet(indigo_style.get_groupbox_style())
         action_layout = QVBoxLayout(action_group)
         
         self.activate_btn = PrimaryPushButton("激活环境", self)
-        self.activate_btn.setStyleSheet(ENV_BUTTON_STYLE)
+        self.activate_btn.setStyleSheet(indigo_style.get_button_style())
         self.activate_btn.setMinimumHeight(40)
         self.activate_btn.clicked.connect(self.activate_venv)
         
         self.update_btn = PrimaryPushButton("更新依赖", self)
-        self.update_btn.setStyleSheet(ENV_BUTTON_STYLE)
+        self.update_btn.setStyleSheet(indigo_style.get_button_style())
         self.update_btn.setMinimumHeight(40)
         self.update_btn.clicked.connect(self.update_package)
         
         self.export_req_btn = PrimaryPushButton("导出依赖 requirements.txt", self)
-        self.export_req_btn.setStyleSheet(ENV_BUTTON_STYLE)
+        self.export_req_btn.setStyleSheet(indigo_style.get_button_style())
         self.export_req_btn.setMinimumHeight(40)
         self.export_req_btn.clicked.connect(self.export_package)
         
         self.export_yml_btn = PrimaryPushButton("导出依赖 environment.yml", self)
-        self.export_yml_btn.setStyleSheet(ENV_BUTTON_STYLE)
+        self.export_yml_btn.setStyleSheet(indigo_style.get_button_style())
         self.export_yml_btn.setMinimumHeight(40)
         self.export_yml_btn.clicked.connect(self.export_environment_yml)
         
@@ -350,7 +350,7 @@ class EnvironmentBuildInterface(QWidget):
         
         # 添加删除按钮
         remove_btn = PushButton("移除", self)
-        remove_btn.setStyleSheet(REMOVE_BUTTON_STYLE)
+        remove_btn.setStyleSheet(red_style.get_button_style())
         remove_btn.setFixedWidth(100)
         remove_btn.clicked.connect(lambda: self.remove_input_row(row_layout))
         row_layout.addWidget(remove_btn)
@@ -366,7 +366,7 @@ class EnvironmentBuildInterface(QWidget):
         
         # 添加删除按钮
         remove_btn = PushButton("移除", self)
-        remove_btn.setStyleSheet(REMOVE_BUTTON_STYLE)
+        remove_btn.setStyleSheet(red_style.get_button_style())
         remove_btn.setFixedWidth(100)
         remove_btn.clicked.connect(lambda: self.remove_input_row(row_layout))
         row_layout.addWidget(remove_btn)
