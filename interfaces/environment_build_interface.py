@@ -1,12 +1,12 @@
 # interfaces/environment_build_interface.py
 import subprocess
-from PySide6.QtCore import Qt
 from pathlib import Path
+from PySide6.QtCore import Qt
 from typing import Any, Self, List, Dict, Optional
+from qfluentwidgets import PrimaryPushButton, LineEdit, PushButton, SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QLayout, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QFrame, QLayoutItem
-from qfluentwidgets import PrimaryPushButton, LineEdit, InfoBar, InfoBarPosition, PushButton, SingleDirectionScrollArea
 
-from utils import config_util
+from utils import config_util, gui_util
 from styles.default import red_style, green_style, indigo_style, BACKGROUND_STYLE, TITLE_STYLE
 
 class EnvironmentBuildInterface(QWidget):
@@ -20,6 +20,7 @@ class EnvironmentBuildInterface(QWidget):
         self.load_config_to_ui()
     
     def init_ui(self: Self) -> None:
+        """初始化 UI"""
         # 创建主滚动区域
         scroll_area: SingleDirectionScrollArea = SingleDirectionScrollArea(self)
         scroll_area.setWidgetResizable(True)
@@ -40,13 +41,13 @@ class EnvironmentBuildInterface(QWidget):
         # 环境名称标签和输入框
         env_name_layout: QHBoxLayout = QHBoxLayout()
         self.env_name_input: LineEdit = LineEdit(self)
-        self.env_name_input.setPlaceholderText("输入环境名称: (默认 .venv)")
+        self.env_name_input.setPlaceholderText("输入环境名称(默认: .venv)")
         env_name_layout.addWidget(self.env_name_input)
         env_layout.addLayout(env_name_layout)
         # Python 版本标签和输入框
         python_version_layout: QHBoxLayout = QHBoxLayout()
         self.python_version_input: LineEdit = LineEdit(self)
-        self.python_version_input.setPlaceholderText("输入 Python 版本: (默认 3.10)")
+        self.python_version_input.setPlaceholderText("输入 Python 版本(默认: 3.10)")
         python_version_layout.addWidget(self.python_version_input)
         env_layout.addLayout(python_version_layout)
         # pip 包管理
@@ -61,7 +62,7 @@ class EnvironmentBuildInterface(QWidget):
         self.pip_add_btn: PushButton = PushButton("添加", self)
         self.pip_add_btn.setStyleSheet(green_style.get_button_style())
         self.pip_add_btn.setFixedWidth(100)
-        self.pip_add_btn.clicked.connect(self.add_pip_input_row)
+        self.pip_add_btn.clicked.connect(lambda: self.add_pip_input_row())
         pip_btn_layout.addWidget(self.pip_add_btn)
         pip_layout.addLayout(pip_btn_layout)
         env_layout.addWidget(pip_group)
@@ -77,7 +78,7 @@ class EnvironmentBuildInterface(QWidget):
         self.conda_add_btn: PushButton = PushButton("添加", self)
         self.conda_add_btn.setStyleSheet(green_style.get_button_style())
         self.conda_add_btn.setFixedWidth(100)
-        self.conda_add_btn.clicked.connect(self.add_conda_input_row)
+        self.conda_add_btn.clicked.connect(lambda: self.add_conda_input_row())
         conda_btn_layout.addWidget(self.conda_add_btn)
         conda_layout.addLayout(conda_btn_layout)
         env_layout.addWidget(conda_group)
@@ -155,7 +156,7 @@ class EnvironmentBuildInterface(QWidget):
         # 保存到配置
         self.save_ui_to_config()
         # 执行命令
-        command: str = f"conda env create -f {config_util.config_path} --prefix ./{env_name}"
+        command: str = f"conda env create --file {config_util.config_path} --prefix ./{env_name}"
         process: subprocess.Popen = subprocess.Popen(
             command,
             shell=True,
@@ -180,7 +181,7 @@ class EnvironmentBuildInterface(QWidget):
         # 保存到配置
         self.save_ui_to_config()
         # 前台输出
-        self.show_success("环境构建完成!")
+        gui_util.show_success(self, "环境构建完成!")
     
     def activate_venv(self: Self) -> None:
         """激活环境"""
@@ -192,7 +193,7 @@ class EnvironmentBuildInterface(QWidget):
             shell=True
         )
         # 前台输出
-        self.show_success(f"激活环境: {env_name}")
+        gui_util.show_success(self, f"激活环境: {env_name}")
     
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
@@ -213,7 +214,7 @@ class EnvironmentBuildInterface(QWidget):
         # 等待命令执行完成
         process.wait()
         # 前台输出
-        self.show_success("requirements.txt 导出完成!")
+        gui_util.show_success(self, "requirements.txt 导出完成!")
     
     def export_environment(self: Self) -> None:
         """导出依赖 environment.yml"""
@@ -234,7 +235,7 @@ class EnvironmentBuildInterface(QWidget):
         # 等待命令执行完成
         process.wait()
         # 前台输出
-        self.show_success("environment.yml 导出完成!")
+        gui_util.show_success(self, "environment.yml 导出完成!")
     
     def get_env_name(self: Self) -> str:
         """带默认参数地获取环境名"""
@@ -246,103 +247,38 @@ class EnvironmentBuildInterface(QWidget):
         python_version: str = self.python_version_input.text().strip()
         return python_version if python_version else '3.10'
     
-    def show_error(self: Self, message: str) -> None:
-        """前台错误提示"""
-        InfoBar.error(
-            title="错误",
-            content=message,
-            orient=Qt.Horizontal, # pyright: ignore[reportAttributeAccessIssue]
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=3000,
-            parent=self
-        )
-    
-    def show_success(self: Self, message: str) -> None:
-        """前台成功提示"""
-        InfoBar.success(
-            title="成功",
-            content=message,
-            orient=Qt.Horizontal, # pyright: ignore[reportAttributeAccessIssue]
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-    
     def clear_all_inputs(self: Self) -> None:
         """清空所有动态添加的输入框"""
-        self.clear_input_container(self.pip_inputs_container)
-        self.clear_input_container(self.conda_inputs_container)
-    
-    def clear_input_container(self: Self, container: QVBoxLayout) -> None:
-        """清空指定的输入容器"""
-        while container.count():
-            item: QLayoutItem = container.takeAt(0)
-            layout: QLayout = item.layout()
-            if layout:
-                self.clear_layout(layout)
-            container.removeItem(item)
-    
-    def clear_layout(self: Self, layout: QLayout) -> None:
-        """递归清除布局中的所有部件"""
-        while layout.count():
-            item: QLayoutItem = layout.takeAt(0)
-            widget: QWidget = item.widget()
-            if widget:
-                widget.deleteLater()
-            else:
-                sub_layout: QLayout = item.layout()
-                if sub_layout:
-                    self.clear_layout(sub_layout)
+        gui_util.clear_input_container(self.pip_inputs_container)
+        gui_util.clear_input_container(self.conda_inputs_container)
     
     def add_pip_input_row(self: Self, package_text: str = "") -> None:
         """增加 pip 包输入框"""
-        row_layout: QHBoxLayout = QHBoxLayout()
-        package_input: LineEdit = LineEdit(self)
-        package_input.setPlaceholderText("输入 pip 包名")
-        if package_text:
-            package_input.setText(package_text)
-        row_layout.addWidget(package_input)
-        # 添加删除按钮
-        remove_btn: PushButton = PushButton("移除", self)
-        remove_btn.setStyleSheet(red_style.get_button_style())
-        remove_btn.setFixedWidth(100)
-        remove_btn.clicked.connect(lambda: self.remove_input_row(row_layout))
-        row_layout.addWidget(remove_btn)
+        row_layout: QHBoxLayout = gui_util.create_removable_input_row(self, "输入 pip 包名", package_text)
+        # 获取删除按钮并连接点击事件
+        remove_btn: QWidget = row_layout.itemAt(1).widget()
+        remove_btn.clicked.connect(lambda: self.remove_input_row(row_layout)) # pyright: ignore[reportAttributeAccessIssue]
         # 添加到容器
         self.pip_inputs_container.addLayout(row_layout)
     
     def add_conda_input_row(self: Self, package_text: str = "") -> None:
         """增加 conda 包输入框"""
-        row_layout: QHBoxLayout = QHBoxLayout()
-        package_input: LineEdit = LineEdit(self)
-        package_input.setPlaceholderText("输入 conda 包名")
-        if package_text:
-            package_input.setText(package_text)
-        row_layout.addWidget(package_input)
-        # 添加删除按钮
-        remove_btn: PushButton = PushButton("移除", self)
-        remove_btn.setStyleSheet(red_style.get_button_style())
-        remove_btn.setFixedWidth(100)
-        remove_btn.clicked.connect(lambda: self.remove_input_row(row_layout))
-        row_layout.addWidget(remove_btn)
+        row_layout: QHBoxLayout = gui_util.create_removable_input_row(self, "输入 conda 包名", package_text)
+        # 获取删除按钮并连接点击事件
+        remove_btn: QWidget = row_layout.itemAt(1).widget()
+        remove_btn.clicked.connect(lambda: self.remove_input_row(row_layout)) # pyright: ignore[reportAttributeAccessIssue]
         # 添加到容器
         self.conda_inputs_container.addLayout(row_layout)
     
     def remove_input_row(self: Self, row_layout: QHBoxLayout) -> None:
         """移除输入框"""
-        # 移除布局中的所有部件
-        while row_layout.count():
-            item: QLayoutItem = row_layout.takeAt(0)
-            widget: QWidget = item.widget()
-            if widget:
-                widget.deleteLater()
         # 从容器布局中移除该行
         if self.pip_inputs_container.indexOf(row_layout) != -1:
             self.pip_inputs_container.removeItem(row_layout)
         elif self.conda_inputs_container.indexOf(row_layout) != -1:
             self.conda_inputs_container.removeItem(row_layout)
+        # 清除布局中的部件
+        gui_util.clear_layout(row_layout)
     
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""

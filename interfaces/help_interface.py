@@ -15,6 +15,7 @@ class HelpInterface(QWidget):
         self.init_ui()
     
     def init_ui(self: Self) -> None:
+        """初始化 UI"""
         layout: QVBoxLayout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignCenter) # pyright: ignore[reportAttributeAccessIssue]
         # 标题
