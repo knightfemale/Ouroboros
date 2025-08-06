@@ -1,6 +1,7 @@
 # main.py
 import os
 import sys
+from typing import Self
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
 from qfluentwidgets import FluentWindow, NavigationItemPosition, FluentIcon
@@ -14,7 +15,7 @@ from interfaces.nuitka_packaging_interface import NuitkaPackagingInterface
 from interfaces.environment_build_interface import EnvironmentBuildInterface
 
 class MainWindow(FluentWindow):
-    def __init__(self) -> None:
+    def __init__(self: Self) -> None:
         super().__init__()
         # 检查并创建默认配置文件
         self.ensure_default_config()
@@ -23,10 +24,10 @@ class MainWindow(FluentWindow):
         self.resize(1280, 720)
         
         # 创建子界面实例
-        self.homeInterface = HomeInterface(self)
-        self.environmentBuildInterface = EnvironmentBuildInterface(self)
-        self.nuitkaPackagingInterface = NuitkaPackagingInterface(self)
-        self.helpInterface = HelpInterface(self)
+        self.homeInterface: HomeInterface = HomeInterface(self)
+        self.environmentBuildInterface: EnvironmentBuildInterface = EnvironmentBuildInterface(self)
+        self.nuitkaPackagingInterface: NuitkaPackagingInterface = NuitkaPackagingInterface(self)
+        self.helpInterface: HelpInterface = HelpInterface(self)
         
         # 添加导航项
         self.add_navigation_items()
@@ -35,20 +36,20 @@ class MainWindow(FluentWindow):
         self.homeInterface.env_button.clicked.connect(lambda: self.switchTo(self.environmentBuildInterface))
         self.homeInterface.pack_button.clicked.connect(lambda: self.switchTo(self.nuitkaPackagingInterface))
 
-    def create_interface(self, text, object_name) -> QWidget:
+    def create_interface(self: Self, text: str, object_name: str) -> QWidget:
         """创建并初始化一个界面"""
-        interface = QWidget()
+        interface: QWidget = QWidget()
         interface.setObjectName(object_name)
         
-        layout = QVBoxLayout(interface)
-        label = QLabel(text, interface)
+        layout: QVBoxLayout = QVBoxLayout(interface)
+        label: QLabel = QLabel(text, interface)
         label.setAlignment(Qt.AlignCenter) # pyright: ignore[reportAttributeAccessIssue]
         label.setStyleSheet("font-size: 30px; color: #666666;")
         layout.addWidget(label)
         
         return interface
 
-    def add_navigation_items(self) -> None:
+    def add_navigation_items(self: Self) -> None:
         # 添加主导航项
         self.addSubInterface(
             self.homeInterface,
@@ -80,7 +81,7 @@ class MainWindow(FluentWindow):
         # 默认选中首页
         self.switchTo(self.homeInterface)
         
-    def ensure_default_config(self) -> None:
+    def ensure_default_config(self: Self) -> None:
         """确保配置文件存在"""
         if not os.path.exists("ouroboros.yml"):
             config_util.save_config({
@@ -91,7 +92,7 @@ class MainWindow(FluentWindow):
             })
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = MainWindow()
+    app: QApplication = QApplication(sys.argv)
+    window: MainWindow = MainWindow()
     window.show()
     sys.exit(app.exec())
