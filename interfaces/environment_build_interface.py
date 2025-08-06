@@ -199,7 +199,7 @@ class EnvironmentBuildInterface(QWidget):
         # 获取参数
         env_name: str = self.get_env_name()
         # 执行命令
-        command: str = f"./{env_name}/python.exe -m pip freeze > ./requirements.txt"
+        command: str = f"\"./{env_name}/python\" -m pip freeze > ./requirements.txt"
         process: subprocess.Popen = subprocess.Popen(
             command,
             shell=True,
