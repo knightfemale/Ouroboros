@@ -4,6 +4,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QFrame
 from qfluentwidgets import PrimaryPushButton, LineEdit, InfoBar, InfoBarPosition, PushButton, SingleDirectionScrollArea
 
+from utils import config_util
 from styles.default import red_style, green_style, indigo_style, BACKGROUND_STYLE, TITLE_STYLE
 
 class EnvironmentBuildInterface(QWidget):
@@ -11,6 +12,7 @@ class EnvironmentBuildInterface(QWidget):
         super().__init__(parent=parent)
         self.setObjectName("EnvironmentBuildInterface")
         self.init_ui()
+        self.load_config_to_ui()
     
     def init_ui(self) -> None:
         # 创建主滚动区域
@@ -149,6 +151,63 @@ class EnvironmentBuildInterface(QWidget):
         outer_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(outer_layout)
     
+    def load_config_to_ui(self):
+        """从配置文件加载数据到UI"""
+        config = config_util.load_config()
+        
+        # 设置环境名称
+        env_name = config.get('name', '.venv')
+        self.env_name_input.setText(env_name)
+        
+        # 设置Python版本
+        python_version = ""
+        for dep in config.get('dependencies', []):
+            if isinstance(dep, str) and dep.startswith('python='):
+                python_version = dep.split('=')[1]
+                break
+        if python_version:
+            self.python_version_input.setText(python_version)
+        
+        # 清空现有输入框
+        self.clear_all_inputs()
+        
+        # 添加conda包
+        for dep in config.get('dependencies', []):
+            if isinstance(dep, str) and not dep.startswith('python='):
+                self.add_conda_input_row(dep)
+        
+        # 添加pip包
+        for dep in config.get('dependencies', []):
+            if isinstance(dep, dict) and 'pip' in dep:
+                for pip_dep in dep['pip']:
+                    self.add_pip_input_row(pip_dep)
+    
+    def clear_all_inputs(self) -> None:
+        """清空所有动态添加的输入框"""
+        self.clear_input_container(self.pip_inputs_container)
+        self.clear_input_container(self.conda_inputs_container)
+    
+    def clear_input_container(self, container) -> None:
+        """清空指定的输入容器"""
+        while container.count():
+            item = container.takeAt(0)
+            layout = item.layout()
+            if layout:
+                self.clear_layout(layout)
+            container.removeItem(item)
+    
+    def clear_layout(self, layout) -> None:
+        """递归清除布局中的所有部件"""
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
+            else:
+                sub_layout = item.layout()
+                if sub_layout:
+                    self.clear_layout(sub_layout)
+    
     def create_venv(self) -> None:
         env_name = self.get_env_name()
         python_version = self.get_python_version()
@@ -178,6 +237,7 @@ class EnvironmentBuildInterface(QWidget):
         except Exception as e:
             print(f"❌ 创建 .gitignore 文件失败: {str(e)}!\n")
         
+        self.save_ui_to_config()
         self.show_success("环境创建完成!")
         self.toggle_buttons(True)
     
@@ -220,6 +280,7 @@ class EnvironmentBuildInterface(QWidget):
         for package in conda_packages:
             self.install_conda_package(env_name, package)
         
+        self.save_ui_to_config()
         self.show_success("依赖更新完成!")
         self.toggle_buttons(True)
     
@@ -342,10 +403,12 @@ class EnvironmentBuildInterface(QWidget):
         )
     
     # 增加 pip 包输入框
-    def add_pip_input_row(self) -> None:
+    def add_pip_input_row(self, package_text: str = "") -> None:
         row_layout = QHBoxLayout()
         package_input = LineEdit(self)
         package_input.setPlaceholderText("输入 pip 包名")
+        if package_text:
+            package_input.setText(package_text)
         row_layout.addWidget(package_input)
         
         # 添加删除按钮
@@ -358,10 +421,12 @@ class EnvironmentBuildInterface(QWidget):
         self.pip_inputs_container.addLayout(row_layout)
 
     # 增加 conda 包输入框
-    def add_conda_input_row(self) -> None:
+    def add_conda_input_row(self, package_text: str = "") -> None:
         row_layout = QHBoxLayout()
         package_input = LineEdit(self)
         package_input.setPlaceholderText("输入 conda 包名")
+        if package_text:
+            package_input.setText(package_text)
         row_layout.addWidget(package_input)
         
         # 添加删除按钮
@@ -387,3 +452,43 @@ class EnvironmentBuildInterface(QWidget):
             self.pip_inputs_container.removeItem(row_layout)
         elif self.conda_inputs_container.indexOf(row_layout) != -1:
             self.conda_inputs_container.removeItem(row_layout)
+    
+    def save_ui_to_config(self) -> None:
+        """将当前UI状态保存到配置文件"""
+        config = {
+            "name": self.get_env_name(),
+            "dependencies": []
+        }
+        
+        # 添加Python版本
+        python_version = self.get_python_version()
+        if python_version:
+            config["dependencies"].append(f"python={python_version}")
+        
+        # 添加conda包
+        conda_packages = []
+        for i in range(self.conda_inputs_container.count()):
+            row_layout = self.conda_inputs_container.itemAt(i).layout()
+            if row_layout:
+                input_widget = row_layout.itemAt(0).widget() # pyright: ignore[reportOptionalMemberAccess]
+                if isinstance(input_widget, LineEdit):
+                    package = input_widget.text().strip()
+                    if package:
+                        conda_packages.append(package)
+        config["dependencies"].extend(conda_packages)
+        
+        # 添加pip包
+        pip_packages = []
+        for i in range(self.pip_inputs_container.count()):
+            row_layout = self.pip_inputs_container.itemAt(i).layout()
+            if row_layout:
+                input_widget = row_layout.itemAt(0).widget() # pyright: ignore[reportOptionalMemberAccess]
+                if isinstance(input_widget, LineEdit):
+                    package = input_widget.text().strip()
+                    if package:
+                        pip_packages.append(package)
+        
+        if pip_packages:
+            config["dependencies"].append({"pip": pip_packages})
+        
+        config_util.save_config(config)
