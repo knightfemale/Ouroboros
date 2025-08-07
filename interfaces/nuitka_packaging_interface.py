@@ -219,15 +219,21 @@ class NuitkaPackagingInterface(QWidget):
         compiler_layout.addWidget(compiler_lable)
         compiler_layout.addWidget(self.compiler_combox)
         advanced_layout.addLayout(compiler_layout)
-        # 其他参数
-        other_args_layout = QHBoxLayout()
-        self.other_args_input = LineEdit(self)
-        self.other_args_input.setPlaceholderText("其他 Nuitka 参数")
-        other_args_lable = QLabel("其他参数")
-        other_args_lable.setStyleSheet(LABLE_STYLE)
-        other_args_layout.addWidget(other_args_lable)
-        other_args_layout.addWidget(self.other_args_input)
-        advanced_layout.addLayout(other_args_layout)
+        # 额外参数
+        extra_args_group = QGroupBox("额外参数", self)
+        extra_args_group.setStyleSheet(purple_style.get_groupbox_style())
+        extra_args_layout = QVBoxLayout(extra_args_group)
+        self.extra_args_container = QVBoxLayout()
+        extra_args_layout.addLayout(self.extra_args_container)
+        # 添加按钮布局
+        extra_args_btn_layout = QHBoxLayout()
+        self.extra_args_add_btn = PushButton("添加参数", self)
+        self.extra_args_add_btn.setStyleSheet(green_style.get_button_style())
+        self.extra_args_add_btn.setFixedWidth(100)
+        self.extra_args_add_btn.clicked.connect(lambda: self.add_dynamic_row("extra_args"))
+        extra_args_btn_layout.addWidget(self.extra_args_add_btn)
+        extra_args_layout.addLayout(extra_args_btn_layout)
+        advanced_layout.addWidget(extra_args_group)
         # 添加到主布局
         main_layout.addWidget(advanced_group)
         # 将内容容器设置到滚动区域
@@ -241,7 +247,7 @@ class NuitkaPackagingInterface(QWidget):
     def load_config_to_ui(self) -> None:
         """从配置文件加载数据到 UI"""
         config = config_util.load_config().get("nuitka", {})
-        # 基本选项
+        # 固定字段
         self.entry_input.setText(config.get("entry", ""))
         self.output_name_input.setText(config.get("output_name", ""))
         self.output_dir_input.setText(config.get("output_dir", ""))
@@ -253,9 +259,8 @@ class NuitkaPackagingInterface(QWidget):
         self.download_switch.setChecked(config.get("download", True))
         self.compiler_combox.setCurrentText(config.get("compiler", "Auto"))
         self.jobs_input.setText(config.get("jobs", ""))
-        self.other_args_input.setText(config.get("other_args", ""))
         # 动态字段
-        for field in ["plugins", "packages", "modules", "files", "dirs"]:
+        for field in ["plugins", "packages", "modules", "files", "dirs", "extra_args"]:
             container = getattr(self, f"{field}_container")
             gui_util.clear_input_container(container)
             for item in config.get(field, []):
@@ -270,6 +275,7 @@ class NuitkaPackagingInterface(QWidget):
             "plugins": "输入插件名(例如: pyside6)",
             "files": "输入文件路径(格式: 源文件=目标路径)",
             "dirs": "输入目录路径(格式: 源目录=目标路径)",
+            "extra_args": "输入额外参数(例如: --lto=yes)",
         }
         row_layout = gui_util.create_removable_input_row(self, PLACEHOLDER[field_type], text)
         remove_btn = row_layout.itemAt(1).widget()
@@ -297,10 +303,9 @@ class NuitkaPackagingInterface(QWidget):
             "assume_yes": self.download_switch.isChecked(),
             "compiler": self.compiler_combox.currentText(),
             "jobs": self.jobs_input.text().strip(),
-            "other_args": self.other_args_input.text().strip(),
         })
         # 动态字段
-        for field in ["plugins", "packages", "modules", "files", "dirs"]:
+        for field in ["plugins", "packages", "modules", "files", "dirs", "extra_args"]:
             container = getattr(self, f"{field}_container")
             items = []
             for i in range(container.count()):
@@ -368,9 +373,9 @@ class NuitkaPackagingInterface(QWidget):
         ]:
             for item in self.collect_dynamic_items(field):
                 nuitka_args.append(f"{flag}={item}")
-        # 其他参数
-        if other_args := self.other_args_input.text().strip():
-            nuitka_args.extend(other_args.split())
+        # 添加额外参数
+        for arg in self.collect_dynamic_items("extra_args"):
+            nuitka_args.append(arg)
         # 执行命令
         command: str = f"start \"NuitkaBuild\" cmd /k \"{str(python_path)}\" {" ".join(nuitka_args)}"
         gui_util.show_info(self, f"开始编译打包: {command}")

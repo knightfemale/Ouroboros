@@ -12,10 +12,12 @@ nuitka:
   dirs: []
   disable_console: true
   entry: ./main.py
+  extra_args:
+  - --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy
+  - --windows-icon-from-ico=output/icon.ico
   files: []
   jobs: ''
   modules: []
-  other_args: --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy --windows-icon-from-ico=output/icon.ico
   output_dir: output
   output_name: Ouroboros
   packages: []
