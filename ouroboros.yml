@@ -13,8 +13,8 @@ nuitka:
   disable_console: true
   entry: ./main.py
   extra_args:
-  - --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy
   - --windows-icon-from-ico=output/icon.ico
+  - --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy
   files: []
   jobs: ''
   modules: []
