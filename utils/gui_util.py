@@ -26,7 +26,7 @@ def show_success(parent: Any, message: str) -> None:
         orient=Qt.Horizontal, # pyright: ignore[reportAttributeAccessIssue]
         isClosable=True,
         position=InfoBarPosition.TOP,
-        duration=2000,
+        duration=3000,
         parent=parent
     )
 
@@ -38,7 +38,7 @@ def show_info(parent: Any, message: str) -> None:
         orient=Qt.Horizontal, # pyright: ignore[reportAttributeAccessIssue]
         isClosable=True,
         position=InfoBarPosition.TOP,
-        duration=1500,
+        duration=3000,
         parent=parent
     )
 

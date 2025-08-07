@@ -6,7 +6,7 @@ from typing import Any, List, Dict
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QFrame, QGroupBox
 from qfluentwidgets import PrimaryPushButton, LineEdit, PushButton, ModelComboBox, SwitchButton, SingleDirectionScrollArea
 
-from utils import config_util, gui_util, nuitka_util
+from utils import config_util, gui_util
 from styles.default import TITLE_STYLE, LABLE_STYLE, BACKGROUND_STYLE, green_style, purple_style
 
 class NuitkaPackagingInterface(QWidget):
@@ -214,7 +214,9 @@ class NuitkaPackagingInterface(QWidget):
         other_args_layout = QHBoxLayout()
         self.other_args_input = LineEdit(self)
         self.other_args_input.setPlaceholderText("其他 Nuitka 参数")
-        other_args_layout.addWidget(QLabel("其他参数:"))
+        other_args_lable = QLabel("其他参数")
+        other_args_lable.setStyleSheet(LABLE_STYLE)
+        other_args_layout.addWidget(other_args_lable)
         other_args_layout.addWidget(self.other_args_input)
         advanced_layout.addLayout(other_args_layout)
         
@@ -251,7 +253,7 @@ class NuitkaPackagingInterface(QWidget):
         self.output_name_input.setText(config.get("output_name", ""))
         self.output_dir_input.setText(config.get("output_dir", ""))
         self.onefile_switch.setChecked(config.get("onefile", True))
-        self.console_switch.setChecked(config.get("console", False))
+        self.console_switch.setChecked(config.get("disable_console", False))
         self.remove_switch.setChecked(config.get("remove", True))
         self.scons_switch.setChecked(config.get("scons", True))
         self.download_switch.setChecked(config.get("download", True))
@@ -268,8 +270,14 @@ class NuitkaPackagingInterface(QWidget):
     def add_dynamic_row(self, field_type: str, text: str = "") -> None:
         """添加动态行到指定容器"""
         container = getattr(self, f"{field_type}_container")
-        placeholder = f"输入{field_type}"
-        row_layout = gui_util.create_removable_input_row(self, placeholder, text)
+        PLACEHOLDER: Dict[str, str] = {
+            "packages": "输入包名(例如: numpy)",
+            "modules": "输入模块名(例如: sys)",
+            "plugins": "输入插件名(例如: pyside6)",
+            "files": "输入文件路径(格式: 源文件=目标路径)",
+            "dirs": "输入目录路径(格式: 源目录=目标路径)",
+        }
+        row_layout = gui_util.create_removable_input_row(self, PLACEHOLDER[field_type], text)
         remove_btn = row_layout.itemAt(1).widget()
         remove_btn.clicked.connect(lambda: self.remove_row(row_layout, container)) # pyright: ignore[reportAttributeAccessIssue]
         container.addLayout(row_layout)
@@ -316,30 +324,29 @@ class NuitkaPackagingInterface(QWidget):
         self.save_ui_to_config()
         python_path: Path = Path.cwd() / f"{config_util.load_config().get("name")}/python"
         # 构建命令
-        command: List = [
+        nuitka_args: List = [
             "-m",
             "nuitka",
-            "--standalone",
             self.entry_input.text().strip(),
         ]
         # 添加选项参数
         options: Dict[str, Any] = {
             "onefile": "--onefile",
-            "console": "--disable-console",
+            "console": "--windows-console-mode=disable",
             "remove": "--remove-output",
             "scons": "--show-scons",
             "download": "--assume-yes-for-downloads",
         }
         for attr, flag in options.items():
             if getattr(self, f"{attr}_switch").isChecked():
-                command.append(flag)
+                nuitka_args.append(flag)
         # 添加其他参数
         if output_name := self.output_name_input.text().strip():
-            command.append(f"--output-filename={output_name}")
+            nuitka_args.append(f"--output-filename={output_name}")
         if output_dir := self.output_dir_input.text().strip():
-            command.append(f"--output-dir={output_dir}")
+            nuitka_args.append(f"--output-dir={output_dir}")
         if jobs := self.jobs_input.text().strip():
-            command.append(f"--jobs={jobs}")
+            nuitka_args.append(f"--jobs={jobs}")
         # 编译器选项
         compiler_map: Dict[str, str] = {
             "MSVC": "--msvc",
@@ -347,7 +354,7 @@ class NuitkaPackagingInterface(QWidget):
             "Clang": "--clang"
         }
         if compiler := compiler_map.get(self.compiler_combox.currentText()):
-            command.append(compiler)
+            nuitka_args.append(compiler)
         # 添加插件/包/模块等
         for field, flag in [
             ("plugins", "--enable-plugin"),
@@ -357,28 +364,14 @@ class NuitkaPackagingInterface(QWidget):
             ("dirs", "--include-data-dir"),
         ]:
             for item in self.collect_dynamic_items(field):
-                command.append(f"{flag}={item}")
+                nuitka_args.append(f"{flag}={item}")
         # 其他参数
         if other_args := self.other_args_input.text().strip():
-            command.extend(other_args.split())
-        # 生成脚本内容（将命令列表转换为字符串表示）
-        script_content = nuitka_util.scripts.format(command=repr(command))
-        # 将脚本写入文件
-        script_path: Path = Path("./nuitka_build.py")
-        with open(script_path, "w", encoding="utf-8") as f:
-            f.write(script_content)
-        # 执行生成的脚本
-        try:
-            python_command = f"start \"NuitkaBuild\" cmd /k \"{str(python_path)}\" ./nuitka_build.py"
-            subprocess.run(
-                python_command,
-                shell=True
-            )
-            gui_util.show_success(self, "打包成功!")
-        except subprocess.CalledProcessError as e:
-            gui_util.show_error(self, f"打包失败: {e}")
-        except FileNotFoundError:
-            gui_util.show_error(self, "未找到 Python 解释器!")
+            nuitka_args.extend(other_args.split())
+        # 执行命令
+        command: str = f"start \"NuitkaBuild\" cmd /k \"{str(python_path)}\" {" ".join(nuitka_args)}"
+        gui_util.show_info(self, f"开始编译打包: {command}")
+        subprocess.run(command, shell=True)
     
     def collect_dynamic_items(self, field: str) -> list:
         """收集动态字段内容"""

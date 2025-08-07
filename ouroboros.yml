@@ -1,14 +1,14 @@
 dependencies:
 - python=3.13
 - pip:
-  - nuitka
   - pyside6-fluent-widgets[full]
+  - nuitka
 name: .venv
 nuitka:
   assume_yes: true
   compiler: Auto
   dirs: []
-  disable_console: false
+  disable_console: true
   entry: ./main.py
   files: []
   jobs: ''

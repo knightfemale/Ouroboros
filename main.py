@@ -19,19 +19,16 @@ class MainWindow(FluentWindow):
         super().__init__()
         # 检查并创建默认配置文件
         self.ensure_default_config()
-        
+        # 创建窗口
         self.setWindowTitle("Ouroboros")
         self.resize(1280, 720)
-        
         # 创建子界面实例
         self.homeInterface: HomeInterface = HomeInterface(self)
         self.environmentBuildInterface: EnvironmentBuildInterface = EnvironmentBuildInterface(self)
         self.nuitkaPackagingInterface: NuitkaPackagingInterface = NuitkaPackagingInterface(self)
         self.helpInterface: HelpInterface = HelpInterface(self)
-        
         # 添加导航项
         self.add_navigation_items()
-        
         # 连接首页按钮信号
         self.homeInterface.env_button.clicked.connect(lambda: self.switchTo(self.environmentBuildInterface))
         self.homeInterface.pack_button.clicked.connect(lambda: self.switchTo(self.nuitkaPackagingInterface))
@@ -40,7 +37,6 @@ class MainWindow(FluentWindow):
         """创建并初始化一个界面"""
         interface: QWidget = QWidget()
         interface.setObjectName(object_name)
-        
         layout: QVBoxLayout = QVBoxLayout(interface)
         label: QLabel = QLabel(text, interface)
         label.setAlignment(Qt.AlignCenter) # pyright: ignore[reportAttributeAccessIssue]

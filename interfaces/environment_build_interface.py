@@ -1,10 +1,9 @@
 # interfaces/environment_build_interface.py
 import subprocess
-from pathlib import Path
 from PySide6.QtCore import Qt
 from typing import Any, Self, List, Dict, Optional
 from qfluentwidgets import PrimaryPushButton, LineEdit, PushButton, SingleDirectionScrollArea
-from PySide6.QtWidgets import QWidget, QLayout, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QFrame
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QFrame
 
 from utils import config_util, gui_util
 from styles.default import green_style, indigo_style, BACKGROUND_STYLE, TITLE_STYLE
@@ -156,86 +155,32 @@ class EnvironmentBuildInterface(QWidget):
         # 保存到配置
         self.save_ui_to_config()
         # 执行命令
-        command: str = f"conda env create --file {config_util.config_path} --prefix ./{env_name}"
-        process: subprocess.Popen = subprocess.Popen(
-            command,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True
-        )
-        # 后台输出
-        print("开始创建环境!\n")
-        for line in process.stdout: # pyright: ignore[reportOptionalIterable]
-            print(line.strip())
-        # 等待命令执行完成
-        process.wait()
-        # 创建 .gitignore 文件
-        try:
-            gitignore_path: Path = Path(f"./{env_name}/.gitignore")
-            with open(gitignore_path, "w") as f:
-                f.write("*")
-            print(f"✅ 已创建 .gitignore 文件: {gitignore_path}!\n")
-        except Exception as e:
-            print(f"❌ 创建 .gitignore 文件失败: {str(e)}!\n")
-        # 保存到配置
-        self.save_ui_to_config()
-        # 前台输出
-        gui_util.show_success(self, "环境构建完成!")
+        gui_util.show_info(self, "开始环境构建")
+        subprocess.run(f"start \"CondaBuild\" cmd /k conda env create --file {config_util.config_path} --prefix ./{env_name}", shell=True)
     
     def activate_venv(self: Self) -> None:
         """激活环境"""
         # 获取参数
         env_name: str = self.get_env_name()
         # 执行命令
-        subprocess.run(
-            f"start cmd /k call activate ./{env_name}", 
-            shell=True,
-        )
-        # 前台输出
-        gui_util.show_success(self, f"激活环境: {env_name}")
+        gui_util.show_info(self, f"激活环境: {env_name}")
+        subprocess.run(f"start \"{env_name}\" cmd /k call activate ./{env_name}", shell=True)
     
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
         # 获取参数
         env_name: str = self.get_env_name()
         # 执行命令
-        command: str = f"\"./{env_name}/python\" -m pip freeze > ./requirements.txt"
-        process: subprocess.Popen = subprocess.Popen(
-            command,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True
-        )
-        # 后台输出
-        for line in process.stdout: # pyright: ignore[reportOptionalIterable]
-            print(line.strip())
-        # 等待命令执行完成
-        process.wait()
-        # 前台输出
-        gui_util.show_success(self, "requirements.txt 导出完成!")
+        gui_util.show_info(self, "开始导出 requirements.txt")
+        subprocess.Popen(f"\"./{env_name}/python\" -m pip freeze > ./requirements.txt", shell=True)
     
     def export_environment(self: Self) -> None:
         """导出依赖 environment.yml"""
         # 获取参数
         env_name: str = self.get_env_name()
         # 执行命令
-        command: str = f"conda env export -p ./{env_name} > environment.yml"
-        process: subprocess.Popen = subprocess.Popen(
-            command,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True
-        )
-        # 后台输出
-        for line in process.stdout: # pyright: ignore[reportOptionalIterable]
-            print(line.strip())
-        # 等待命令执行完成
-        process.wait()
-        # 前台输出
-        gui_util.show_success(self, "environment.yml 导出完成!")
+        gui_util.show_info(self, "开始导出 environment.yml")
+        subprocess.Popen(f"conda env export -p ./{env_name} > ./environment.yml", shell=True)
     
     def get_env_name(self: Self) -> str:
         """带默认参数地获取环境名"""
