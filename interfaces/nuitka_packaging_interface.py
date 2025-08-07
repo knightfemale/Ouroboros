@@ -68,15 +68,15 @@ class NuitkaPackagingInterface(QWidget):
         self.output_dir_input.setPlaceholderText("输出目录(默认: 根目录)")
         output_dir_layout.addWidget(self.output_dir_input)
         options_layout.addLayout(output_dir_layout)
-        # 单文件模式
-        onefile_layout = QHBoxLayout()
-        self.onefile_switch = SwitchButton(self)
-        self.onefile_switch.setChecked(True)
-        onefile_lable = QLabel("打包成单文件", self)
-        onefile_lable.setStyleSheet(LABLE_STYLE)
-        onefile_layout.addWidget(onefile_lable)
-        onefile_layout.addWidget(self.onefile_switch)
-        options_layout.addLayout(onefile_layout)
+        # 构建模式选择
+        build_mode_layout = QHBoxLayout()
+        build_mode_label = QLabel("构建模式", self)
+        build_mode_label.setStyleSheet(LABLE_STYLE)
+        self.build_mode_combo = ModelComboBox(self)
+        self.build_mode_combo.addItems(["独立模式", "单文件格式", "模块模式"])
+        build_mode_layout.addWidget(build_mode_label)
+        build_mode_layout.addWidget(self.build_mode_combo)
+        options_layout.addLayout(build_mode_layout)
         # 禁用控制台
         console_layout = QHBoxLayout()
         self.console_switch = SwitchButton(self)
@@ -245,7 +245,8 @@ class NuitkaPackagingInterface(QWidget):
         self.entry_input.setText(config.get("entry", ""))
         self.output_name_input.setText(config.get("output_name", ""))
         self.output_dir_input.setText(config.get("output_dir", ""))
-        self.onefile_switch.setChecked(config.get("onefile", True))
+        build_mode = config.get("build_mode", "独立模式")
+        self.build_mode_combo.setCurrentText(build_mode)
         self.console_switch.setChecked(config.get("disable_console", False))
         self.remove_switch.setChecked(config.get("remove", True))
         self.scons_switch.setChecked(config.get("scons", True))
@@ -289,7 +290,7 @@ class NuitkaPackagingInterface(QWidget):
             "entry": self.entry_input.text().strip(),
             "output_name": self.output_name_input.text().strip(),
             "output_dir": self.output_dir_input.text().strip(),
-            "onefile": self.onefile_switch.isChecked(),
+            "build_mode": self.build_mode_combo.currentText(),
             "disable_console": self.console_switch.isChecked(),
             "remove_output": self.remove_switch.isChecked(),
             "show_scons": self.scons_switch.isChecked(),
@@ -323,16 +324,25 @@ class NuitkaPackagingInterface(QWidget):
             self.entry_input.text().strip(),
         ]
         # 添加选项参数
-        options: Dict[str, Any] = {
-            "onefile": "--onefile",
+        OPTIONS: Dict[str, Any] = {
             "console": "--windows-console-mode=disable",
             "remove": "--remove-output",
             "scons": "--show-scons",
             "download": "--assume-yes-for-downloads",
         }
-        for attr, flag in options.items():
+        for attr, flag in OPTIONS.items():
             if getattr(self, f"{attr}_switch").isChecked():
                 nuitka_args.append(flag)
+        
+        # 添加构建模式参数
+        BUILD_MODE: Dict[str, str] = {
+            "独立模式": "--standalone",
+            "单文件模式": "--onefile",
+            "模块模式": "--module"
+        }
+        build_mode = self.build_mode_combo.currentText()
+        if build_mode in BUILD_MODE:
+            nuitka_args.append(BUILD_MODE[build_mode])
         # 添加其他参数
         if output_name := self.output_name_input.text().strip():
             nuitka_args.append(f"--output-filename={output_name}")
