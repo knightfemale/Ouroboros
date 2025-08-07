@@ -34,6 +34,18 @@ class NuitkaPackagingInterface(QWidget):
         title = QLabel("Nuitka 打包工具", self)
         title.setStyleSheet(TITLE_STYLE)
         main_layout.addWidget(title)
+        # 操作按钮区域
+        action_group = QGroupBox("操作", self)
+        action_group.setStyleSheet(purple_style.get_groupbox_style())
+        action_layout = QVBoxLayout(action_group)
+        # 构建按钮
+        self.build_btn = PrimaryPushButton("编译打包", self)
+        self.build_btn.setStyleSheet(purple_style.get_button_style())
+        self.build_btn.setMinimumHeight(40)
+        self.build_btn.clicked.connect(self.start_packaging)
+        action_layout.addWidget(self.build_btn)
+        # 添加到主布局
+        main_layout.addWidget(action_group)
         # 基本选项区域
         options_group = QGroupBox("基本选项", self)
         options_group.setStyleSheet(purple_style.get_groupbox_style())
@@ -82,33 +94,6 @@ class NuitkaPackagingInterface(QWidget):
         remove_layout.addWidget(remove_lable)
         remove_layout.addWidget(self.remove_switch)
         options_layout.addLayout(remove_layout)
-        # 显示 Scons 命令
-        scons_layout = QHBoxLayout()
-        self.scons_switch = SwitchButton(self)
-        self.scons_switch.setChecked(True)
-        scons_lable = QLabel("显示 Scons 命令")
-        scons_lable.setStyleSheet(LABLE_STYLE)
-        scons_layout.addWidget(scons_lable)
-        scons_layout.addWidget(self.scons_switch)
-        options_layout.addLayout(scons_layout)
-        # 自动同意下载
-        download_layout = QHBoxLayout()
-        self.download_switch = SwitchButton(self)
-        self.download_switch.setChecked(True)
-        download_lable = QLabel("自动同意下载")
-        download_lable.setStyleSheet(LABLE_STYLE)
-        download_layout.addWidget(download_lable)
-        download_layout.addWidget(self.download_switch)
-        options_layout.addLayout(download_layout)
-        # 编译器选择
-        compiler_layout = QHBoxLayout()
-        self.compiler_combox = ModelComboBox(self)
-        self.compiler_combox.addItems(["Auto", "MSVC", "MinGW64", "Clang"])
-        compiler_lable = QLabel("编译器", self)
-        compiler_lable.setStyleSheet(LABLE_STYLE)
-        compiler_layout.addWidget(compiler_lable)
-        compiler_layout.addWidget(self.compiler_combox)
-        options_layout.addLayout(compiler_layout)
         # 并行任务数
         jobs_layout = QHBoxLayout()
         self.jobs_input = LineEdit(self)
@@ -118,10 +103,9 @@ class NuitkaPackagingInterface(QWidget):
         # 加入布局
         main_layout.addWidget(options_group)
         # 显式导入区域
-        import_group = QGroupBox("显示导入", self)
+        import_group = QGroupBox("显式导入", self)
         import_group.setStyleSheet(purple_style.get_groupbox_style())
         import_layout = QVBoxLayout(import_group)
-
         # 启用包
         package_group = QGroupBox("启用包", self)
         package_group.setStyleSheet(purple_style.get_groupbox_style())
@@ -202,14 +186,39 @@ class NuitkaPackagingInterface(QWidget):
         # 加入布局
         dir_btn_layout.addWidget(self.dir_add_btn)
         import_layout.addWidget(dir_group)
-        # 加入主布局
+        # 添加到主布局
         main_layout.addWidget(import_group)
-        
         # 高级选项区域
         advanced_group = QGroupBox("高级选项", self)
         advanced_group.setStyleSheet(purple_style.get_groupbox_style())
         advanced_layout = QVBoxLayout(advanced_group)
-        
+        # 显示 Scons 命令
+        scons_layout = QHBoxLayout()
+        self.scons_switch = SwitchButton(self)
+        self.scons_switch.setChecked(True)
+        scons_lable = QLabel("显示 Scons 命令")
+        scons_lable.setStyleSheet(LABLE_STYLE)
+        scons_layout.addWidget(scons_lable)
+        scons_layout.addWidget(self.scons_switch)
+        advanced_layout.addLayout(scons_layout)
+        # 自动同意下载
+        download_layout = QHBoxLayout()
+        self.download_switch = SwitchButton(self)
+        self.download_switch.setChecked(True)
+        download_lable = QLabel("自动同意下载")
+        download_lable.setStyleSheet(LABLE_STYLE)
+        download_layout.addWidget(download_lable)
+        download_layout.addWidget(self.download_switch)
+        advanced_layout.addLayout(download_layout)
+        # 编译器选择
+        compiler_layout = QHBoxLayout()
+        self.compiler_combox = ModelComboBox(self)
+        self.compiler_combox.addItems(["Auto", "MSVC", "MinGW64", "Clang"])
+        compiler_lable = QLabel("编译器", self)
+        compiler_lable.setStyleSheet(LABLE_STYLE)
+        compiler_layout.addWidget(compiler_lable)
+        compiler_layout.addWidget(self.compiler_combox)
+        advanced_layout.addLayout(compiler_layout)
         # 其他参数
         other_args_layout = QHBoxLayout()
         self.other_args_input = LineEdit(self)
@@ -219,27 +228,11 @@ class NuitkaPackagingInterface(QWidget):
         other_args_layout.addWidget(other_args_lable)
         other_args_layout.addWidget(self.other_args_input)
         advanced_layout.addLayout(other_args_layout)
-        
+        # 添加到主布局
         main_layout.addWidget(advanced_group)
-        
-        # 操作按钮区域
-        action_group = QGroupBox("操作", self)
-        action_group.setStyleSheet(purple_style.get_groupbox_style())
-        action_layout = QVBoxLayout(action_group)
-        
-        # 构建按钮
-        self.build_btn = PrimaryPushButton("编译打包", self)
-        self.build_btn.setStyleSheet(purple_style.get_button_style())
-        self.build_btn.setMinimumHeight(40)
-        self.build_btn.clicked.connect(self.start_packaging)
-        action_layout.addWidget(self.build_btn)
-        
-        main_layout.addWidget(action_group)
-        
-        # 设置滚动区域内容
+        # 将内容容器设置到滚动区域
         scroll_area.setWidget(content_widget)
-        
-        # 设置主布局
+        # 设置主布局为滚动区域
         outer_layout = QVBoxLayout(self)
         outer_layout.addWidget(scroll_area)
         outer_layout.setContentsMargins(0, 0, 0, 0)

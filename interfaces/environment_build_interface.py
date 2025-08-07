@@ -33,6 +33,38 @@ class EnvironmentBuildInterface(QWidget):
         # 标题
         title: QLabel = QLabel("环境构建工具", content_widget)
         title.setStyleSheet(TITLE_STYLE)
+        # 添加到主布局
+        main_layout.addWidget(title)
+        # 操作按钮区域
+        action_group: QGroupBox = QGroupBox("操作", self)
+        action_group.setStyleSheet(indigo_style.get_groupbox_style())
+        action_layout: QVBoxLayout = QVBoxLayout(action_group)
+        # 构建环境
+        self.build_btn: PrimaryPushButton = PrimaryPushButton("构建环境", self)
+        self.build_btn.setStyleSheet(indigo_style.get_button_style())
+        self.build_btn.setMinimumHeight(40)
+        self.build_btn.clicked.connect(self.build_env)
+        action_layout.addWidget(self.build_btn)
+        # 激活环境
+        self.activate_btn: PrimaryPushButton = PrimaryPushButton("激活环境", self)
+        self.activate_btn.setStyleSheet(indigo_style.get_button_style())
+        self.activate_btn.setMinimumHeight(40)
+        self.activate_btn.clicked.connect(self.activate_venv)
+        action_layout.addWidget(self.activate_btn)
+        # 导出依赖 requirements.txt
+        self.export_req_btn: PrimaryPushButton = PrimaryPushButton("导出依赖 requirements.txt", self)
+        self.export_req_btn.setStyleSheet(indigo_style.get_button_style())
+        self.export_req_btn.setMinimumHeight(40)
+        self.export_req_btn.clicked.connect(self.export_requirements)
+        action_layout.addWidget(self.export_req_btn)
+        # 导出依赖 environment.yml
+        self.export_yml_btn: PrimaryPushButton = PrimaryPushButton("导出依赖 environment.yml", self)
+        self.export_yml_btn.setStyleSheet(indigo_style.get_button_style())
+        self.export_yml_btn.setMinimumHeight(40)
+        self.export_yml_btn.clicked.connect(self.export_environment)
+        action_layout.addWidget(self.export_yml_btn)
+        # 添加到主布局
+        main_layout.addWidget(action_group)
         # 环境构建区域
         env_group: QGroupBox = QGroupBox("环境构建", self)
         env_group.setStyleSheet(indigo_style.get_groupbox_style())
@@ -81,38 +113,8 @@ class EnvironmentBuildInterface(QWidget):
         conda_btn_layout.addWidget(self.conda_add_btn)
         conda_layout.addLayout(conda_btn_layout)
         env_layout.addWidget(conda_group)
-        # 操作按钮区域
-        action_group: QGroupBox = QGroupBox("操作", conda_group)
-        action_group.setStyleSheet(indigo_style.get_groupbox_style())
-        action_layout: QVBoxLayout = QVBoxLayout(action_group)
-        # 构建环境
-        self.build_btn: PrimaryPushButton = PrimaryPushButton("构建环境", self)
-        self.build_btn.setStyleSheet(indigo_style.get_button_style())
-        self.build_btn.setMinimumHeight(40)
-        self.build_btn.clicked.connect(self.build_env)
-        action_layout.addWidget(self.build_btn)
-        # 激活环境
-        self.activate_btn: PrimaryPushButton = PrimaryPushButton("激活环境", self)
-        self.activate_btn.setStyleSheet(indigo_style.get_button_style())
-        self.activate_btn.setMinimumHeight(40)
-        self.activate_btn.clicked.connect(self.activate_venv)
-        action_layout.addWidget(self.activate_btn)
-        # 导出依赖 requirements.txt
-        self.export_req_btn: PrimaryPushButton = PrimaryPushButton("导出依赖 requirements.txt", self)
-        self.export_req_btn.setStyleSheet(indigo_style.get_button_style())
-        self.export_req_btn.setMinimumHeight(40)
-        self.export_req_btn.clicked.connect(self.export_requirements)
-        action_layout.addWidget(self.export_req_btn)
-        # 导出依赖 environment.yml
-        self.export_yml_btn: PrimaryPushButton = PrimaryPushButton("导出依赖 environment.yml", self)
-        self.export_yml_btn.setStyleSheet(indigo_style.get_button_style())
-        self.export_yml_btn.setMinimumHeight(40)
-        self.export_yml_btn.clicked.connect(self.export_environment)
-        action_layout.addWidget(self.export_yml_btn)
         # 添加到主布局
-        main_layout.addWidget(title)
         main_layout.addWidget(env_group)
-        main_layout.addWidget(action_group)
         # 将内容容器设置到滚动区域
         scroll_area.setWidget(content_widget)
         # 设置主布局为滚动区域

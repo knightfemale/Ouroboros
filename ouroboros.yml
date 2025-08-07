@@ -2,6 +2,7 @@ dependencies:
 - python=3.13
 - pip:
   - nuitka
+  - pyyaml
   - pyside6-fluent-widgets[full]
 name: .venv
 nuitka:
