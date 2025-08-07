@@ -1,8 +1,8 @@
 dependencies:
 - python=3.13
 - pip:
-  - pyside6-fluent-widgets[full]
   - nuitka
+  - pyside6-fluent-widgets[full]
 name: .venv
 nuitka:
   assume_yes: true
@@ -14,7 +14,7 @@ nuitka:
   jobs: ''
   modules: []
   onefile: true
-  other_args: ''
+  other_args: --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy
   output_dir: output
   output_name: Ouroboros
   packages: []
