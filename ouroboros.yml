@@ -1,6 +1,24 @@
 dependencies:
-  - python=3.13
-  - pip:
-      - nuitka
-      - pyside6-fluent-widgets[full]
+- python=3.13
+- pip:
+  - nuitka
+  - pyside6-fluent-widgets[full]
 name: .venv
+nuitka:
+  assume_yes: true
+  compiler: Auto
+  dirs: []
+  disable_console: false
+  entry: ./main.py
+  files: []
+  jobs: ''
+  modules: []
+  onefile: true
+  other_args: ''
+  output_dir: output
+  output_name: Ouroboros
+  packages: []
+  plugins:
+  - pyside6
+  remove_output: true
+  show_scons: true

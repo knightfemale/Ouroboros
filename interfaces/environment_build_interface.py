@@ -4,10 +4,10 @@ from pathlib import Path
 from PySide6.QtCore import Qt
 from typing import Any, Self, List, Dict, Optional
 from qfluentwidgets import PrimaryPushButton, LineEdit, PushButton, SingleDirectionScrollArea
-from PySide6.QtWidgets import QWidget, QLayout, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QFrame, QLayoutItem
+from PySide6.QtWidgets import QWidget, QLayout, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout, QFrame
 
 from utils import config_util, gui_util
-from styles.default import red_style, green_style, indigo_style, BACKGROUND_STYLE, TITLE_STYLE
+from styles.default import green_style, indigo_style, BACKGROUND_STYLE, TITLE_STYLE
 
 class EnvironmentBuildInterface(QWidget):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
@@ -190,7 +190,7 @@ class EnvironmentBuildInterface(QWidget):
         # 执行命令
         subprocess.run(
             f"start cmd /k call activate ./{env_name}", 
-            shell=True
+            shell=True,
         )
         # 前台输出
         gui_util.show_success(self, f"激活环境: {env_name}")
@@ -282,36 +282,31 @@ class EnvironmentBuildInterface(QWidget):
     
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""
-        config: Dict[str, Any] = {
+        # 先加载完整配置
+        full_config: Dict[str, Any] = config_util.load_config()
+        # 只更新环境构建部分
+        full_config.update({
             "name": self.get_env_name(),
-            "dependencies": [],
-        }
-        # 添加 Python 版本
-        python_version: str = self.get_python_version()
-        if python_version:
-            config["dependencies"].append(f"python={python_version}")
-        # 添加 conda 包
-        conda_packages: List[str] = []
+            "dependencies": self.collect_dependencies()
+        })
+        config_util.save_config(full_config)
+    
+    def collect_dependencies(self) -> list:
+        """收集所有依赖项"""
+        deps: List[Any] = [f"python={self.get_python_version()}"]
+        # 添加conda包
         for i in range(self.conda_inputs_container.count()):
-            row_layout: QLayout = self.conda_inputs_container.itemAt(i).layout()
-            if row_layout:
-                input_widget: QWidget = row_layout.itemAt(0).widget() # pyright: ignore[reportOptionalMemberAccess]
-                if isinstance(input_widget, LineEdit):
-                    package: str = input_widget.text().strip()
-                    if package:
-                        conda_packages.append(package)
-        config["dependencies"].extend(conda_packages)
-        # 添加 pip 包
+            if row := self.conda_inputs_container.itemAt(i).layout():
+                if input_widget := row.itemAt(0).widget(): # pyright: ignore[reportOptionalMemberAccess]
+                    if package := input_widget.text().strip(): # pyright: ignore[reportAttributeAccessIssue]
+                        deps.append(package)
+        # 添加pip包
         pip_packages: List[str] = []
         for i in range(self.pip_inputs_container.count()):
-            row_layout: QLayout = self.pip_inputs_container.itemAt(i).layout()
-            if row_layout:
-                input_widget: QWidget = row_layout.itemAt(0).widget() # pyright: ignore[reportOptionalMemberAccess]
-                if isinstance(input_widget, LineEdit):
-                    package: str = input_widget.text().strip()
-                    if package:
+            if row := self.pip_inputs_container.itemAt(i).layout():
+                if input_widget := row.itemAt(0).widget(): # pyright: ignore[reportOptionalMemberAccess]
+                    if package := input_widget.text().strip(): # pyright: ignore[reportAttributeAccessIssue]
                         pip_packages.append(package)
         if pip_packages:
-            config["dependencies"].append({"pip": pip_packages})
-        # 保存配置
-        config_util.save_config(config)
+            deps.append({"pip": pip_packages})
+        return deps

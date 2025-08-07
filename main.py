@@ -35,7 +35,7 @@ class MainWindow(FluentWindow):
         # 连接首页按钮信号
         self.homeInterface.env_button.clicked.connect(lambda: self.switchTo(self.environmentBuildInterface))
         self.homeInterface.pack_button.clicked.connect(lambda: self.switchTo(self.nuitkaPackagingInterface))
-
+    
     def create_interface(self: Self, text: str, object_name: str) -> QWidget:
         """创建并初始化一个界面"""
         interface: QWidget = QWidget()
@@ -48,7 +48,7 @@ class MainWindow(FluentWindow):
         layout.addWidget(label)
         
         return interface
-
+    
     def add_navigation_items(self: Self) -> None:
         # 添加主导航项
         self.addSubInterface(
@@ -66,10 +66,8 @@ class MainWindow(FluentWindow):
             FluentIcon.ZIP_FOLDER,
             "Nuitka 打包",
         )
-        
         # 添加分隔线
         self.navigationInterface.addSeparator()
-        
         # 添加帮助项(放在底部)
         self.addSubInterface(
             self.helpInterface, 
@@ -77,10 +75,9 @@ class MainWindow(FluentWindow):
             "帮助与支持",
             position=NavigationItemPosition.BOTTOM,
         )
-        
         # 默认选中首页
         self.switchTo(self.homeInterface)
-        
+    
     def ensure_default_config(self: Self) -> None:
         """确保配置文件存在"""
         if not os.path.exists("ouroboros.yml"):
