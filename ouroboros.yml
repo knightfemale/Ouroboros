@@ -7,7 +7,7 @@ dependencies:
 name: .venv
 nuitka:
   assume_yes: true
-  build_mode: 单文件格式
+  build_mode: 单文件模式
   compiler: Auto
   dirs: []
   disable_console: true
@@ -15,7 +15,7 @@ nuitka:
   files: []
   jobs: ''
   modules: []
-  other_args: --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy
+  other_args: --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy --windows-icon-from-ico=output/icon.ico
   output_dir: output
   output_name: Ouroboros
   packages: []

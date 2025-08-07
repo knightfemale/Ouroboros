@@ -73,7 +73,7 @@ class NuitkaPackagingInterface(QWidget):
         build_mode_label = QLabel("构建模式", self)
         build_mode_label.setStyleSheet(LABLE_STYLE)
         self.build_mode_combo = ModelComboBox(self)
-        self.build_mode_combo.addItems(["独立模式", "单文件格式", "模块模式"])
+        self.build_mode_combo.addItems(["独立模式", "单文件模式", "模块模式"])
         build_mode_layout.addWidget(build_mode_label)
         build_mode_layout.addWidget(self.build_mode_combo)
         options_layout.addLayout(build_mode_layout)
