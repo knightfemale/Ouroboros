@@ -1,8 +1,7 @@
 # main.py
 import sys
 from typing import Self
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
+from PySide6.QtWidgets import QApplication
 from qfluentwidgets import FluentWindow, NavigationItemPosition, FluentIcon
 
 # 导入自定义页面
@@ -27,18 +26,6 @@ class MainWindow(FluentWindow):
         # 连接首页按钮信号
         self.homeInterface.env_button.clicked.connect(lambda: self.switchTo(self.environmentBuildInterface))
         self.homeInterface.pack_button.clicked.connect(lambda: self.switchTo(self.nuitkaPackagingInterface))
-    
-    def create_interface(self: Self, text: str, object_name: str) -> QWidget:
-        """创建并初始化一个界面"""
-        interface: QWidget = QWidget()
-        interface.setObjectName(object_name)
-        layout: QVBoxLayout = QVBoxLayout(interface)
-        label: QLabel = QLabel(text, interface)
-        label.setAlignment(Qt.AlignCenter) # pyright: ignore[reportAttributeAccessIssue]
-        label.setStyleSheet("font-size: 30px; color: #666666;")
-        layout.addWidget(label)
-        
-        return interface
     
     def add_navigation_items(self: Self) -> None:
         # 添加主导航项
