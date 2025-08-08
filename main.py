@@ -1,12 +1,9 @@
 # main.py
-import os
 import sys
 from typing import Self
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
 from qfluentwidgets import FluentWindow, NavigationItemPosition, FluentIcon
-
-from utils import config_util
 
 # 导入自定义页面
 from interfaces.home_interface import HomeInterface
@@ -17,8 +14,6 @@ from interfaces.environment_build_interface import EnvironmentBuildInterface
 class MainWindow(FluentWindow):
     def __init__(self: Self) -> None:
         super().__init__()
-        # 检查并创建默认配置文件
-        self.ensure_default_config()
         # 创建窗口
         self.setWindowTitle("Ouroboros")
         self.resize(1280, 720)
@@ -73,16 +68,6 @@ class MainWindow(FluentWindow):
         )
         # 默认选中首页
         self.switchTo(self.homeInterface)
-    
-    def ensure_default_config(self: Self) -> None:
-        """确保配置文件存在"""
-        if not os.path.exists("ouroboros.yml"):
-            config_util.save_config({
-                "name": "",
-                "dependencies": [
-                    {"pip": []},
-                ],
-            })
 
 if __name__ == '__main__':
     app: QApplication = QApplication(sys.argv)
