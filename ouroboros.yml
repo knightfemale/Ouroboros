@@ -24,4 +24,4 @@ nuitka:
   plugins:
   - pyside6
   remove_output: true
-  show_scons: true
+  show_scons: false

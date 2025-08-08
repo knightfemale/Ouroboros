@@ -48,14 +48,14 @@ class MainWindow(FluentWindow):
             "首页",
         )
         self.addSubInterface(
-            self.environmentBuildInterface,
-            FluentIcon.DEVELOPER_TOOLS,
-            "环境构建",
-        )
-        self.addSubInterface(
             self.nuitkaPackagingInterface,
             FluentIcon.ZIP_FOLDER,
-            "Nuitka 打包",
+            "Nuitka 编译打包",
+        )
+        self.addSubInterface(
+            self.environmentBuildInterface,
+            FluentIcon.DEVELOPER_TOOLS,
+            "Conda 环境管理",
         )
         # 添加分隔线
         self.navigationInterface.addSeparator()

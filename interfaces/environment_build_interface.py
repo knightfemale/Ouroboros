@@ -6,9 +6,10 @@ from qfluentwidgets import SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QFrame
 
 from utils import config_util, gui_util
-from styles.default import green_style, indigo_style, BACKGROUND_STYLE, TITLE_STYLE
+from styles.default import green_style, BACKGROUND_STYLE, TITLE_STYLE
 
-button_style: str = indigo_style.get_button_style()
+button_style: str = green_style.get_button_style()
+lable_style: str = green_style.get_lable_style()
 
 class EnvironmentBuildInterface(QWidget):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
@@ -39,7 +40,7 @@ class EnvironmentBuildInterface(QWidget):
         main_layout.addWidget(title)
         # 操作区域
         action_group: QGroupBox = QGroupBox("操作", self)
-        action_group.setStyleSheet(indigo_style.get_groupbox_style())
+        action_group.setStyleSheet(green_style.get_groupbox_style())
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
         self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "构建环境", slot=self.build_env, style=button_style)
         self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
@@ -49,14 +50,14 @@ class EnvironmentBuildInterface(QWidget):
         main_layout.addWidget(action_group)
         # 环境参数区域
         env_group: QGroupBox = QGroupBox("环境参数", self)
-        env_group.setStyleSheet(indigo_style.get_groupbox_style())
+        env_group.setStyleSheet(green_style.get_groupbox_style())
         env_layout: QVBoxLayout = QVBoxLayout(env_group)
         # 环境名称和版本
-        self.env_name_input = gui_util.InputBuilder.create(self, env_layout, "输入环境名称(默认: .venv)")
-        self.python_version_input = gui_util.InputBuilder.create(self, env_layout, "输入 Python 版本(默认: 3.10)")
+        self.env_name_input = gui_util.InputBuilder.create(self, env_layout, "环境名称", "输入环境名称(默认: .venv)", lable_style=lable_style)
+        self.python_version_input = gui_util.InputBuilder.create(self, env_layout, "Python 版本", "输入 Python 版本(默认: 3.10)", lable_style=lable_style)
         # pip 包管理
         pip_group: QGroupBox = QGroupBox("pip 包管理", self)
-        pip_group.setStyleSheet(indigo_style.get_groupbox_style())
+        pip_group.setStyleSheet(green_style.get_groupbox_style())
         pip_layout: QVBoxLayout = QVBoxLayout(pip_group)
         self.pip_container = gui_util.DynamicInputContainer(self, "输入 pip 包名")
         pip_layout.addLayout(self.pip_container.container_layout)
@@ -64,7 +65,7 @@ class EnvironmentBuildInterface(QWidget):
         env_layout.addWidget(pip_group)
         # conda 包管理
         conda_group: QGroupBox = QGroupBox("conda 包管理", self)
-        conda_group.setStyleSheet(indigo_style.get_groupbox_style())
+        conda_group.setStyleSheet(green_style.get_groupbox_style())
         conda_layout: QVBoxLayout = QVBoxLayout(conda_group)
         self.conda_container = gui_util.DynamicInputContainer(self, "输入 conda 包名")
         conda_layout.addLayout(self.conda_container.container_layout)

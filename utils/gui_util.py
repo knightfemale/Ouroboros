@@ -4,7 +4,7 @@ from typing import Any, Self, List, Optional
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLayout, QLayoutItem, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from qfluentwidgets import InfoBar, InfoBarPosition, LineEdit, PushButton, PrimaryPushButton, LineEdit, PushButton, SwitchButton, ModelComboBox
 
-from styles.default import red_style, LABLE_STYLE
+from styles.default import red_style
 
 class ButtonBuilder:
     """按钮构建器"""
@@ -21,7 +21,7 @@ class ButtonBuilder:
         return btn
 
 class PrimaryButtonBuilder:
-    """按钮构建器"""
+    """主要按钮构建器"""
     @staticmethod
     def create(parent: QWidget, layout: QVBoxLayout, text: str, slot: object, height: int = 40, style: str = "") -> PrimaryPushButton:
         """创建按钮"""
@@ -35,21 +35,26 @@ class PrimaryButtonBuilder:
 class InputBuilder:
     """输入框构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, placeholder: str, style: str = "") -> LineEdit:
+    def create(parent: QWidget, layout: QVBoxLayout, label_text: str, placeholder: str, style: str = "", lable_style: str = "") -> LineEdit:
         """创建输入框"""
+        len_layout: QVBoxLayout = QVBoxLayout()
+        label: QLabel = QLabel(label_text, parent)
+        label.setStyleSheet(lable_style)
         input_widget: LineEdit = LineEdit(parent)
         input_widget.setPlaceholderText(placeholder)
-        layout.addWidget(input_widget)
+        len_layout.addWidget(label)
+        len_layout.addWidget(input_widget)
+        layout.addLayout(len_layout)
         return input_widget
 
 class SwitchBuilder:
     """开关构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, label_text: str, checked: bool = True, style: str = "") -> SwitchButton:
+    def create(parent: QWidget, layout: QVBoxLayout, label_text: str, checked: bool = True, style: str = "", lable_style: str = "") -> SwitchButton:
         """创建开关行"""
         len_layout: QHBoxLayout = QHBoxLayout()
         label: QLabel = QLabel(label_text, parent)
-        label.setStyleSheet(LABLE_STYLE)
+        label.setStyleSheet(lable_style)
         switch = SwitchButton(parent)
         switch.setChecked(checked)
         len_layout.addWidget(label)
@@ -60,11 +65,11 @@ class SwitchBuilder:
 class ComboBoxBuilder:
     """下拉框构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, label_text: str, items: list[str], current_text: Optional[str] = None, style: str = "") -> ModelComboBox:
+    def create(parent: QWidget, layout: QVBoxLayout, label_text: str, items: list[str], current_text: Optional[str] = None, style: str = "", lable_style: str = "") -> ModelComboBox:
         """创建下拉框行"""
         len_layout: QHBoxLayout = QHBoxLayout()
         label: QLabel = QLabel(label_text, parent)
-        label.setStyleSheet(LABLE_STYLE)
+        label.setStyleSheet(lable_style)
         combo: ModelComboBox = ModelComboBox(parent)
         combo.addItems(items)
         if current_text:

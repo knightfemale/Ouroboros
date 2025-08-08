@@ -15,7 +15,7 @@ TITLE_STYLE: str = """
 """
 
 LABLE_STYLE: str = """
-    color: #333333;
+    color: {text};
 """
 
 GROUPBOX_STYLE: str = """
@@ -100,6 +100,12 @@ PURPLE_THEME: Dict[str, str] = {
 class Style():
     def __init__(self: Self, theme: Dict[str, str]) -> None:
         self.theme: Dict[str, str] = theme
+    
+    def get_lable_style(self: Self) -> str:
+        lable_style: str = LABLE_STYLE.format(
+            text = self.theme["light"],
+        )
+        return lable_style
     
     def get_groupbox_style(self: Self) -> str:
         groupbox_style: str = GROUPBOX_STYLE.format(
