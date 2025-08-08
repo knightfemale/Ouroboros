@@ -42,6 +42,7 @@ class NuitkaPackagingInterface(QWidget):
         action_group.setStyleSheet(red_style.get_groupbox_style())
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
         self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "编译打包", slot=self.start_packaging, style=button_style)
+        self.save_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
         # 添加到主布局
         main_layout.addWidget(action_group)
         # 基本选项区域

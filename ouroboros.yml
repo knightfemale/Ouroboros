@@ -8,7 +8,7 @@ name: .venv
 nuitka:
   assume_yes: true
   build_mode: 单文件模式
-  compiler: Auto
+  compiler: MSVC
   dirs: []
   disable_console: true
   entry: ./main.py

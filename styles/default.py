@@ -78,15 +78,16 @@ GREEN_THEME: Dict[str, str] = {
 }
 
 BLUE_THEME: Dict[str, str] = {
-    "light": "#2196f3",
-    "dark": "#1976d2",
-    "darker": "#0d47a1",
+
+    "light": "#42A5F5",
+    "dark": "#1976D2",
+    "darker": "#0D47A1",
 }
 
 INDIGO_THEME: Dict[str, str] = {
-    "light": "#3f51b5",
-    "dark": "#303f9f",
-    "darker": "#1a237e",
+    "light": "#5C6BC0",
+    "dark": "#3949AB",
+    "darker": "#1A237E",
 }
 
 PURPLE_THEME: Dict[str, str] = {
