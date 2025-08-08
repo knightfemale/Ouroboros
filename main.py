@@ -1,6 +1,7 @@
 # main.py
 import sys
 from typing import Self
+from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from qfluentwidgets import FluentWindow, NavigationItemPosition, FluentIcon
 
@@ -14,7 +15,7 @@ class MainWindow(FluentWindow):
     def __init__(self: Self) -> None:
         super().__init__()
         # 创建窗口
-        self.setWindowTitle("Ouroboros")
+        self.setWindowTitle(f"Ouroboros-{Path.cwd().name}")
         self.resize(1280, 720)
         # 创建子界面实例
         self.homeInterface: HomeInterface = HomeInterface(self)
