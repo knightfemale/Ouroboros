@@ -51,8 +51,8 @@ class NuitkaPackagingInterface(QWidget):
         self.output_name_input = gui_util.InputBuilder.create(self, options_layout, "输出文件名(默认: 入口文件名)")
         self.output_dir_input = gui_util.InputBuilder.create(self, options_layout, "输出目录(默认: 根目录)")
         self.build_mode_combo = gui_util.ComboBoxBuilder.create(self, options_layout, "构建模式", ["独立模式", "单文件模式", "模块模式"])
-        self.console_switch = gui_util.SwitchBuilder.create(self, options_layout, "禁用控制台")
-        self.remove_switch = gui_util.SwitchBuilder.create(self, options_layout, "删除构建文件夹")
+        self.disable_console_switch = gui_util.SwitchBuilder.create(self, options_layout, "禁用控制台")
+        self.remove_output_switch = gui_util.SwitchBuilder.create(self, options_layout, "删除构建文件夹")
         self.jobs_input = gui_util.InputBuilder.create(self, options_layout, "输入并行任务数(默认: all)")
         # 添加到主布局
         main_layout.addWidget(options_group)
@@ -106,8 +106,8 @@ class NuitkaPackagingInterface(QWidget):
         advanced_group: QGroupBox = QGroupBox("高级选项", self)
         advanced_group.setStyleSheet(purple_style.get_groupbox_style())
         advanced_layout: QVBoxLayout = QVBoxLayout(advanced_group)
-        self.scons_switch = gui_util.SwitchBuilder.create(self, advanced_layout, "显示 Scons 命令")
-        self.download_switch = gui_util.SwitchBuilder.create(self, advanced_layout, "自动同意下载")
+        self.show_scons_switch = gui_util.SwitchBuilder.create(self, advanced_layout, "显示 Scons 命令")
+        self.assume_yes_switch = gui_util.SwitchBuilder.create(self, advanced_layout, "自动同意下载")
         self.compiler_combo = gui_util.ComboBoxBuilder.create(self, advanced_layout, "编译器", ["Auto", "MSVC", "MinGW64", "Clang"])
         # 额外参数
         extra_args_group: QGroupBox = QGroupBox("额外参数", self)
@@ -136,10 +136,10 @@ class NuitkaPackagingInterface(QWidget):
         self.output_dir_input.setText(config.get("output_dir", ""))
         build_mode: str = config.get("build_mode", "独立模式")
         self.build_mode_combo.setCurrentText(build_mode)
-        self.console_switch.setChecked(config.get("disable_console", False))
-        self.remove_switch.setChecked(config.get("remove", True))
-        self.scons_switch.setChecked(config.get("scons", False))
-        self.download_switch.setChecked(config.get("download", True))
+        self.disable_console_switch.setChecked(config.get("disable_console", False))
+        self.remove_output_switch.setChecked(config.get("remove_output", True))
+        self.show_scons_switch.setChecked(config.get("show_scons", False))
+        self.assume_yes_switch.setChecked(config.get("assume_yes", True))
         self.compiler_combo.setCurrentText(config.get("compiler", "Auto"))
         self.jobs_input.setText(config.get("jobs", ""))
         # 动态字段
@@ -157,10 +157,10 @@ class NuitkaPackagingInterface(QWidget):
             "output_name": self.output_name_input.text().strip(),
             "output_dir": self.output_dir_input.text().strip(),
             "build_mode": self.build_mode_combo.currentText(),
-            "disable_console": self.console_switch.isChecked(),
-            "remove_output": self.remove_switch.isChecked(),
-            "show_scons": self.scons_switch.isChecked(),
-            "assume_yes": self.download_switch.isChecked(),
+            "disable_console": self.disable_console_switch.isChecked(),
+            "remove_output": self.remove_output_switch.isChecked(),
+            "show_scons": self.show_scons_switch.isChecked(),
+            "assume_yes": self.assume_yes_switch.isChecked(),
             "compiler": self.compiler_combo.currentText(),
             "jobs": self.jobs_input.text().strip(),
         })
@@ -190,10 +190,10 @@ class NuitkaPackagingInterface(QWidget):
                 nuitka_args.append(f"{flag}{value}")
         # 添加开关参数
         STITCH: Dict[str, Any] = {
-            "console": "--windows-console-mode=disable",
-            "remove": "--remove-output",
-            "scons": "--show-scons",
-            "download": "--assume-yes-for-downloads",
+            "disable_console": "--windows-console-mode=disable",
+            "remove_output": "--remove-output",
+            "show_scons": "--show-scons",
+            "assume_yes": "--assume-yes-for-downloads",
         }
         for attr, flag in STITCH.items():
             if getattr(self, f"{attr}_switch").isChecked():
