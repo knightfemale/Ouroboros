@@ -138,7 +138,7 @@ class NuitkaPackagingInterface(QWidget):
         self.build_mode_combo.setCurrentText(build_mode)
         self.console_switch.setChecked(config.get("disable_console", False))
         self.remove_switch.setChecked(config.get("remove", True))
-        self.scons_switch.setChecked(config.get("scons", True))
+        self.scons_switch.setChecked(config.get("scons", False))
         self.download_switch.setChecked(config.get("download", True))
         self.compiler_combo.setCurrentText(config.get("compiler", "Auto"))
         self.jobs_input.setText(config.get("jobs", ""))
@@ -151,7 +151,7 @@ class NuitkaPackagingInterface(QWidget):
         """保存UI状态到配置文件"""
         config: Dict[str, Any] = config_util.load_config()
         nuitka_config: Dict[str, Any] = config.setdefault("nuitka", {})
-        # 基本选项
+        # 固定字段
         nuitka_config.update({
             "entry": self.entry_input.text().strip(),
             "output_name": self.output_name_input.text().strip(),
@@ -172,62 +172,62 @@ class NuitkaPackagingInterface(QWidget):
     
     def start_packaging(self: Self) -> None:
         """执行打包命令"""
+        # 保存到配置
         self.save_ui_to_config()
+        # 解释器路径
         python_path: Path = Path.cwd() / f"{config_util.load_config().get("name")}/python"
-        # 构建命令
-        nuitka_args: List = [
-            "-m",
-            "nuitka",
-            self.entry_input.text().strip(),
-        ]
-        # 添加选项参数
-        OPTIONS: Dict[str, Any] = {
+        # 参数列表
+        nuitka_args: List = ["-m", "nuitka"]
+        # 添加输入框参数
+        INPUT_FIELDS = {
+            "entry_input": "",
+            "output_name_input": "--output-filename=",
+            "output_dir_input": "--output-dir=",
+            "jobs_input": "--jobs="
+        }
+        for attr, flag in INPUT_FIELDS.items():
+            if value := getattr(self, attr).text().strip():
+                nuitka_args.append(f"{flag}{value}")
+        # 添加开关参数
+        STITCH: Dict[str, Any] = {
             "console": "--windows-console-mode=disable",
             "remove": "--remove-output",
             "scons": "--show-scons",
             "download": "--assume-yes-for-downloads",
         }
-        for attr, flag in OPTIONS.items():
+        for attr, flag in STITCH.items():
             if getattr(self, f"{attr}_switch").isChecked():
                 nuitka_args.append(flag)
-        # 添加构建模式参数
-        BUILD_MODE: Dict[str, str] = {
-            "独立模式": "--standalone",
-            "单文件模式": "--onefile",
-            "模块模式": "--module"
+        # 添加下拉框参数
+        COMBO_PARAMS = {
+            "build_mode_combo": {
+                "独立模式": "--standalone",
+                "单文件模式": "--onefile",
+                "模块模式": "--module"
+            },
+            "compiler_combo": {
+                "MSVC": "--msvc=latest",
+                "MinGW64": "--mingw64",
+                "Clang": "--clang"
+            },
         }
-        build_mode: str = self.build_mode_combo.currentText()
-        if build_mode in BUILD_MODE:
-            nuitka_args.append(BUILD_MODE[build_mode])
-        # 添加其他参数
-        if output_name := self.output_name_input.text().strip():
-            nuitka_args.append(f"--output-filename={output_name}")
-        if output_dir := self.output_dir_input.text().strip():
-            nuitka_args.append(f"--output-dir={output_dir}")
-        if jobs := self.jobs_input.text().strip():
-            nuitka_args.append(f"--jobs={jobs}")
-        # 编译器选项
-        compiler_map: Dict[str, str] = {
-            "MSVC": "--msvc",
-            "MinGW64": "--mingw64",
-            "Clang": "--clang"
-        }
-        if compiler := compiler_map.get(self.compiler_combo.currentText()):
-            nuitka_args.append(compiler)
-        # 添加插件/包/模块等
+        for combo_name, mapping in COMBO_PARAMS.items():
+            combo = getattr(self, combo_name)
+            current_text = combo.currentText()
+            if current_text in mapping:
+                nuitka_args.append(mapping[current_text])
+        # 添加动态输入框参数
         for field, flag in [
-            ("plugins", "--enable-plugin"),
-            ("packages", "--include-package"),
-            ("modules", "--include-module"),
-            ("files", "--include-data-files"),
-            ("dirs", "--include-data-dir"),
+            ("plugins", "--enable-plugin="),
+            ("packages", "--include-package="),
+            ("modules", "--include-module="),
+            ("files", "--include-data-files="),
+            ("dirs", "--include-data-dir="),
+            ("extra_args", ""),
         ]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             for item in container.get_items():
-                nuitka_args.append(f"{flag}={item}")
-        # 添加额外参数
-        for arg in self.extra_args_container.get_items():
-            nuitka_args.append(arg)
+                nuitka_args.append(f"{flag}{item}")
         # 执行命令
         command: str = f"start \"NuitkaBuild\" cmd /k \"{str(python_path)}\" {" ".join(nuitka_args)}"
         gui_util.MessageDisplay.info(self, f"开始编译打包: {command}")
