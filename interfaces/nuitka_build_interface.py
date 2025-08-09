@@ -190,6 +190,7 @@ class NuitkaPackagingInterface(Interface):
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             nuitka_config[field] = container.get_items()
         config_util.save_config(config)
+        gui_util.MessageDisplay.success(self, "保存成功")
     
     def start_packaging(self: Self) -> None:
         """执行打包命令"""

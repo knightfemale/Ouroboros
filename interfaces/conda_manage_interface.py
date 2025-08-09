@@ -144,6 +144,7 @@ class EnvironmentBuildInterface(Interface):
             "dependencies": self.collect_dependencies()
         })
         config_util.save_config(full_config)
+        gui_util.MessageDisplay.success(self, "保存成功")
     
     def collect_dependencies(self) -> list:
         """收集所有依赖项"""
