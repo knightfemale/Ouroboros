@@ -55,7 +55,7 @@ class NuitkaPackagingInterface(Interface):
         info_group: QGroupBox = QGroupBox("信息", self)
         info_group.setStyleSheet(group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)
-        self.nuitka_version_label: QLabel = QLabel("Nuitka Version: 正在获取...", self)
+        self.nuitka_version_label: QLabel = QLabel(self)
         self.nuitka_version_label.setStyleSheet(lable_style)
         info_layout.addWidget(self.nuitka_version_label)
         main_layout.addWidget(info_group)

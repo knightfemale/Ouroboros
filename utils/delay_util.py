@@ -59,6 +59,8 @@ def set_delay_lable(
     if hasattr(interface, var_name) and getattr(interface, var_name):
         operate(lable, getattr(interface, var_name))
         return
+    else:
+        operate(lable, f"{prefix}正在获取...")
     # 创建并启动后台线程
     thread = DelayLabelThread(interface, var_name, lable, command, prefix, err)
     # 连接信号

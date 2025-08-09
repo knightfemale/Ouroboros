@@ -59,7 +59,7 @@ class EnvironmentBuildInterface(Interface):
         info_group: QGroupBox = QGroupBox("信息", self)
         info_group.setStyleSheet(group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)
-        self.conda_version_label = QLabel("Conda Version: 正在获取...", self)
+        self.conda_version_label = QLabel(self)
         self.conda_version_label.setStyleSheet(lable_style)
         info_layout.addWidget(self.conda_version_label)
         main_layout.addWidget(info_group)
