@@ -1,15 +1,44 @@
 # utils/gui_util.py
 from PySide6.QtCore import Qt
 from typing import Any, Self, List, Optional, Callable
-from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLayout, QLayoutItem, QWidget, QVBoxLayout, QLabel, QHBoxLayout
-from qfluentwidgets import InfoBar, InfoBarPosition, LineEdit, PushButton, PrimaryPushButton, LineEdit, PushButton, SwitchButton, ModelComboBox
+from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLayout, QLayoutItem, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QGroupBox, QFrame
+from qfluentwidgets import InfoBar, InfoBarPosition, LineEdit, PushButton, PrimaryPushButton, LineEdit, PushButton, SwitchButton, ModelComboBox, SingleDirectionScrollArea
 
 from styles.default import red_style
+
+class ScrollAreaBuilder:
+    """区域构建器"""
+    @staticmethod
+    def create(parent: QWidget, widget: QWidget,  style: str = "") -> SingleDirectionScrollArea:
+        scroll_area = SingleDirectionScrollArea(parent)
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.NoFrame) # pyright: ignore[reportAttributeAccessIssue]
+        scroll_area.setStyleSheet(style)
+        scroll_area.setWidget(widget)
+        return scroll_area
+
+class GroupBuilder:
+    """区域构建器"""
+    @staticmethod
+    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, title: str,  style: str = "") -> QGroupBox:
+        group = QGroupBox(title, parent)
+        group.setStyleSheet(style)
+        layout.addWidget(group)
+        return group
+
+class LabelBuilder:
+    """标签构建器"""
+    @staticmethod
+    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, content: str ="", style: str = "") -> QLabel:
+        label: QLabel = QLabel(content, parent)
+        label.setStyleSheet(style)
+        layout.addWidget(label)
+        return label
 
 class ButtonBuilder:
     """按钮构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, text: str, slot: Callable, width: int = 100, style: str = "") -> PushButton:
+    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, text: str, slot: Callable, width: int = 100, style: str = "") -> PushButton:
         """创建按钮"""
         btn_layout: QHBoxLayout = QHBoxLayout()
         btn = PushButton(text, parent)
@@ -23,7 +52,7 @@ class ButtonBuilder:
 class PrimaryButtonBuilder:
     """主要按钮构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, text: str, slot: Callable, height: int = 40, style: str = "") -> PrimaryPushButton:
+    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, text: str, slot: Callable, height: int = 40, style: str = "") -> PrimaryPushButton:
         """创建按钮"""
         btn: PrimaryPushButton = PrimaryPushButton(text, parent)
         btn.setStyleSheet(style)
@@ -35,7 +64,7 @@ class PrimaryButtonBuilder:
 class InputBuilder:
     """输入框构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, label_text: str, placeholder: str, style: str = "", lable_style: str = "") -> LineEdit:
+    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, label_text: str, placeholder: str, style: str = "", lable_style: str = "") -> LineEdit:
         """创建输入框"""
         len_layout: QVBoxLayout = QVBoxLayout()
         label: QLabel = QLabel(label_text, parent)
@@ -50,7 +79,7 @@ class InputBuilder:
 class SwitchBuilder:
     """开关构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, label_text: str, checked: bool = True, style: str = "", lable_style: str = "") -> SwitchButton:
+    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, label_text: str, checked: bool = True, style: str = "", lable_style: str = "") -> SwitchButton:
         """创建开关行"""
         len_layout: QHBoxLayout = QHBoxLayout()
         label: QLabel = QLabel(label_text, parent)
@@ -65,7 +94,7 @@ class SwitchBuilder:
 class ComboBoxBuilder:
     """下拉框构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, label_text: str, items: list[str], current_text: Optional[str] = None, style: str = "", lable_style: str = "") -> ModelComboBox:
+    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, label_text: str, items: list[str], current_text: Optional[str] = None, style: str = "", lable_style: str = "") -> ModelComboBox:
         """创建下拉框行"""
         len_layout: QHBoxLayout = QHBoxLayout()
         label: QLabel = QLabel(label_text, parent)
@@ -80,11 +109,13 @@ class ComboBoxBuilder:
         return combo
 
 class DynamicInputContainer:
-    def __init__(self: Self, parent: QWidget, placeholder: str) -> None:
+    def __init__(self: Self, parent: QWidget, layout: QVBoxLayout|QHBoxLayout, placeholder: str) -> None:
         self.parent: QWidget = parent
         self.placeholder: str = placeholder
         self.container_layout: QVBoxLayout = QVBoxLayout()
         self.rows: List[QHBoxLayout] = []
+        layout.addLayout(self.container_layout)
+
     
     def add_row(self: Self, text: str = "") -> None:
         """添加一行输入框"""

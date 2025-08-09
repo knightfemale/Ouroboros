@@ -3,10 +3,10 @@ import subprocess
 from PySide6.QtCore import Qt
 from typing import Any, Self, List, Dict, Optional
 from qfluentwidgets import SingleDirectionScrollArea
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QFrame
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
 
 from interfaces.interface import Interface
-from utils import config_util, gui_util, delay_util
+from utils import config_util, gui_util
 from styles.default import green_style, BACKGROUND_STYLE, TITLE_STYLE
 
 group_style: str = green_style.get_groupbox_style()
@@ -41,69 +41,47 @@ class EnvironmentBuildInterface(Interface):
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""
-        # 创建主滚动区域
-        scroll_area: SingleDirectionScrollArea = SingleDirectionScrollArea(self)
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setFrameShape(QFrame.NoFrame) # pyright: ignore[reportAttributeAccessIssue]
-        # 改为白色背景
-        scroll_area.setStyleSheet(BACKGROUND_STYLE)
-        # 创建内容容器
+        # 创建内容容器与主区域
         content_widget: QWidget = QWidget()
         main_layout: QVBoxLayout = QVBoxLayout(content_widget)
         main_layout.setAlignment(Qt.AlignTop) # pyright: ignore[reportAttributeAccessIssue]
-        # 标题区域
-        title: QLabel = QLabel("环境构建工具", content_widget)
-        title.setStyleSheet(TITLE_STYLE)
-        main_layout.addWidget(title)
-        # 信息区域
-        info_group: QGroupBox = QGroupBox("信息", self)
-        info_group.setStyleSheet(group_style)
-        info_layout: QVBoxLayout = QVBoxLayout(info_group)
-        self.conda_version_label = QLabel(self)
-        self.conda_version_label.setStyleSheet(lable_style)
-        info_layout.addWidget(self.conda_version_label)
-        main_layout.addWidget(info_group)
-        # 操作区域
-        action_group: QGroupBox = QGroupBox("操作", self)
-        action_group.setStyleSheet(group_style)
-        action_layout: QVBoxLayout = QVBoxLayout(action_group)
-        self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "构建环境", slot=self.build_env, style=button_style)
-        self.save_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
-        self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
-        self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 requirements.txt", slot=self.export_requirements, style=button_style)
-        self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 environment.yml", slot=self.export_environment, style=button_style)
-        main_layout.addWidget(action_group)
-        # 环境参数区域
-        env_group: QGroupBox = QGroupBox("环境参数", self)
-        env_group.setStyleSheet(group_style)
-        env_layout: QVBoxLayout = QVBoxLayout(env_group)
-        # 环境名称和版本
-        self.env_name_input = gui_util.InputBuilder.create(self, env_layout, "环境名称", "输入环境名称(默认: .venv)", lable_style=lable_style)
-        self.python_version_input = gui_util.InputBuilder.create(self, env_layout, "Python 版本", "输入 Python 版本(默认: 3.10)", lable_style=lable_style)
-        # pip 包管理区域
-        pip_group: QGroupBox = QGroupBox("pip 包管理", self)
-        pip_group.setStyleSheet(group_style)
-        pip_layout: QVBoxLayout = QVBoxLayout(pip_group)
-        self.pip_container = gui_util.DynamicInputContainer(self, "输入 pip 包名")
-        pip_layout.addLayout(self.pip_container.container_layout)
-        self.pip_add_btn = gui_util.ButtonBuilder.create(self, pip_layout, "添加", slot=lambda: self.pip_container.add_row(""), style=green_style.get_button_style())
-        env_layout.addWidget(pip_group)
-        # conda 包管理区域
-        conda_group: QGroupBox = QGroupBox("conda 包管理", self)
-        conda_group.setStyleSheet(group_style)
-        conda_layout: QVBoxLayout = QVBoxLayout(conda_group)
-        self.conda_container = gui_util.DynamicInputContainer(self, "输入 conda 包名")
-        conda_layout.addLayout(self.conda_container.container_layout)
-        self.conda_add_btn = gui_util.ButtonBuilder.create(self, conda_layout, "添加", slot=lambda: self.conda_container.add_row(""), style=green_style.get_button_style())
-        env_layout.addWidget(conda_group)
-        main_layout.addWidget(env_group)
-        # 将内容容器设置到滚动区域
-        scroll_area.setWidget(content_widget)
+        # 创建主滚动区域
+        scroll_area: SingleDirectionScrollArea = gui_util.ScrollAreaBuilder.create(self, content_widget, BACKGROUND_STYLE)
         # 设置主布局为滚动区域
         outer_layout: QVBoxLayout = QVBoxLayout(self)
         outer_layout.addWidget(scroll_area)
         outer_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(outer_layout)
+        # 标题区域
+        self.title_label: QLabel = gui_util.LabelBuilder.create(content_widget, main_layout, content="Conda 环境构建工具",style=TITLE_STYLE)
+        # 信息区域
+        info_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "信息", style=group_style)
+        info_layout: QVBoxLayout = QVBoxLayout(info_group)
+        self.conda_version_label: QLabel = gui_util.LabelBuilder.create(self, info_layout, style=lable_style)
+        # 操作区域
+        action_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "操作", style=group_style)
+        action_layout: QVBoxLayout = QVBoxLayout(action_group)
+        self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "构建环境", slot=self.build_env, style=button_style)
+        self.save_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
+        self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
+        self.export_pip_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 requirements.txt", slot=self.export_requirements, style=button_style)
+        self.export_conda_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 environment.yml", slot=self.export_environment, style=button_style)
+        # 环境参数区域
+        env_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "环境参数", style=group_style)
+        env_layout: QVBoxLayout = QVBoxLayout(env_group)
+        # 环境名称和版本
+        self.env_name_input = gui_util.InputBuilder.create(self, env_layout, "环境名称", "输入环境名称(默认: .venv)", lable_style=lable_style)
+        self.python_version_input = gui_util.InputBuilder.create(self, env_layout, "Python 版本", "输入 Python 版本(默认: 3.10)", lable_style=lable_style)
+        # pip 包管理区域
+        pip_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "pip 包管理", style=group_style)
+        pip_layout: QVBoxLayout = QVBoxLayout(pip_group)
+        self.pip_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, pip_layout, "输入 pip 包名")
+        self.pip_add_btn = gui_util.ButtonBuilder.create(self, pip_layout, "添加", slot=lambda: self.pip_container.add_row(""), style=green_style.get_button_style())
+        # conda 包管理区域
+        conda_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "conda 包管理", style=group_style)
+        conda_layout: QVBoxLayout = QVBoxLayout(conda_group)
+        self.conda_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, conda_layout, "输入 conda 包名")
+        self.conda_add_btn = gui_util.ButtonBuilder.create(self, conda_layout, "添加", slot=lambda: self.conda_container.add_row(""), style=green_style.get_button_style())
     
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
@@ -144,7 +122,7 @@ class EnvironmentBuildInterface(Interface):
             "dependencies": self.collect_dependencies()
         })
         config_util.save_config(full_config)
-        gui_util.MessageDisplay.success(self, "保存成功")
+        gui_util.MessageDisplay.success(self, "保存配置成功")
     
     def collect_dependencies(self) -> list:
         """收集所有依赖项"""
