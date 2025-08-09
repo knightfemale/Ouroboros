@@ -1,13 +1,11 @@
 # interfaces/conda_manage_interface.py
 import subprocess
-from PySide6.QtCore import Qt
 from typing import Any, Self, List, Dict, Optional
-from qfluentwidgets import SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
 
-from interfaces.interface import Interface
 from utils import config_util, gui_util
-from styles.default import green_style, BACKGROUND_STYLE, TITLE_STYLE
+from interfaces.interface import Interface
+from styles.default import green_style, TITLE_STYLE
 
 group_style: str = green_style.get_groupbox_style()
 button_style: str = green_style.get_button_style()
@@ -41,25 +39,14 @@ class EnvironmentBuildInterface(Interface):
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""
-        # 创建内容容器与主区域
-        content_widget: QWidget = QWidget()
-        main_layout: QVBoxLayout = QVBoxLayout(content_widget)
-        main_layout.setAlignment(Qt.AlignTop) # pyright: ignore[reportAttributeAccessIssue]
-        # 创建主滚动区域
-        scroll_area: SingleDirectionScrollArea = gui_util.ScrollAreaBuilder.create(self, content_widget, BACKGROUND_STYLE)
-        # 设置主布局为滚动区域
-        outer_layout: QVBoxLayout = QVBoxLayout(self)
-        outer_layout.addWidget(scroll_area)
-        outer_layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(outer_layout)
         # 标题区域
-        self.title_label: QLabel = gui_util.LabelBuilder.create(content_widget, main_layout, content="Conda 环境构建工具",style=TITLE_STYLE)
+        self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="Conda 环境构建工具",style=TITLE_STYLE)
         # 信息区域
-        info_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "信息", style=group_style)
+        info_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "信息", style=group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)
         self.conda_version_label: QLabel = gui_util.LabelBuilder.create(self, info_layout, style=lable_style)
         # 操作区域
-        action_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "操作", style=group_style)
+        action_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "操作", style=group_style)
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
         self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "构建环境", slot=self.build_env, style=button_style)
         self.save_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
@@ -67,7 +54,7 @@ class EnvironmentBuildInterface(Interface):
         self.export_pip_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 requirements.txt", slot=self.export_requirements, style=button_style)
         self.export_conda_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 environment.yml", slot=self.export_environment, style=button_style)
         # 环境参数区域
-        env_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "环境参数", style=group_style)
+        env_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "环境参数", style=group_style)
         env_layout: QVBoxLayout = QVBoxLayout(env_group)
         # 环境名称和版本
         self.env_name_input = gui_util.InputBuilder.create(self, env_layout, "环境名称", "输入环境名称(默认: .venv)", lable_style=lable_style)

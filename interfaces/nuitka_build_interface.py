@@ -1,14 +1,12 @@
 # interfaces/nuitka_build_interface.py
 import subprocess
 from pathlib import Path
-from PySide6.QtCore import Qt
 from typing import Any, Self, List, Dict, Optional
-from qfluentwidgets import SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
 
 from interfaces.interface import Interface
 from utils import config_util, gui_util, delay_util
-from styles.default import TITLE_STYLE, BACKGROUND_STYLE, red_style, green_style
+from styles.default import TITLE_STYLE, red_style, green_style
 
 group_style: str = red_style.get_groupbox_style()
 button_style: str = red_style.get_button_style()
@@ -38,30 +36,19 @@ class NuitkaPackagingInterface(Interface):
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""
-        # 创建内容容器与主区域
-        content_widget: QWidget = QWidget()
-        main_layout: QVBoxLayout = QVBoxLayout(content_widget)
-        main_layout.setAlignment(Qt.AlignTop) # pyright: ignore[reportAttributeAccessIssue]
-        # 创建主滚动区域
-        scroll_area: SingleDirectionScrollArea = gui_util.ScrollAreaBuilder.create(self, content_widget, BACKGROUND_STYLE)
-        # 设置主布局为滚动区域
-        outer_layout: QVBoxLayout = QVBoxLayout(self)
-        outer_layout.addWidget(scroll_area)
-        outer_layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(outer_layout)
         # 标题区域
-        self.title_label: QLabel = gui_util.LabelBuilder.create(content_widget, main_layout, content="Nuitka 编译打包工具",style=TITLE_STYLE)
+        self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="Nuitka 编译打包工具",style=TITLE_STYLE)
         # 信息区域
-        info_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "信息", style=group_style)
+        info_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "信息", style=group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)
         self.nuitka_version_label: QLabel = gui_util.LabelBuilder.create(self, info_layout, style=lable_style)
         # 操作区域
-        action_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "操作", style=group_style)
+        action_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "操作", style=group_style)
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
         self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "编译打包", slot=self.start_packaging, style=button_style)
         self.save_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
         # 基本选项区域
-        options_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "基本选项", style=group_style)
+        options_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "基本选项", style=group_style)
         options_layout: QVBoxLayout = QVBoxLayout(options_group)
         self.entry_input = gui_util.InputBuilder.create(self, options_layout, "Python 入口文件", "输入 Python 入口文件(例如: ./main.py)", lable_style=lable_style)
         self.output_name_input = gui_util.InputBuilder.create(self, options_layout, "输出文件名", "输出文件名(默认: 入口文件名)", lable_style=lable_style)
@@ -71,7 +58,7 @@ class NuitkaPackagingInterface(Interface):
         self.disable_console_switch = gui_util.SwitchBuilder.create(self, options_layout, "禁用控制台", lable_style=lable_style)
         self.remove_output_switch = gui_util.SwitchBuilder.create(self, options_layout, "删除构建文件夹", lable_style=lable_style)
         # 显式导入区域
-        import_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "显式导入", style=group_style)
+        import_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "显式导入", style=group_style)
         import_layout: QVBoxLayout = QVBoxLayout(import_group)
         # 启用包区域
         package_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "启用包", style=group_style)
@@ -99,7 +86,7 @@ class NuitkaPackagingInterface(Interface):
         self.dirs_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, dir_layout, "输入目录路径(格式: 源目录=目标路径)")
         self.pip_add_btn = gui_util.ButtonBuilder.create(self, dir_layout, "添加目录", slot=lambda: self.dirs_container.add_row(""), style=green_style.get_button_style())
         # 高级选项区域
-        advanced_group: QGroupBox = gui_util.GroupBuilder.create(self, main_layout, "高级选项", style=group_style)
+        advanced_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "高级选项", style=group_style)
         advanced_layout: QVBoxLayout = QVBoxLayout(advanced_group)
         self.compiler_combo = gui_util.ComboBoxBuilder.create(self, advanced_layout, "编译器", ["Auto", "MSVC", "MinGW64", "Clang"], lable_style=lable_style)
         self.show_scons_switch = gui_util.SwitchBuilder.create(self, advanced_layout, "显示 Scons 命令", lable_style=lable_style)

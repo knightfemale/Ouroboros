@@ -1,21 +1,10 @@
 # utils/gui_util.py
 from PySide6.QtCore import Qt
 from typing import Any, Self, List, Optional, Callable
-from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLayout, QLayoutItem, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QGroupBox, QFrame
-from qfluentwidgets import InfoBar, InfoBarPosition, LineEdit, PushButton, PrimaryPushButton, LineEdit, PushButton, SwitchButton, ModelComboBox, SingleDirectionScrollArea
+from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLayout, QLayoutItem, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QGroupBox
+from qfluentwidgets import InfoBar, InfoBarPosition, LineEdit, PushButton, PrimaryPushButton, LineEdit, PushButton, SwitchButton, ModelComboBox
 
 from styles.default import red_style
-
-class ScrollAreaBuilder:
-    """区域构建器"""
-    @staticmethod
-    def create(parent: QWidget, widget: QWidget,  style: str = "") -> SingleDirectionScrollArea:
-        scroll_area = SingleDirectionScrollArea(parent)
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setFrameShape(QFrame.NoFrame) # pyright: ignore[reportAttributeAccessIssue]
-        scroll_area.setStyleSheet(style)
-        scroll_area.setWidget(widget)
-        return scroll_area
 
 class GroupBuilder:
     """区域构建器"""
