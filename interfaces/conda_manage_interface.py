@@ -1,10 +1,11 @@
-# interfaces/environment_build_interface.py
+# interfaces/conda_manage_interface.py
 import subprocess
 from PySide6.QtCore import Qt
 from typing import Any, Self, List, Dict, Optional
 from qfluentwidgets import SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QFrame
 
+from interfaces.interface import Interface
 from utils import config_util, gui_util, delay_util
 from styles.default import green_style, BACKGROUND_STYLE, TITLE_STYLE
 
@@ -12,7 +13,7 @@ group_style: str = green_style.get_groupbox_style()
 button_style: str = green_style.get_button_style()
 lable_style: str = green_style.get_lable_style()
 
-class EnvironmentBuildInterface(QWidget):
+class EnvironmentBuildInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent=parent)
         # 设置对象名
@@ -21,12 +22,18 @@ class EnvironmentBuildInterface(QWidget):
         self.init_ui()
         # 加载配置到 UI
         self.load_config_to_ui()
-        
-        # 创建Conda版本加载器
-        self.conda_loader: delay_util.DelayedLoader = delay_util.DelayedLoader(
-            load_function=self._get_conda_version, cache_key="conda_version")
-        # 连接数据加载完成信号
-        self.conda_loader.data_loaded.connect(self.handle_loaded_data)
+        # 全局变量
+        self.conda_version: str = ""
+        # 延时变量
+        self.delay_variables = {
+            "conda_version": {
+                "label": self.conda_version_label,
+                "command": ["conda", "--version"],
+                "prefix": "Conda Version: ",
+                "err": "未找到, 请确保 Conda 已安装",
+                "operate": delay_util.label_operate,
+            },
+        }
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""
@@ -48,9 +55,9 @@ class EnvironmentBuildInterface(QWidget):
         info_group: QGroupBox = QGroupBox("信息", self)
         info_group.setStyleSheet(group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)
-        self.version_label = QLabel(self)
-        self.version_label.setStyleSheet(lable_style)
-        info_layout.addWidget(self.version_label)
+        self.conda_version_label = QLabel("Conda Version: 正在获取...", self)
+        self.conda_version_label.setStyleSheet(lable_style)
+        info_layout.addWidget(self.conda_version_label)
         main_layout.addWidget(info_group)
         # 操作区域
         action_group: QGroupBox = QGroupBox("操作", self)
@@ -133,42 +140,6 @@ class EnvironmentBuildInterface(QWidget):
             "dependencies": self.collect_dependencies()
         })
         config_util.save_config(full_config)
-    
-    def showEvent(self: Self, event: Any) -> None:
-        """当界面显示时触发 - 加载所需数据"""
-        super().showEvent(event)
-        # 获取Conda版本数据
-        version_data = self.conda_loader.get_data()
-        if version_data is None:
-            # 数据正在加载中
-            self.version_label.setText("Conda Version: 获取中...")
-        else:
-            # 已有缓存数据
-            self._update_version_label(version_data)
-    
-    def _get_conda_version(self) -> str:
-        """获取 Conda 版本的后台任务函数"""
-        try:
-            process = subprocess.Popen(
-                "conda --version",
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                creationflags=subprocess.CREATE_NO_WINDOW,
-                text=True,
-            )
-            stdout, stderr = process.communicate()
-            return stdout.strip()[6:] if process.returncode == 0 and stdout.startswith("conda ") else f"获取失败 (错误码: {process.returncode})"
-        except (subprocess.SubprocessError, FileNotFoundError) as e:
-            return f"未找到, 请确保 Conda 已安装: {e}"
-    
-    def handle_loaded_data(self: Self, key: str, data: Any) -> None:
-        """处理加载完成的数据"""
-        if key == "conda_version":
-            self._update_version_label(data)
-    
-    def _update_version_label(self: Self, version: str) -> None:
-        """更新版本标签显示"""
-        self.version_label.setText(f"Conda Version: {version}")
     
     def collect_dependencies(self) -> list:
         """收集所有依赖项"""

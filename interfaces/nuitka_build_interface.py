@@ -1,20 +1,20 @@
-# interfaces/nuitka_packaging_interface.py
-import platform
+# interfaces/nuitka_build_interface.py
 import subprocess
 from pathlib import Path
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt
 from typing import Any, Self, List, Dict, Optional
 from qfluentwidgets import SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QGroupBox
 
-from utils import config_util, gui_util, delay_util 
+from interfaces.interface import Interface
+from utils import config_util, gui_util, delay_util
 from styles.default import TITLE_STYLE, BACKGROUND_STYLE, red_style, green_style
 
 group_style: str = red_style.get_groupbox_style()
 button_style: str = red_style.get_button_style()
 lable_style: str = red_style.get_lable_style()
 
-class NuitkaPackagingInterface(QWidget):
+class NuitkaPackagingInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent=parent)
         # 设置对象名
@@ -23,11 +23,18 @@ class NuitkaPackagingInterface(QWidget):
         self.init_ui()
         # 加载配置到 UI
         self.load_config_to_ui()
-        
-        # 创建Nuitka版本加载器
-        self.nuitka_loader: delay_util.DelayedLoader = delay_util.DelayedLoader(load_function=self._get_nuitka_version, cache_key="nuitka_version")
-        # 连接数据加载完成信号
-        self.nuitka_loader.data_loaded.connect(self.handle_loaded_data)
+        # 全局变量
+        self.nuitka_version: str = ""
+        # 延时变量
+        self.delay_variables = {
+            "nuitka_version": {
+                "label": self.nuitka_version_label,
+                "command": [str(Path.cwd() / f"{config_util.load_config().get('name')}/python"), "-m", "nuitka", "--version"],
+                "prefix": "Nuitka Version: ",
+                "err": "未找到, 请确保 Nuitka 已安装",
+                "operate": delay_util.label_operate,
+            },
+        }
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""
@@ -48,9 +55,9 @@ class NuitkaPackagingInterface(QWidget):
         info_group: QGroupBox = QGroupBox("信息", self)
         info_group.setStyleSheet(group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)
-        self.version_label = QLabel(self)
-        self.version_label.setStyleSheet(lable_style)
-        info_layout.addWidget(self.version_label)
+        self.nuitka_version_label: QLabel = QLabel("Nuitka Version: 正在获取...", self)
+        self.nuitka_version_label.setStyleSheet(lable_style)
+        info_layout.addWidget(self.nuitka_version_label)
         main_layout.addWidget(info_group)
         # 操作区域
         action_group: QGroupBox = QGroupBox("操作", self)
@@ -184,50 +191,10 @@ class NuitkaPackagingInterface(QWidget):
             nuitka_config[field] = container.get_items()
         config_util.save_config(config)
     
-    def showEvent(self: Self, event: Any) -> None:
-        """当界面显示时触发 - 加载所需数据"""
-        super().showEvent(event)
-        # 获取Nuitka版本数据
-        version_data = self.nuitka_loader.get_data()
-        if version_data is None:
-            # 数据正在加载中
-            self.version_label.setText("Nuitka Version: 获取中...")
-        else:
-            # 已有缓存数据
-            self._update_version_label(version_data)
-    
-    def _get_nuitka_version(self) -> str:
-        """获取 Nuitka 版本的后台任务函数"""
-        try:
-            python_path: Path = Path.cwd() / f"{config_util.load_config().get('name')}/python"
-            process = subprocess.Popen(
-                [str(python_path), "-m", "nuitka", "--version"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                creationflags=subprocess.CREATE_NO_WINDOW,
-                text=True,
-            )
-            stdout, stderr = process.communicate()
-            return stdout.strip() if process.returncode == 0 else f"获取失败 (错误码: {process.returncode})"
-        except (subprocess.SubprocessError, FileNotFoundError) as e:
-            return f"未找到, 请确保 Nuitka 已安装: {str(e)}"
-    
-    def handle_loaded_data(self: Self, key: str, data: Any) -> None:
-        """处理加载完成的数据"""
-        if key == "nuitka_version":
-            self._update_version_label(data)
-        # 可以添加其他数据类型的处理
-    
-    def _update_version_label(self: Self, version: str) -> None:
-        """更新版本标签显示"""
-        self.version_label.setText(f"Nuitka Version: {version}")
-    
     def start_packaging(self: Self) -> None:
         """执行打包命令"""
         # 保存到配置
         self.save_ui_to_config()
-        # 解释器路径
-        python_path: Path = Path.cwd() / f"{config_util.load_config().get("name")}/python"
         # 参数列表
         nuitka_args: List = ["-m", "nuitka"]
         # 添加输入框参数
@@ -281,6 +248,7 @@ class NuitkaPackagingInterface(QWidget):
             for item in container.get_items():
                 nuitka_args.append(f"{flag}{item}")
         # 执行命令
+        python_path: Path = Path.cwd() / f"{config_util.load_config().get('name')}/python"
         command: str = f"start \"NuitkaBuild\" cmd /k \"{str(python_path)}\" {" ".join(nuitka_args)}"
         gui_util.MessageDisplay.info(self, f"开始编译打包: {command}")
         subprocess.run(command, shell=True)

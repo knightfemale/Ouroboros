@@ -1,6 +1,6 @@
 # utils/gui_util.py
 from PySide6.QtCore import Qt
-from typing import Any, Self, List, Optional
+from typing import Any, Self, List, Optional, Callable
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLayout, QLayoutItem, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from qfluentwidgets import InfoBar, InfoBarPosition, LineEdit, PushButton, PrimaryPushButton, LineEdit, PushButton, SwitchButton, ModelComboBox
 
@@ -9,7 +9,7 @@ from styles.default import red_style
 class ButtonBuilder:
     """按钮构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, text: str, slot: object, width: int = 100, style: str = "") -> PushButton:
+    def create(parent: QWidget, layout: QVBoxLayout, text: str, slot: Callable, width: int = 100, style: str = "") -> PushButton:
         """创建按钮"""
         btn_layout: QHBoxLayout = QHBoxLayout()
         btn = PushButton(text, parent)
@@ -23,7 +23,7 @@ class ButtonBuilder:
 class PrimaryButtonBuilder:
     """主要按钮构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout, text: str, slot: object, height: int = 40, style: str = "") -> PrimaryPushButton:
+    def create(parent: QWidget, layout: QVBoxLayout, text: str, slot: Callable, height: int = 40, style: str = "") -> PrimaryPushButton:
         """创建按钮"""
         btn: PrimaryPushButton = PrimaryPushButton(text, parent)
         btn.setStyleSheet(style)
