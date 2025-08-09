@@ -1,14 +1,16 @@
 # interfaces/nuitka_packaging_interface.py
+import platform
 import subprocess
 from pathlib import Path
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from typing import Any, Self, List, Dict, Optional
 from qfluentwidgets import SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QGroupBox
 
-from utils import config_util, gui_util
+from utils import config_util, gui_util, delay_util 
 from styles.default import TITLE_STYLE, BACKGROUND_STYLE, red_style, green_style
 
+group_style: str = red_style.get_groupbox_style()
 button_style: str = red_style.get_button_style()
 lable_style: str = red_style.get_lable_style()
 
@@ -21,6 +23,11 @@ class NuitkaPackagingInterface(QWidget):
         self.init_ui()
         # 加载配置到 UI
         self.load_config_to_ui()
+        
+        # 创建Nuitka版本加载器
+        self.nuitka_loader: delay_util.DelayedLoader = delay_util.DelayedLoader(load_function=self._get_nuitka_version, cache_key="nuitka_version")
+        # 连接数据加载完成信号
+        self.nuitka_loader.data_loaded.connect(self.handle_loaded_data)
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""
@@ -37,9 +44,17 @@ class NuitkaPackagingInterface(QWidget):
         title: QLabel = QLabel("Nuitka 打包工具", self)
         title.setStyleSheet(TITLE_STYLE)
         main_layout.addWidget(title)
+        # 信息区域
+        info_group: QGroupBox = QGroupBox("信息", self)
+        info_group.setStyleSheet(group_style)
+        info_layout: QVBoxLayout = QVBoxLayout(info_group)
+        self.version_label = QLabel(self)
+        self.version_label.setStyleSheet(lable_style)
+        info_layout.addWidget(self.version_label)
+        main_layout.addWidget(info_group)
         # 操作区域
         action_group: QGroupBox = QGroupBox("操作", self)
-        action_group.setStyleSheet(red_style.get_groupbox_style())
+        action_group.setStyleSheet(group_style)
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
         self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "编译打包", slot=self.start_packaging, style=button_style)
         self.save_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
@@ -47,7 +62,7 @@ class NuitkaPackagingInterface(QWidget):
         main_layout.addWidget(action_group)
         # 基本选项区域
         options_group: QGroupBox = QGroupBox("基本选项", self)
-        options_group.setStyleSheet(red_style.get_groupbox_style())
+        options_group.setStyleSheet(group_style)
         options_layout: QVBoxLayout = QVBoxLayout(options_group)
         self.entry_input = gui_util.InputBuilder.create(self, options_layout, "Python 入口文件", "输入 Python 入口文件(例如: ./main.py)", lable_style=lable_style)
         self.output_name_input = gui_util.InputBuilder.create(self, options_layout, "输出文件名", "输出文件名(默认: 入口文件名)", lable_style=lable_style)
@@ -56,71 +71,68 @@ class NuitkaPackagingInterface(QWidget):
         self.build_mode_combo = gui_util.ComboBoxBuilder.create(self, options_layout, "构建模式", ["独立模式", "单文件模式", "模块模式"], lable_style=lable_style)
         self.disable_console_switch = gui_util.SwitchBuilder.create(self, options_layout, "禁用控制台", lable_style=lable_style)
         self.remove_output_switch = gui_util.SwitchBuilder.create(self, options_layout, "删除构建文件夹", lable_style=lable_style)
-        # 添加到主布局
         main_layout.addWidget(options_group)
         # 显式导入区域
         import_group: QGroupBox = QGroupBox("显式导入", self)
-        import_group.setStyleSheet(red_style.get_groupbox_style())
+        import_group.setStyleSheet(group_style)
         import_layout: QVBoxLayout = QVBoxLayout(import_group)
-        # 启用包
+        main_layout.addWidget(import_group)
+        # 启用包区域
         package_group: QGroupBox = QGroupBox("启用包", self)
-        package_group.setStyleSheet(red_style.get_groupbox_style())
+        package_group.setStyleSheet(group_style)
         package_layout: QVBoxLayout = QVBoxLayout(package_group)
         self.packages_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, "输入包名(例如: numpy)")
         package_layout.addLayout(self.packages_container.container_layout)
         self.pip_add_btn = gui_util.ButtonBuilder.create(self, package_layout, "添加包", slot=lambda: self.packages_container.add_row(""), style=green_style.get_button_style())
         import_layout.addWidget(package_group)
-        # 启用模块
+        # 启用模块区域
         module_group: QGroupBox = QGroupBox("启用包", self)
-        module_group.setStyleSheet(red_style.get_groupbox_style())
+        module_group.setStyleSheet(group_style)
         module_layout: QVBoxLayout = QVBoxLayout(module_group)
         self.modules_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, "输入模块名(例如: sys)")
         module_layout.addLayout(self.modules_container.container_layout)
         self.pip_add_btn = gui_util.ButtonBuilder.create(self, module_layout, "添加模块", slot=lambda: self.modules_container.add_row(""), style=green_style.get_button_style())
         import_layout.addWidget(module_group)
-        # 启用插件
+        # 启用插件区域
         plugin_group: QGroupBox = QGroupBox("启用插件", self)
-        plugin_group.setStyleSheet(red_style.get_groupbox_style())
+        plugin_group.setStyleSheet(group_style)
         plugin_layout: QVBoxLayout = QVBoxLayout(plugin_group)
         self.plugins_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, "输入插件名(例如: pyside6)")
         plugin_layout.addLayout(self.plugins_container.container_layout)
         self.pip_add_btn = gui_util.ButtonBuilder.create(self, plugin_layout, "添加插件", slot=lambda: self.plugins_container.add_row(""), style=green_style.get_button_style())
         import_layout.addWidget(plugin_group)
-        # 包含文件
+        # 包含文件区域
         file_group: QGroupBox = QGroupBox("包含文件", self)
-        file_group.setStyleSheet(red_style.get_groupbox_style())
+        file_group.setStyleSheet(group_style)
         file_layout: QVBoxLayout = QVBoxLayout(file_group)
         self.files_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, "输入文件路径(格式: 源文件=目标路径)")
         file_layout.addLayout(self.files_container.container_layout)
         self.pip_add_btn = gui_util.ButtonBuilder.create(self, file_layout, "添加文件", slot=lambda: self.files_container.add_row(""), style=green_style.get_button_style())
         import_layout.addWidget(file_group)
-        # 包含目录
+        # 包含目录区域
         dir_group: QGroupBox = QGroupBox("包含目录", self)
-        dir_group.setStyleSheet(red_style.get_groupbox_style())
+        dir_group.setStyleSheet(group_style)
         dir_layout: QVBoxLayout = QVBoxLayout(dir_group)
         self.dirs_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, "输入目录路径(格式: 源目录=目标路径)")
         dir_layout.addLayout(self.dirs_container.container_layout)
         self.pip_add_btn = gui_util.ButtonBuilder.create(self, dir_layout, "添加目录", slot=lambda: self.dirs_container.add_row(""), style=green_style.get_button_style())
         import_layout.addWidget(dir_group)
-        # 添加到主布局
-        main_layout.addWidget(import_group)
         # 高级选项区域
         advanced_group: QGroupBox = QGroupBox("高级选项", self)
-        advanced_group.setStyleSheet(red_style.get_groupbox_style())
+        advanced_group.setStyleSheet(group_style)
         advanced_layout: QVBoxLayout = QVBoxLayout(advanced_group)
+        main_layout.addWidget(advanced_group)
         self.compiler_combo = gui_util.ComboBoxBuilder.create(self, advanced_layout, "编译器", ["Auto", "MSVC", "MinGW64", "Clang"], lable_style=lable_style)
         self.show_scons_switch = gui_util.SwitchBuilder.create(self, advanced_layout, "显示 Scons 命令", lable_style=lable_style)
         self.assume_yes_switch = gui_util.SwitchBuilder.create(self, advanced_layout, "自动同意下载", lable_style=lable_style)
-        # 额外参数
+        # 额外参数区域
         extra_args_group: QGroupBox = QGroupBox("额外参数", self)
-        extra_args_group.setStyleSheet(red_style.get_groupbox_style())
+        extra_args_group.setStyleSheet(group_style)
         extra_args_layout: QVBoxLayout = QVBoxLayout(extra_args_group)
         self.extra_args_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, "输入额外参数(例如: --lto=yes)")
         extra_args_layout.addLayout(self.extra_args_container.container_layout)
         self.pip_add_btn = gui_util.ButtonBuilder.create(self, extra_args_layout, "添加参数", slot=lambda: self.extra_args_container.add_row(""), style=green_style.get_button_style())
         advanced_layout.addWidget(extra_args_group)
-        # 添加到主布局
-        main_layout.addWidget(advanced_group)
         # 将内容容器设置到滚动区域
         scroll_area.setWidget(content_widget)
         # 设置主布局为滚动区域
@@ -171,6 +183,44 @@ class NuitkaPackagingInterface(QWidget):
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             nuitka_config[field] = container.get_items()
         config_util.save_config(config)
+    
+    def showEvent(self: Self, event: Any) -> None:
+        """当界面显示时触发 - 加载所需数据"""
+        super().showEvent(event)
+        # 获取Nuitka版本数据
+        version_data = self.nuitka_loader.get_data()
+        if version_data is None:
+            # 数据正在加载中
+            self.version_label.setText("Nuitka Version: 获取中...")
+        else:
+            # 已有缓存数据
+            self._update_version_label(version_data)
+    
+    def _get_nuitka_version(self) -> str:
+        """获取 Nuitka 版本的后台任务函数"""
+        try:
+            python_path: Path = Path.cwd() / f"{config_util.load_config().get('name')}/python"
+            process = subprocess.Popen(
+                [str(python_path), "-m", "nuitka", "--version"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                creationflags=subprocess.CREATE_NO_WINDOW,
+                text=True,
+            )
+            stdout, stderr = process.communicate()
+            return stdout.strip() if process.returncode == 0 else f"获取失败 (错误码: {process.returncode})"
+        except (subprocess.SubprocessError, FileNotFoundError) as e:
+            return f"未找到, 请确保 Nuitka 已安装: {str(e)}"
+    
+    def handle_loaded_data(self: Self, key: str, data: Any) -> None:
+        """处理加载完成的数据"""
+        if key == "nuitka_version":
+            self._update_version_label(data)
+        # 可以添加其他数据类型的处理
+    
+    def _update_version_label(self: Self, version: str) -> None:
+        """更新版本标签显示"""
+        self.version_label.setText(f"Nuitka Version: {version}")
     
     def start_packaging(self: Self) -> None:
         """执行打包命令"""

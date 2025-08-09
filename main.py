@@ -8,8 +8,8 @@ from qfluentwidgets import FluentWindow, NavigationItemPosition, FluentIcon
 # 导入自定义页面
 from interfaces.home_interface import HomeInterface
 from interfaces.help_interface import HelpInterface
-from interfaces.nuitka_packaging_interface import NuitkaPackagingInterface
-from interfaces.environment_build_interface import EnvironmentBuildInterface
+from interfaces.nuitka_build_interface import NuitkaPackagingInterface
+from interfaces.conda_manage_interface import EnvironmentBuildInterface
 
 class MainWindow(FluentWindow):
     def __init__(self: Self) -> None:

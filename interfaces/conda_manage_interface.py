@@ -5,9 +5,10 @@ from typing import Any, Self, List, Dict, Optional
 from qfluentwidgets import SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QFrame
 
-from utils import config_util, gui_util
+from utils import config_util, gui_util, delay_util
 from styles.default import green_style, BACKGROUND_STYLE, TITLE_STYLE
 
+group_style: str = green_style.get_groupbox_style()
 button_style: str = green_style.get_button_style()
 lable_style: str = green_style.get_lable_style()
 
@@ -20,6 +21,12 @@ class EnvironmentBuildInterface(QWidget):
         self.init_ui()
         # 加载配置到 UI
         self.load_config_to_ui()
+        
+        # 创建Conda版本加载器
+        self.conda_loader: delay_util.DelayedLoader = delay_util.DelayedLoader(
+            load_function=self._get_conda_version, cache_key="conda_version")
+        # 连接数据加载完成信号
+        self.conda_loader.data_loaded.connect(self.handle_loaded_data)
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""
@@ -33,46 +40,51 @@ class EnvironmentBuildInterface(QWidget):
         content_widget: QWidget = QWidget()
         main_layout: QVBoxLayout = QVBoxLayout(content_widget)
         main_layout.setAlignment(Qt.AlignTop) # pyright: ignore[reportAttributeAccessIssue]
-        # 标题
+        # 标题区域
         title: QLabel = QLabel("环境构建工具", content_widget)
         title.setStyleSheet(TITLE_STYLE)
-        # 添加到主布局
         main_layout.addWidget(title)
+        # 信息区域
+        info_group: QGroupBox = QGroupBox("信息", self)
+        info_group.setStyleSheet(group_style)
+        info_layout: QVBoxLayout = QVBoxLayout(info_group)
+        self.version_label = QLabel(self)
+        self.version_label.setStyleSheet(lable_style)
+        info_layout.addWidget(self.version_label)
+        main_layout.addWidget(info_group)
         # 操作区域
         action_group: QGroupBox = QGroupBox("操作", self)
-        action_group.setStyleSheet(green_style.get_groupbox_style())
+        action_group.setStyleSheet(group_style)
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
         self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "构建环境", slot=self.build_env, style=button_style)
         self.save_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
         self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
         self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 requirements.txt", slot=self.export_requirements, style=button_style)
         self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 environment.yml", slot=self.export_environment, style=button_style)
-        # 添加到主布局
         main_layout.addWidget(action_group)
         # 环境参数区域
         env_group: QGroupBox = QGroupBox("环境参数", self)
-        env_group.setStyleSheet(green_style.get_groupbox_style())
+        env_group.setStyleSheet(group_style)
         env_layout: QVBoxLayout = QVBoxLayout(env_group)
         # 环境名称和版本
         self.env_name_input = gui_util.InputBuilder.create(self, env_layout, "环境名称", "输入环境名称(默认: .venv)", lable_style=lable_style)
         self.python_version_input = gui_util.InputBuilder.create(self, env_layout, "Python 版本", "输入 Python 版本(默认: 3.10)", lable_style=lable_style)
-        # pip 包管理
+        # pip 包管理区域
         pip_group: QGroupBox = QGroupBox("pip 包管理", self)
-        pip_group.setStyleSheet(green_style.get_groupbox_style())
+        pip_group.setStyleSheet(group_style)
         pip_layout: QVBoxLayout = QVBoxLayout(pip_group)
         self.pip_container = gui_util.DynamicInputContainer(self, "输入 pip 包名")
         pip_layout.addLayout(self.pip_container.container_layout)
         self.pip_add_btn = gui_util.ButtonBuilder.create(self, pip_layout, "添加", slot=lambda: self.pip_container.add_row(""), style=green_style.get_button_style())
         env_layout.addWidget(pip_group)
-        # conda 包管理
+        # conda 包管理区域
         conda_group: QGroupBox = QGroupBox("conda 包管理", self)
-        conda_group.setStyleSheet(green_style.get_groupbox_style())
+        conda_group.setStyleSheet(group_style)
         conda_layout: QVBoxLayout = QVBoxLayout(conda_group)
         self.conda_container = gui_util.DynamicInputContainer(self, "输入 conda 包名")
         conda_layout.addLayout(self.conda_container.container_layout)
         self.conda_add_btn = gui_util.ButtonBuilder.create(self, conda_layout, "添加", slot=lambda: self.conda_container.add_row(""), style=green_style.get_button_style())
         env_layout.addWidget(conda_group)
-        # 添加到主布局
         main_layout.addWidget(env_group)
         # 将内容容器设置到滚动区域
         scroll_area.setWidget(content_widget)
@@ -122,12 +134,47 @@ class EnvironmentBuildInterface(QWidget):
         })
         config_util.save_config(full_config)
     
+    def showEvent(self: Self, event: Any) -> None:
+        """当界面显示时触发 - 加载所需数据"""
+        super().showEvent(event)
+        # 获取Conda版本数据
+        version_data = self.conda_loader.get_data()
+        if version_data is None:
+            # 数据正在加载中
+            self.version_label.setText("Conda Version: 获取中...")
+        else:
+            # 已有缓存数据
+            self._update_version_label(version_data)
+    
+    def _get_conda_version(self) -> str:
+        """获取 Conda 版本的后台任务函数"""
+        try:
+            process = subprocess.Popen(
+                "conda --version",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                creationflags=subprocess.CREATE_NO_WINDOW,
+                text=True,
+            )
+            stdout, stderr = process.communicate()
+            return stdout.strip()[6:] if process.returncode == 0 and stdout.startswith("conda ") else f"获取失败 (错误码: {process.returncode})"
+        except (subprocess.SubprocessError, FileNotFoundError) as e:
+            return f"未找到, 请确保 Conda 已安装: {e}"
+    
+    def handle_loaded_data(self: Self, key: str, data: Any) -> None:
+        """处理加载完成的数据"""
+        if key == "conda_version":
+            self._update_version_label(data)
+    
+    def _update_version_label(self: Self, version: str) -> None:
+        """更新版本标签显示"""
+        self.version_label.setText(f"Conda Version: {version}")
+    
     def collect_dependencies(self) -> list:
         """收集所有依赖项"""
         deps: List[Any] = [f"python={self.get_python_version()}"]
         # 添加conda包
         deps.extend(self.conda_container.get_items())
-        
         # 添加pip包
         pip_packages = self.pip_container.get_items()
         if pip_packages:
