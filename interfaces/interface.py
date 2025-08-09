@@ -13,7 +13,5 @@ class Interface(QWidget):
     def showEvent(self: Self, event: Any) -> None:
         """当界面显示时触发"""
         super().showEvent(event)
-        
-        for key in self.delay_variables:
-            item = self.delay_variables[key]
-            delay_util.set_delay_lable(self, key, item["label"], item["command"], item["prefix"], item["err"], item["operate"])
+        for key, value in self.delay_variables.items():
+            delay_util.set_delay_lable(self, key, value["label"], value["command"], value["prefix"], value["err"], value["operate"])

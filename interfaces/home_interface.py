@@ -1,11 +1,12 @@
 # interfaces/home_interface.py
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout
 from qfluentwidgets import PrimaryPushButton
 
+from interfaces.interface import Interface
 from styles.default import red_style, green_style
 
-class HomeInterface(QWidget):
+class HomeInterface(Interface):
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
         self.setObjectName("HomeInterface")
