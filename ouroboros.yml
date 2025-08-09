@@ -19,7 +19,7 @@ nuitka:
   jobs: ''
   modules: []
   output_dir: output
-  output_name: Ouroboros-v0.1.2
+  output_name: Ouroboros-v0.1.3
   packages: []
   plugins:
   - pyside6

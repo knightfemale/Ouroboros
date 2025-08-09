@@ -31,9 +31,13 @@ class EnvironmentBuildInterface(Interface):
                 "command": ["conda", "--version"],
                 "prefix": "Conda Version: ",
                 "err": "未找到, 请确保 Conda 已安装",
-                "operate": delay_util.label_operate,
+                "operate": self.conda_operate,
             },
         }
+    
+    def conda_operate(self, lable: QLabel, text: str) -> None:
+        """设置 Conda 版本的标签方式"""
+        lable.setText(text.replace("conda ", ""))
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""
