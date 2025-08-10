@@ -52,6 +52,11 @@ BUTTON_STYLE: str = """
 """
 
 # =============== 主题 ===============
+DEFAULT_THEME: Dict[str, str] = {
+    "light": "#00bbc9",
+    "dark": "#009faa",
+    "darker": "#00868f",
+}
 
 RED_THEME: Dict[str, str] = {
     "light": "#f44336",
@@ -104,24 +109,25 @@ class Style():
     
     def get_lable_style(self: Self) -> str:
         lable_style: str = LABLE_STYLE.format(
-            text = self.theme["light"],
+            text = self.theme["dark"],
         )
         return lable_style
     
     def get_groupbox_style(self: Self) -> str:
         groupbox_style: str = GROUPBOX_STYLE.format(
-            groupbox = self.theme["light"],
+            groupbox = self.theme["dark"],
         )
         return groupbox_style
 
     def get_button_style(self: Self) -> str:
         button_style: str = BUTTON_STYLE.format(
-            button_normal = self.theme["light"],
-            button_hover = self.theme["dark"],
+            button_normal = self.theme["dark"],
+            button_hover = self.theme["light"],
             button_pressed = self.theme["darker"],
         )
         return button_style
 
+default_style: Style = Style(DEFAULT_THEME)
 red_style: Style = Style(RED_THEME)
 orange_style: Style = Style(ORANGE_THEME)
 yellow_style: Style = Style(YELLOW_THEME)

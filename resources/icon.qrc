@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/Nuitka.svg</file>
+        <file>icons/Conda.svg</file>
+    </qresource>
+</RCC>

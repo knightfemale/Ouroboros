@@ -5,7 +5,7 @@ from qfluentwidgets import SingleDirectionScrollArea
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QFrame
 
 from utils import delay_util
-from styles.default import BACKGROUND_STYLE
+from utils.style_util import BACKGROUND_STYLE
 
 class Interface(QWidget):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:

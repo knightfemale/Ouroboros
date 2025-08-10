@@ -4,7 +4,7 @@ from typing import Self, Optional
 from qfluentwidgets import HyperlinkButton
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
 
-from styles.default import TITLE_STYLE
+from utils.style_util import TITLE_STYLE
 
 class HelpInterface(QWidget):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:

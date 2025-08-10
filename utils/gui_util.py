@@ -4,7 +4,7 @@ from typing import Any, Self, List, Optional, Callable
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLayout, QLayoutItem, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QGroupBox
 from qfluentwidgets import InfoBar, InfoBarPosition, LineEdit, PushButton, PrimaryPushButton, LineEdit, PushButton, SwitchButton, ModelComboBox
 
-from styles.default import red_style
+from utils.style_util import red_style, TITLE_STYLE
 
 class GroupBuilder:
     """区域构建器"""
@@ -18,7 +18,7 @@ class GroupBuilder:
 class LabelBuilder:
     """标签构建器"""
     @staticmethod
-    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, content: str ="", style: str = "") -> QLabel:
+    def create(parent: QWidget, layout: QVBoxLayout|QHBoxLayout, content: str ="", style: str = TITLE_STYLE) -> QLabel:
         label: QLabel = QLabel(content, parent)
         label.setStyleSheet(style)
         layout.addWidget(label)

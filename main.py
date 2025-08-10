@@ -8,8 +8,11 @@ from qfluentwidgets import FluentWindow, NavigationItemPosition, FluentIcon
 # 导入自定义页面
 from interfaces.home_interface import HomeInterface
 from interfaces.help_interface import HelpInterface
-from interfaces.nuitka_build_interface import NuitkaPackagingInterface
-from interfaces.conda_manage_interface import EnvironmentBuildInterface
+from interfaces.nuitka_build_interface import NuitkaBuildInterface
+from interfaces.conda_manage_interface import CondaManageInterface
+
+from resources import icon
+from utils import icon_util
 
 class MainWindow(FluentWindow):
     def __init__(self: Self) -> None:
@@ -19,14 +22,14 @@ class MainWindow(FluentWindow):
         self.resize(1280, 720)
         # 创建子界面实例
         self.homeInterface: HomeInterface = HomeInterface(self)
-        self.environmentBuildInterface: EnvironmentBuildInterface = EnvironmentBuildInterface(self)
-        self.nuitkaPackagingInterface: NuitkaPackagingInterface = NuitkaPackagingInterface(self)
+        self.nuitka_build_interface: NuitkaBuildInterface = NuitkaBuildInterface(self)
+        self.conda_manage_interface: CondaManageInterface = CondaManageInterface(self)
         self.helpInterface: HelpInterface = HelpInterface(self)
         # 添加导航项
         self.add_navigation_items()
         # 连接首页按钮信号
-        self.homeInterface.env_button.clicked.connect(lambda: self.switchTo(self.environmentBuildInterface))
-        self.homeInterface.pack_button.clicked.connect(lambda: self.switchTo(self.nuitkaPackagingInterface))
+        self.homeInterface.pack_button.clicked.connect(lambda: self.switchTo(self.nuitka_build_interface))
+        self.homeInterface.env_button.clicked.connect(lambda: self.switchTo(self.conda_manage_interface))
     
     def add_navigation_items(self: Self) -> None:
         # 添加主导航项
@@ -36,13 +39,13 @@ class MainWindow(FluentWindow):
             "首页",
         )
         self.addSubInterface(
-            self.nuitkaPackagingInterface,
-            FluentIcon.ZIP_FOLDER,
+            self.nuitka_build_interface,
+            icon_util.FluentIcon.NUITKA,
             "Nuitka 编译打包",
         )
         self.addSubInterface(
-            self.environmentBuildInterface,
-            FluentIcon.DEVELOPER_TOOLS,
+            self.conda_manage_interface,
+            icon_util.FluentIcon.CONDA,
             "Conda 环境管理",
         )
         # 添加分隔线

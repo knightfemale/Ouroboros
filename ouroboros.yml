@@ -13,13 +13,13 @@ nuitka:
   disable_console: true
   entry: ./main.py
   extra_args:
-  - --windows-icon-from-ico=output/icon.ico
+  - --windows-icon-from-ico=resources/icons/icon.ico
   - --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy
   files: []
   jobs: ''
   modules: []
   output_dir: output
-  output_name: Ouroboros-v0.1.3
+  output_name: Ouroboros-v0.1.4
   packages: []
   plugins:
   - pyside6

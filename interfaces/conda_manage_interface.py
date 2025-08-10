@@ -5,13 +5,13 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
 
 from utils import config_util, gui_util
 from interfaces.interface import Interface
-from styles.default import green_style, TITLE_STYLE
+from utils.style_util import green_style
 
 group_style: str = green_style.get_groupbox_style()
 button_style: str = green_style.get_button_style()
 lable_style: str = green_style.get_lable_style()
 
-class EnvironmentBuildInterface(Interface):
+class CondaManageInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent=parent)
         # 设置对象名
@@ -40,7 +40,7 @@ class EnvironmentBuildInterface(Interface):
     def init_ui(self: Self) -> None:
         """初始化 UI"""
         # 标题区域
-        self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="Conda 环境构建工具",style=TITLE_STYLE)
+        self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="Conda 环境构建")
         # 信息区域
         info_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "信息", style=group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)

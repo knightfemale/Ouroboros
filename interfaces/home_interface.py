@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt
 from qfluentwidgets import PrimaryPushButton
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 
-from styles.default import red_style, green_style
+from utils.style_util import yellow_style, green_style
 
 class HomeInterface(QWidget):
     def __init__(self, parent=None) -> None:
@@ -22,7 +22,7 @@ class HomeInterface(QWidget):
         button_layout.setAlignment(Qt.AlignCenter) # pyright: ignore[reportAttributeAccessIssue]
         self.pack_button = PrimaryPushButton("Nuitka 编译打包", self)
         self.pack_button.setFixedSize(180, 60)
-        self.pack_button.setStyleSheet(red_style.get_button_style())
+        self.pack_button.setStyleSheet(yellow_style.get_button_style())
         self.env_button = PrimaryPushButton("Conda 环境管理", self)
         self.env_button.setFixedSize(180, 60)
         self.env_button.setStyleSheet(green_style.get_button_style())

@@ -6,17 +6,17 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
 
 from interfaces.interface import Interface
 from utils import config_util, gui_util, delay_util
-from styles.default import TITLE_STYLE, red_style, green_style
+from utils.style_util import yellow_style, green_style
 
-group_style: str = red_style.get_groupbox_style()
-button_style: str = red_style.get_button_style()
-lable_style: str = red_style.get_lable_style()
+group_style: str = yellow_style.get_groupbox_style()
+button_style: str = yellow_style.get_button_style()
+lable_style: str = yellow_style.get_lable_style()
 
-class NuitkaPackagingInterface(Interface):
+class NuitkaBuildInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent=parent)
         # 设置对象名
-        self.setObjectName("NuitkaPackagingInterface")
+        self.setObjectName("NuitkaBuildInterface")
         # 初始化 UI
         self.init_ui()
         # 加载配置到 UI
@@ -37,7 +37,7 @@ class NuitkaPackagingInterface(Interface):
     def init_ui(self: Self) -> None:
         """初始化 UI"""
         # 标题区域
-        self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="Nuitka 编译打包工具",style=TITLE_STYLE)
+        self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="Nuitka 编译打包")
         # 信息区域
         info_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "信息", style=group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)
