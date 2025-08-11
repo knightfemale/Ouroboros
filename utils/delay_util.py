@@ -1,34 +1,22 @@
 # utils/delay_util.py
 import subprocess
+from typing import Dict, Optional
 from PySide6.QtCore import QThread, Signal
-from typing import List, Callable, Optional
 from PySide6.QtWidgets import QWidget, QLabel
 
-class DelayLabelThread(QThread):
+class DelayThread(QThread):
     # 信号: 标签, 结果文本
-    operate = Signal(QLabel, str)
+    operate = Signal(object, str)
     
-    def __init__(
-        self,
-        interface: Optional[QWidget],
-        var_name: str,
-        lable: QLabel,
-        command: List[str],
-        prefix: str,
-        err: str
-    ) -> None:
+    def __init__(self, interface: Optional[QWidget], details: dict) -> None:
         super().__init__(interface)
         self.interface = interface
-        self.var_name = var_name
-        self.lable = lable
-        self.command = command
-        self.prefix = prefix
-        self.err = err
+        self.details = details
     
     def run(self) -> None:
         try:
             process = subprocess.Popen(
-                self.command,
+                self.details["command"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 creationflags=subprocess.CREATE_NO_WINDOW,
@@ -36,38 +24,30 @@ class DelayLabelThread(QThread):
             )
             stdout, stderr = process.communicate()
             if process.returncode == 0:
-                text = f"{self.prefix}{stdout.strip()}"
-                setattr(self.interface, self.var_name, text)
-                self.operate.emit(self.lable, text)
+                text = f"{self.details["prefix"]}{stdout.strip()}"
+                self.details["var"] = text
+                self.operate.emit(self.details["object"], text)
             else:
                 text = stderr.strip() or "Unknown error"
-                self.operate.emit(self.lable, f"{self.prefix}{self.err}: {text}")
+                self.operate.emit(self.details["object"], f"{self.details["prefix"]}{self.details["err"]}: {text}")
         except (subprocess.SubprocessError, FileNotFoundError) as e:
-            self.operate.emit(self.lable, f"{self.prefix}{self.err}: {str(e)}")
+            self.operate.emit(self.details["object"], f"{self.details["prefix"]}{self.details["err"]}: {str(e)}")
 
-def set_delay_lable(
-    interface: QWidget,
-    var_name: str,
-    lable: QLabel,
-    command: List[str],
-    prefix: str,
-    err: str,
-    operate: Callable[[QLabel, str], None],
-) -> None:
+def set_delay_var(interface: QWidget, details: Dict) -> None:
     """设置延时标签"""
     # 如果已有缓存值, 直接使用
-    if hasattr(interface, var_name) and getattr(interface, var_name):
-        operate(lable, getattr(interface, var_name))
+    if details["var"]:
+        details["operate"](details["object"], details["var"])
         return
     else:
-        operate(lable, f"{prefix}正在获取...")
+        details["operate"](details["object"], f"{details["prefix"]}正在获取...")
     # 创建并启动后台线程
-    thread = DelayLabelThread(interface, var_name, lable, command, prefix, err)
+    thread = DelayThread(interface, details)
     # 连接信号
-    thread.operate.connect(operate)
+    thread.operate.connect(details["operate"])
     # 启动线程
     thread.start()
 
-def label_operate(lable: QLabel, text: str) -> None:
+def set_label_text(lable: QLabel, text: str) -> None:
     """默认的设置标签方式"""
     lable.setText(text)

@@ -32,4 +32,4 @@ class Interface(QWidget):
         """当界面显示时触发"""
         super().showEvent(event)
         for key, value in self.delay_variables.items():
-            delay_util.set_delay_lable(self, key, value["label"], value["command"], value["prefix"], value["err"], value["operate"])
+            delay_util.set_delay_var(self, value)

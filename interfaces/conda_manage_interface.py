@@ -3,7 +3,7 @@ import subprocess
 from typing import Any, Self, List, Dict, Optional
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
 
-from utils import config_util, gui_util
+from utils import config_util, gui_util, delay_util
 from interfaces.interface import Interface
 from utils.style_util import green_style
 
@@ -20,22 +20,17 @@ class CondaManageInterface(Interface):
         self.init_ui()
         # 加载配置到 UI
         self.load_config_to_ui()
-        # 全局变量
-        self.conda_version: str = ""
         # 延时变量
         self.delay_variables = {
             "conda_version": {
-                "label": self.conda_version_label,
+                "var": None,
+                "object": self.conda_version_label,
                 "command": ["conda", "--version"],
                 "prefix": "Conda Version: ",
                 "err": "未找到, 请确保 Conda 已安装",
-                "operate": self.conda_operate,
+                "operate": delay_util.set_label_text,
             },
         }
-    
-    def conda_operate(self, lable: QLabel, text: str) -> None:
-        """设置 Conda 版本的标签方式"""
-        lable.setText(text.replace("conda ", ""))
     
     def init_ui(self: Self) -> None:
         """初始化 UI"""

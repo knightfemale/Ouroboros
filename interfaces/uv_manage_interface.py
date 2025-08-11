@@ -15,17 +15,21 @@ lable_style: str = purple_style.get_lable_style()
 class UVManageInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent=parent)
+        # 设置对象名
         self.setObjectName("UVManageInterface")
+        # 初始化 UI
         self.init_ui()
+        # 加载配置到 UI
         self.load_config_to_ui()
-        self.uv_version: str = ""
+        # 延时变量
         self.delay_variables = {
             "uv_version": {
-                "label": self.uv_version_label,
+                "var": None,
+                "object": self.uv_version_label,
                 "command": ["uv", "--version"],
                 "prefix": "UV Version: ",
                 "err": "未找到, 请确保 uv 已安装",
-                "operate": delay_util.label_operate,
+                "operate": delay_util.set_label_text,
             },
         }
     

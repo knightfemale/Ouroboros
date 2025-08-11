@@ -21,16 +21,15 @@ class NuitkaBuildInterface(Interface):
         self.init_ui()
         # 加载配置到 UI
         self.load_config_to_ui()
-        # 全局变量
-        self.nuitka_version: str = ""
         # 延时变量
         self.delay_variables = {
             "nuitka_version": {
-                "label": self.nuitka_version_label,
+                "var": None,
+                "object": self.nuitka_version_label,
                 "command": [str(Path.cwd() / f"{config_util.load_config().get('name')}/python"), "-m", "nuitka", "--version"],
                 "prefix": "Nuitka Version: ",
                 "err": "未找到, 请确保 Nuitka 已安装",
-                "operate": delay_util.label_operate,
+                "operate": delay_util.set_label_text,
             },
         }
     
