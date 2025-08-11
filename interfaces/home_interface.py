@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt
 from qfluentwidgets import PrimaryPushButton
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 
-from utils.style_util import yellow_style, green_style
+from utils.style_util import yellow_style, green_style, purple_style
 
 class HomeInterface(QWidget):
     def __init__(self, parent=None) -> None:
@@ -26,10 +26,15 @@ class HomeInterface(QWidget):
         self.env_button = PrimaryPushButton("Conda 环境管理", self)
         self.env_button.setFixedSize(180, 60)
         self.env_button.setStyleSheet(green_style.get_button_style())
+        self.uv_button = PrimaryPushButton("UV 环境管理", self)
+        self.uv_button.setFixedSize(180, 60)
+        self.uv_button.setStyleSheet(purple_style.get_button_style())
         # 添加到布局
         button_layout.addWidget(self.pack_button)
         button_layout.addSpacing(40)
         button_layout.addWidget(self.env_button)
+        button_layout.addSpacing(40)
+        button_layout.addWidget(self.uv_button)
         layout.addWidget(title)
         layout.addWidget(description)
         layout.addSpacing(40)
