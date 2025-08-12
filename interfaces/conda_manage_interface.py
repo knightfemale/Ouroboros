@@ -104,6 +104,7 @@ class CondaManageInterface(Interface):
             "dependencies": self.collect_dependencies()
         })
         config_util.save_config(full_config)
+        self.load_config_to_ui()
         gui_util.MessageDisplay.success(self, "保存配置成功")
     
     def collect_dependencies(self) -> list:

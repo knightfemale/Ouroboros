@@ -1,5 +1,4 @@
 # interfaces/uv_manage_interface.py
-import toml
 import subprocess
 from pathlib import Path
 from qfluentwidgets import LineEdit, PushButton
@@ -104,6 +103,7 @@ class UVManageInterface(Interface):
             del config["project"]["dependencies"]
         # 写入文件
         config_util.save_uv_config(config)
+        self.load_config_to_ui()
         gui_util.MessageDisplay.success(self, "保存配置成功")
     
     def activate_venv(self: Self) -> None:
@@ -119,11 +119,10 @@ class UVManageInterface(Interface):
             },
         }
         config_util.save_uv_config(base_config)
-        self.load_config_to_ui()
         gui_util.MessageDisplay.success(self, "uv 配置文件初始化完成")
     
     def get_project_version(self: Self) -> str:
-        """带默认参数地获取 Python 版本"""
+        """带默认参数地获取项目版本"""
         project_version: str = self.project_version_input.text().strip()
         return project_version if project_version else '0.1.0'
     
