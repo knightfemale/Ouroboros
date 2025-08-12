@@ -27,7 +27,7 @@ class NuitkaBuildInterface(Interface):
             "nuitka_version": {
                 "var": None,
                 "object": self.nuitka_version_label,
-                "command": [self.get_python_path(), "-m", "nuitka", "--version"],
+                "command": ["", "-m", "nuitka", "--version"],
                 "prefix": "Nuitka Version: ",
                 "err": "未找到, 请确保 Nuitka 已安装",
                 "operate": delay_util.set_label_text,
@@ -116,6 +116,11 @@ class NuitkaBuildInterface(Interface):
         for field in ["plugins", "packages", "modules", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             container.set_items(config.get(field, []))
+    
+    def showEvent(self: Self, event: Any) -> None:
+        """当界面显示时触发"""
+        self.delay_variables["nuitka_version"]["command"][0] = self.get_python_path()
+        super().showEvent(event)
     
     def save_ui_to_config(self: Self) -> None:
         """保存UI状态到配置文件"""
