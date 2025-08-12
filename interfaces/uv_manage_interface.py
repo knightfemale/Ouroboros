@@ -67,22 +67,16 @@ class UVManageInterface(Interface):
     
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
-        config_path: Path = Path("./pyproject.toml")
-        if config_path.exists():
-            try:
-                with open(config_path, "r", encoding="utf-8") as f:
-                    config: Dict[str, Any] = toml.load(f)
-                    # 加载项目版本
-                    if "project" in config and "version" in config["project"]:
-                        self.project_version_input.setText(config["project"]["version"])
-                    # 加载项目版本
-                    if "project" in config and "requires-python" in config["project"]:
-                        self.python_version_input.setText(config["project"]["requires-python"][2:])
-                    # 加载依赖
-                    if "project" in config and "dependencies" in config["project"]:
-                        self.pip_container.set_items(config["project"]["dependencies"])
-            except Exception as e:
-                gui_util.MessageDisplay.error(self, f"加载配置失败: {str(e)}")
+        config: Dict[str, Any] = config_util.load_uv_config()
+        # 加载项目版本
+        if "project" in config and "version" in config["project"]:
+            self.project_version_input.setText(config["project"]["version"])
+        # 加载 Python 版本
+        if "project" in config and "requires-python" in config["project"]:
+            self.python_version_input.setText(config["project"]["requires-python"][2:])
+        # 加载依赖
+        if "project" in config and "dependencies" in config["project"]:
+            self.pip_container.set_items(config["project"]["dependencies"])
     
     def sync_env(self: Self) -> None:
         """同步环境"""
@@ -96,14 +90,8 @@ class UVManageInterface(Interface):
         """将当前UI状态保存到配置文件"""
         if not config_path.exists():
             self.init_project()
-        config: Dict[str, Any] = {}
         # 加载现有配置
-        try:
-            with open(config_path, "r", encoding="utf-8") as f:
-                config: Dict[str, Any] = toml.load(f)
-        except Exception as e:
-            gui_util.MessageDisplay.error(self, f"读取配置失败: {str(e)}")
-            return
+        config: Dict[str, Any] = config_util.load_uv_config()
         # 更新项目版本
         config["project"]["version"] = self.get_project_version()
         # 更新 Python 版本
@@ -115,12 +103,8 @@ class UVManageInterface(Interface):
         elif "dependencies" in config["project"]:
             del config["project"]["dependencies"]
         # 写入文件
-        try:
-            with open(config_path, "w", encoding="utf-8") as f:
-                toml.dump(config, f)
-            gui_util.MessageDisplay.success(self, "保存配置成功")
-        except Exception as e:
-            gui_util.MessageDisplay.error(self, f"保存配置失败: {str(e)}")
+        config_util.save_uv_config(config)
+        gui_util.MessageDisplay.success(self, "保存配置成功")
     
     def activate_venv(self: Self) -> None:
         """激活环境"""
@@ -134,13 +118,9 @@ class UVManageInterface(Interface):
                 "name": f"{Path.cwd().name.lower()}",
             },
         }
-        try:
-            with open(config_path, "w", encoding="utf-8") as f:
-                toml.dump(base_config, f)
-            self.load_config_to_ui()
-            gui_util.MessageDisplay.success(self, "uv 配置文件初始化完成")
-        except Exception as e:
-            gui_util.MessageDisplay.error(self, f"uv 配置文件初始化失败: {str(e)}")
+        config_util.save_uv_config(base_config)
+        self.load_config_to_ui()
+        gui_util.MessageDisplay.success(self, "uv 配置文件初始化完成")
     
     def get_project_version(self: Self) -> str:
         """带默认参数地获取 Python 版本"""
