@@ -2,17 +2,19 @@
 import toml
 import subprocess
 from pathlib import Path
-from typing import Any, Self, Dict, Optional
 from qfluentwidgets import LineEdit, PushButton
+from typing import Any, Self, List, Dict, Optional
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
 
-from utils import gui_util, delay_util
+from utils import config_util, gui_util, delay_util
 from interfaces.interface import Interface
 from utils.style_util import green_style, purple_style
 
 group_style: str = purple_style.get_groupbox_style()
 button_style: str = purple_style.get_button_style()
 lable_style: str = purple_style.get_lable_style()
+
+config_path: Path = config_util.uv_config_path
 
 class UVManageInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
@@ -65,20 +67,20 @@ class UVManageInterface(Interface):
     
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
-        pyproject_path: Path = Path("./pyproject.toml")
-        if pyproject_path.exists():
+        config_path: Path = Path("./pyproject.toml")
+        if config_path.exists():
             try:
-                with open(pyproject_path, "r", encoding="utf-8") as f:
-                    pyproject = toml.load(f)
+                with open(config_path, "r", encoding="utf-8") as f:
+                    config: Dict[str, Any] = toml.load(f)
                     # 加载项目版本
-                    if "project" in pyproject and "version" in pyproject["project"]:
-                        self.project_version_input.setText(pyproject["project"]["version"])
+                    if "project" in config and "version" in config["project"]:
+                        self.project_version_input.setText(config["project"]["version"])
                     # 加载项目版本
-                    if "project" in pyproject and "requires-python" in pyproject["project"]:
-                        self.python_version_input.setText(pyproject["project"]["requires-python"][2:])
+                    if "project" in config and "requires-python" in config["project"]:
+                        self.python_version_input.setText(config["project"]["requires-python"][2:])
                     # 加载依赖
-                    if "project" in pyproject and "dependencies" in pyproject["project"]:
-                        self.pip_container.set_items(pyproject["project"]["dependencies"])
+                    if "project" in config and "dependencies" in config["project"]:
+                        self.pip_container.set_items(config["project"]["dependencies"])
             except Exception as e:
                 gui_util.MessageDisplay.error(self, f"加载配置失败: {str(e)}")
     
@@ -92,14 +94,13 @@ class UVManageInterface(Interface):
     
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""
-        config_path: Path = Path("./pyproject.toml")
         if not config_path.exists():
             self.init_project()
-        config = {}
+        config: Dict[str, Any] = {}
         # 加载现有配置
         try:
             with open(config_path, "r", encoding="utf-8") as f:
-                config = toml.load(f)
+                config: Dict[str, Any] = toml.load(f)
         except Exception as e:
             gui_util.MessageDisplay.error(self, f"读取配置失败: {str(e)}")
             return
@@ -108,7 +109,7 @@ class UVManageInterface(Interface):
         # 更新 Python 版本
         config["project"]["requires-python"] = f">={self.get_python_version()}"
         # 更新依赖
-        dependencies = self.pip_container.get_items()
+        dependencies: List[str] = self.pip_container.get_items()
         if dependencies:
             config["project"]["dependencies"] = dependencies
         elif "dependencies" in config["project"]:
@@ -124,15 +125,11 @@ class UVManageInterface(Interface):
     def activate_venv(self: Self) -> None:
         """激活环境"""
         gui_util.MessageDisplay.info(self, "激活环境: .venv")
-        subprocess.run(
-            f'start ".venv" cmd /k call activate ./.venv', 
-            shell=True
-        )
+        subprocess.run(f"start \"UVActivate\" cmd /k \".\\.venv\\Scripts\\activate\"", shell=True)
     
     def init_project(self: Self) -> None:
         """初始化 uv 配置文件"""
-        config_path: Path = Path("./pyproject.toml")
-        base_config = {
+        base_config: Dict[str, Any] = {
             "project": {
                 "name": f"{Path.cwd().name.lower()}",
             },

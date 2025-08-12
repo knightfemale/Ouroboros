@@ -27,7 +27,7 @@ class NuitkaBuildInterface(Interface):
             "nuitka_version": {
                 "var": None,
                 "object": self.nuitka_version_label,
-                "command": [str(Path.cwd() / f"{config_util.load_config().get('name')}/python"), "-m", "nuitka", "--version"],
+                "command": [self.get_python_path(), "-m", "nuitka", "--version"],
                 "prefix": "Nuitka Version: ",
                 "err": "未找到, 请确保 Nuitka 已安装",
                 "operate": delay_util.set_label_text,
@@ -198,7 +198,22 @@ class NuitkaBuildInterface(Interface):
             for item in container.get_items():
                 nuitka_args.append(f"{flag}{item}")
         # 执行命令
-        python_path: Path = Path.cwd() / f"{config_util.load_config().get('name')}/python"
-        command: str = f"start \"NuitkaBuild\" cmd /k \"{str(python_path)}\" {" ".join(nuitka_args)}"
-        gui_util.MessageDisplay.info(self, f"开始编译打包: {command}")
-        subprocess.run(command, shell=True)
+        if python_path := self.get_python_path():
+            command: str = f"start \"NuitkaBuild\" cmd /k \"{python_path}\" {" ".join(nuitka_args)}"
+            gui_util.MessageDisplay.info(self, f"开始编译打包: {command}")
+            subprocess.run(command, shell=True)
+    
+    def get_python_path(self: Self) -> str:
+        """获取可能的 Python 解释器路径"""
+        possible_paths = [
+            # conda 路径
+            Path.cwd() / f"{config_util.load_config().get('name')}/python.exe",
+            # uv 路径
+            Path.cwd() / ".venv/Scripts/python.exe",
+        ]
+        # 检查路径是否存在
+        for path in possible_paths:
+            if path.exists():
+                return str(path)
+        gui_util.MessageDisplay.error(self, "未找到可用解释器")
+        return ""

@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict, Any
 
 config_path: Path = Path("./ouroboros.yml")
+uv_config_path: Path = Path("./pyproject.toml")
 
 def load_config(file_path: Path=config_path) -> Dict[str, Any]:
     """加载配置文件"""

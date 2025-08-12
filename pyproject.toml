@@ -1,0 +1,5 @@
+[project]
+name = "ouroborosuv"
+version = "0.2.0"
+requires-python = ">=3.13"
+dependencies = [ "toml", "nuitka", "pyyaml", "pyside6-fluent-widgets[full]",]
