@@ -1,11 +1,12 @@
 # interfaces/conda_manage_interface.py
 import subprocess
+from qfluentwidgets import LineEdit, PushButton
 from typing import Any, Self, List, Dict, Optional
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
 
-from utils import config_util, gui_util, delay_util
-from interfaces.interface import Interface
 from utils.style_util import green_style
+from interfaces.interface import Interface
+from utils import config_util, gui_util, delay_util
 
 group_style: str = green_style.get_groupbox_style()
 button_style: str = green_style.get_button_style()
@@ -21,7 +22,7 @@ class CondaManageInterface(Interface):
         # 加载配置到 UI
         self.load_config_to_ui()
         # 延时变量
-        self.delay_variables = {
+        self.delay_variables: Dict[str, Any] = {
             "conda_version": {
                 "var": None,
                 "object": self.conda_version_label,
@@ -43,27 +44,26 @@ class CondaManageInterface(Interface):
         # 操作区域
         action_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "操作", style=group_style)
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
-        self.build_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "构建环境", slot=self.build_env, style=button_style)
-        self.save_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
-        self.activate_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
-        self.export_pip_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 requirements.txt", slot=self.export_requirements, style=button_style)
-        self.export_conda_btn = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 environment.yml", slot=self.export_environment, style=button_style)
+        self.build_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "构建环境", slot=self.build_env, style=button_style)
+        self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
+        self.activate_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
+        self.export_pip_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 requirements.txt", slot=self.export_requirements, style=button_style)
+        self.export_conda_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 environment.yml", slot=self.export_environment, style=button_style)
         # 环境参数区域
         env_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "环境参数", style=group_style)
         env_layout: QVBoxLayout = QVBoxLayout(env_group)
-        # 环境名称和版本
-        self.env_name_input = gui_util.InputBuilder.create(self, env_layout, "环境名称", "输入环境名称(默认: .venv)", lable_style=lable_style)
-        self.python_version_input = gui_util.InputBuilder.create(self, env_layout, "Python 版本", "输入 Python 版本(默认: 3.10)", lable_style=lable_style)
+        self.env_name_input: LineEdit = gui_util.InputBuilder.create(self, env_layout, "环境名称", "输入环境名称(默认: .venv)", lable_style=lable_style)
+        self.python_version_input: LineEdit = gui_util.InputBuilder.create(self, env_layout, "Python 版本", "输入 Python 版本(默认: 3.10)", lable_style=lable_style)
         # pip 包管理区域
         pip_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "pip 包管理", style=group_style)
         pip_layout: QVBoxLayout = QVBoxLayout(pip_group)
         self.pip_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, pip_layout, "输入 pip 包名")
-        self.pip_add_btn = gui_util.ButtonBuilder.create(self, pip_layout, "添加", slot=lambda: self.pip_container.add_row(""), style=green_style.get_button_style())
+        self.pip_add_btn: PushButton = gui_util.ButtonBuilder.create(self, pip_layout, "添加", slot=lambda: self.pip_container.add_row(""), style=green_style.get_button_style())
         # conda 包管理区域
         conda_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "conda 包管理", style=group_style)
         conda_layout: QVBoxLayout = QVBoxLayout(conda_group)
         self.conda_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, conda_layout, "输入 conda 包名")
-        self.conda_add_btn = gui_util.ButtonBuilder.create(self, conda_layout, "添加", slot=lambda: self.conda_container.add_row(""), style=green_style.get_button_style())
+        self.conda_add_btn: PushButton = gui_util.ButtonBuilder.create(self, conda_layout, "添加", slot=lambda: self.conda_container.add_row(""), style=green_style.get_button_style())
     
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
@@ -81,7 +81,7 @@ class CondaManageInterface(Interface):
         if python_version:
             self.python_version_input.setText(python_version)
         # 添加 conda 包
-        conda_packages: Any = []
+        conda_packages: Any[str] = []
         for dep in config.get('dependencies', []):
             if isinstance(dep, str) and not dep.startswith('python='):
                 conda_packages.append(dep)
@@ -133,7 +133,7 @@ class CondaManageInterface(Interface):
         env_name: str = self.get_env_name()
         # 执行命令
         gui_util.MessageDisplay.info(self, f"激活环境: {env_name}")
-        subprocess.run(f"start \"{env_name}\" cmd /k call activate ./{env_name}", shell=True)
+        subprocess.run(f"start \"CondaActivate\" cmd /k call activate ./{env_name}", shell=True)
     
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
