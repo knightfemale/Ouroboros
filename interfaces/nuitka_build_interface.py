@@ -1,5 +1,6 @@
 # interfaces/nuitka_build_interface.py
 import subprocess
+import multiprocessing
 from pathlib import Path
 from typing import Any, Self, List, Dict, Optional
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
@@ -53,7 +54,10 @@ class NuitkaBuildInterface(Interface):
         self.entry_input: LineEdit = gui_util.InputBuilder.create(self, options_layout, "Python 入口文件", "输入 Python 入口文件(例如: ./main.py)", lable_style=lable_style)
         self.output_name_input: LineEdit = gui_util.InputBuilder.create(self, options_layout, "输出文件名", "输出文件名(默认: 入口文件名)", lable_style=lable_style)
         self.output_dir_input: LineEdit = gui_util.InputBuilder.create(self, options_layout, "输出目录", "输出目录(默认: 根目录)", lable_style=lable_style)
-        self.jobs_input: LineEdit = gui_util.InputBuilder.create(self, options_layout, "并行任务数", "输入并行任务数(默认: all)", lable_style=lable_style)
+        cpu_count = multiprocessing.cpu_count()
+        jobs_options = [str(i) for i in range(1, cpu_count + 1)]
+        self.default_job = str(cpu_count - 1) if cpu_count > 1 else "1"
+        self.jobs_combo: ModelComboBox = gui_util.ComboBoxBuilder.create(self, options_layout, "并行任务数", jobs_options, current_text=self.default_job, lable_style=lable_style)
         self.build_mode_combo: ModelComboBox = gui_util.ComboBoxBuilder.create(self, options_layout, "构建模式", ["独立模式", "单文件模式", "模块模式"], lable_style=lable_style)
         self.disable_console_switch: SwitchButton = gui_util.SwitchBuilder.create(self, options_layout, "禁用控制台", lable_style=lable_style)
         self.remove_output_switch: SwitchButton = gui_util.SwitchBuilder.create(self, options_layout, "删除构建文件夹", lable_style=lable_style)
@@ -111,7 +115,7 @@ class NuitkaBuildInterface(Interface):
         self.show_scons_switch.setChecked(config.get("show_scons", False))
         self.assume_yes_switch.setChecked(config.get("assume_yes", True))
         self.compiler_combo.setCurrentText(config.get("compiler", "Auto"))
-        self.jobs_input.setText(config.get("jobs", ""))
+        self.jobs_combo.setCurrentText(config.get("jobs", self.default_job))
         # 动态字段
         for field in ["plugins", "packages", "modules", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
@@ -137,7 +141,7 @@ class NuitkaBuildInterface(Interface):
             "show_scons": self.show_scons_switch.isChecked(),
             "assume_yes": self.assume_yes_switch.isChecked(),
             "compiler": self.compiler_combo.currentText(),
-            "jobs": self.jobs_input.text().strip(),
+            "jobs": self.jobs_combo.currentText(),
         })
         # 动态字段
         for field in ["plugins", "packages", "modules", "files", "dirs", "extra_args"]:
@@ -157,7 +161,6 @@ class NuitkaBuildInterface(Interface):
             "entry_input": "",
             "output_name_input": "--output-filename=",
             "output_dir_input": "--output-dir=",
-            "jobs_input": "--jobs="
         }
         for attr, flag in INPUT_FIELDS.items():
             if value := getattr(self, attr).text().strip():
@@ -190,6 +193,8 @@ class NuitkaBuildInterface(Interface):
             current_text = combo.currentText()
             if current_text in mapping:
                 nuitka_args.append(mapping[current_text])
+        if jobs := self.jobs_combo.currentText().strip():
+            nuitka_args.append(f"--jobs={jobs}")
         # 添加动态输入框参数
         for field, flag in [
             ("plugins", "--enable-plugin="),

@@ -17,7 +17,7 @@ nuitka:
   - --windows-icon-from-ico=resources/icons/icon.ico
   - --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy
   files: []
-  jobs: ''
+  jobs: '11'
   modules: []
   output_dir: output
   output_name: Ouroboros-v0.2.0
