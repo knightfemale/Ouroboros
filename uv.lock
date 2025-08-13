@@ -5,7 +5,7 @@ requires-python = ">=3.13"
 [[package]]
 name = "cffi"
 version = "1.17.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pycparser" },
 ]
@@ -27,7 +27,7 @@ wheels = [
 [[package]]
 name = "colorthief"
 version = "0.2.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pillow" },
 ]
@@ -39,7 +39,7 @@ wheels = [
 [[package]]
 name = "darkdetect"
 version = "0.8.0"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/45/77/7575be73bf12dee231d0c6e60ce7fb7a7be4fcd58823374fc59a6e48262e/darkdetect-0.8.0.tar.gz", hash = "sha256:b5428e1170263eb5dea44c25dc3895edd75e6f52300986353cd63533fe7df8b1", size = 7681, upload-time = "2022-12-16T14:14:42.113Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/f2/f2/728f041460f1b9739b85ee23b45fa5a505962ea11fd85bdbe2a02b021373/darkdetect-0.8.0-py3-none-any.whl", hash = "sha256:a7509ccf517eaad92b31c214f593dbcf138ea8a43b2935406bbd565e15527a85", size = 8955, upload-time = "2022-12-16T14:14:40.92Z" },
@@ -48,7 +48,7 @@ wheels = [
 [[package]]
 name = "nuitka"
 version = "2.7.12"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "ordered-set" },
     { name = "zstandard" },
@@ -58,7 +58,7 @@ sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/9b/9c/f51b7c7dae304f
 [[package]]
 name = "numpy"
 version = "2.3.2"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/37/7d/3fec4199c5ffb892bed55cff901e4f39a58c81df9c44c280499e92cad264/numpy-2.3.2.tar.gz", hash = "sha256:e0486a11ec30cdecb53f184d496d1c6a20786c81e55e41640270130056f8ee48", size = 20489306, upload-time = "2025-07-24T21:32:07.553Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/1c/c0/c6bb172c916b00700ed3bf71cb56175fd1f7dbecebf8353545d0b5519f6c/numpy-2.3.2-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:c8d9727f5316a256425892b043736d63e89ed15bbfe6556c5ff4d9d4448ff3b3", size = 20949074, upload-time = "2025-07-24T20:43:07.813Z" },
@@ -110,7 +110,7 @@ wheels = [
 [[package]]
 name = "ordered-set"
 version = "4.1.0"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/4c/ca/bfac8bc689799bcca4157e0e0ced07e70ce125193fc2e166d2e685b7e2fe/ordered-set-4.1.0.tar.gz", hash = "sha256:694a8e44c87657c59292ede72891eb91d34131f6531463aab3009191c77364a8", size = 12826, upload-time = "2022-01-26T14:38:56.6Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/33/55/af02708f230eb77084a299d7b08175cff006dea4f2721074b92cdb0296c0/ordered_set-4.1.0-py3-none-any.whl", hash = "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562", size = 7634, upload-time = "2022-01-26T14:38:48.677Z" },
@@ -124,7 +124,7 @@ dependencies = [
     { name = "nuitka" },
     { name = "pyside6-fluent-widgets", extra = ["full"] },
     { name = "pyyaml" },
-    { name = "toml" },
+    { name = "tomlkit" },
 ]
 
 [package.metadata]
@@ -132,13 +132,13 @@ requires-dist = [
     { name = "nuitka" },
     { name = "pyside6-fluent-widgets", extras = ["full"] },
     { name = "pyyaml" },
-    { name = "toml" },
+    { name = "tomlkit" },
 ]
 
 [[package]]
 name = "pillow"
 version = "11.3.0"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/f3/0d/d0d6dea55cd152ce3d6767bb38a8fc10e33796ba4ba210cbab9354b6d238/pillow-11.3.0.tar.gz", hash = "sha256:3828ee7586cd0b2091b6209e5ad53e20d0649bbe87164a459d0676e035e8f523", size = 47113069, upload-time = "2025-07-01T09:16:30.666Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/1e/93/0952f2ed8db3a5a4c7a11f91965d6184ebc8cd7cbb7941a260d5f018cd2d/pillow-11.3.0-cp313-cp313-ios_13_0_arm64_iphoneos.whl", hash = "sha256:1c627742b539bba4309df89171356fcb3cc5a9178355b2727d1b74a6cf155fbd", size = 2128328, upload-time = "2025-07-01T09:14:35.276Z" },
@@ -193,7 +193,7 @@ wheels = [
 [[package]]
 name = "pycocoa"
 version = "25.4.8"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/9b/37/b242899fa4852131f5df3f8e1aa25275a84e642e9352715d0ee8a7e89772/pycocoa-25.4.8.tar.gz", hash = "sha256:fbc66097abe55f63d082f513dc1ed8489736813b87b24a9ca6973860bdc73480", size = 557781, upload-time = "2025-04-08T16:41:02.285Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/33/0b/a814bd8f6776bfe57171b9e8785f8df134204721ca7d72d9e5abab84d889/pycocoa-25.4.8-py2.py3-none-any.whl", hash = "sha256:ba0c539981d79d6469c226323c94fe486b7732d5ef11e2bf5fdefef4e2de1c57", size = 227218, upload-time = "2025-04-08T16:41:04.122Z" },
@@ -202,7 +202,7 @@ wheels = [
 [[package]]
 name = "pycparser"
 version = "2.22"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/1d/b2/31537cf4b1ca988837256c910a668b553fceb8f069bedc4b1c826024b52c/pycparser-2.22.tar.gz", hash = "sha256:491c8be9c040f5390f5bf44a5b07752bd07f56edf992381b05c701439eec10f6", size = 172736, upload-time = "2024-03-30T13:22:22.564Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/13/a3/a812df4e2dd5696d1f351d58b8fe16a405b234ad2886a0dab9183fb78109/pycparser-2.22-py3-none-any.whl", hash = "sha256:c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc", size = 117552, upload-time = "2024-03-30T13:22:20.476Z" },
@@ -211,7 +211,7 @@ wheels = [
 [[package]]
 name = "pyobjc"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-accessibility", marker = "platform_release >= '20.0'" },
@@ -380,7 +380,7 @@ wheels = [
 [[package]]
 name = "pyobjc-core"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/e8/e9/0b85c81e2b441267bca707b5d89f56c2f02578ef8f3eafddf0e0c0b8848c/pyobjc_core-11.1.tar.gz", hash = "sha256:b63d4d90c5df7e762f34739b39cc55bc63dbcf9fb2fb3f2671e528488c7a87fe", size = 974602, upload-time = "2025-06-14T20:56:34.189Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/c5/24/12e4e2dae5f85fd0c0b696404ed3374ea6ca398e7db886d4f1322eb30799/pyobjc_core-11.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:18986f83998fbd5d3f56d8a8428b2f3e0754fd15cef3ef786ca0d29619024f2c", size = 676431, upload-time = "2025-06-14T20:44:49.908Z" },
@@ -392,7 +392,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-accessibility"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -409,7 +409,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-accounts"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -422,7 +422,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-addressbook"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -438,7 +438,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-adservices"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -451,7 +451,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-adsupport"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -464,7 +464,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-applescriptkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -477,7 +477,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-applescriptobjc"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -490,7 +490,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-applicationservices"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -508,7 +508,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-apptrackingtransparency"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -521,7 +521,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-audiovideobridging"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -537,7 +537,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-authenticationservices"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -553,7 +553,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-automaticassessmentconfiguration"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -569,7 +569,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-automator"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -585,7 +585,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-avfoundation"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -604,7 +604,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-avkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -621,7 +621,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-avrouting"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -637,7 +637,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-backgroundassets"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -653,7 +653,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-browserenginekit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -672,7 +672,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-businesschat"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -685,7 +685,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-calendarstore"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -698,7 +698,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-callkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -714,7 +714,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-carbon"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -727,7 +727,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-cfnetwork"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -743,7 +743,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-cinematic"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-avfoundation" },
@@ -759,7 +759,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-classkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -775,7 +775,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-cloudkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-accounts" },
@@ -791,7 +791,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-cocoa"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
 ]
@@ -806,7 +806,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-collaboration"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -819,7 +819,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-colorsync"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -832,7 +832,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-contacts"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -848,7 +848,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-contactsui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -865,7 +865,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coreaudio"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -881,7 +881,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coreaudiokit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -898,7 +898,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-corebluetooth"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -914,7 +914,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coredata"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -930,7 +930,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-corehaptics"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -943,7 +943,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-corelocation"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -959,7 +959,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coremedia"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -975,7 +975,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coremediaio"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -991,7 +991,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coremidi"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1007,7 +1007,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coreml"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1023,7 +1023,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coremotion"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1039,7 +1039,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coreservices"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1056,7 +1056,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-corespotlight"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1072,7 +1072,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-coretext"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1089,7 +1089,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-corewlan"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1105,7 +1105,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-cryptotokenkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1121,7 +1121,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-datadetection"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1134,7 +1134,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-devicecheck"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1147,7 +1147,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-devicediscoveryextension"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1160,7 +1160,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-dictionaryservices"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-coreservices" },
@@ -1173,7 +1173,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-discrecording"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1189,7 +1189,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-discrecordingui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1203,7 +1203,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-diskarbitration"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1216,7 +1216,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-dvdplayback"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1229,7 +1229,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-eventkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1242,7 +1242,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-exceptionhandling"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1255,7 +1255,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-executionpolicy"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1268,7 +1268,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-extensionkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1284,7 +1284,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-externalaccessory"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1300,7 +1300,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-fileprovider"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1316,7 +1316,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-fileproviderui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-fileprovider" },
@@ -1329,7 +1329,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-findersync"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1342,7 +1342,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-fsevents"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1358,7 +1358,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-fskit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1374,7 +1374,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-gamecenter"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1390,7 +1390,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-gamecontroller"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1406,7 +1406,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-gamekit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1423,7 +1423,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-gameplaykit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1440,7 +1440,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-healthkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1456,7 +1456,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-imagecapturecore"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1472,7 +1472,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-inputmethodkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1488,7 +1488,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-installerplugins"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1501,7 +1501,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-instantmessage"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1515,7 +1515,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-intents"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1531,7 +1531,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-intentsui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-intents" },
@@ -1547,7 +1547,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-iobluetooth"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1563,7 +1563,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-iobluetoothui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-iobluetooth" },
@@ -1576,7 +1576,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-iosurface"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1589,7 +1589,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-ituneslibrary"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1602,7 +1602,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-kernelmanagement"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1615,7 +1615,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-latentsemanticmapping"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1628,7 +1628,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-launchservices"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-coreservices" },
@@ -1641,7 +1641,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-libdispatch"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1657,7 +1657,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-libxpc"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1673,7 +1673,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-linkpresentation"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1687,7 +1687,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-localauthentication"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1704,7 +1704,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-localauthenticationembeddedui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1718,7 +1718,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-mailkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1731,7 +1731,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-mapkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1749,7 +1749,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-mediaaccessibility"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1762,7 +1762,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-mediaextension"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-avfoundation" },
@@ -1780,7 +1780,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-medialibrary"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1794,7 +1794,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-mediaplayer"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-avfoundation" },
@@ -1807,7 +1807,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-mediatoolbox"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1823,7 +1823,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-metal"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1839,7 +1839,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-metalfx"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-metal" },
@@ -1855,7 +1855,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-metalkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1872,7 +1872,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-metalperformanceshaders"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-metal" },
@@ -1888,7 +1888,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-metalperformanceshadersgraph"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-metalperformanceshaders" },
@@ -1901,7 +1901,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-metrickit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1917,7 +1917,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-mlcompute"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1930,7 +1930,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-modelio"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1947,7 +1947,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-multipeerconnectivity"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1963,7 +1963,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-naturallanguage"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1976,7 +1976,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-netfs"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -1989,7 +1989,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-network"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2005,7 +2005,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-networkextension"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2021,7 +2021,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-notificationcenter"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2037,7 +2037,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-opendirectory"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2050,7 +2050,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-osakit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2063,7 +2063,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-oslog"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2081,7 +2081,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-passkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2097,7 +2097,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-pencilkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2110,7 +2110,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-phase"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-avfoundation" },
@@ -2123,7 +2123,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-photos"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2139,7 +2139,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-photosui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2155,7 +2155,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-preferencepanes"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2168,7 +2168,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-pushkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2184,7 +2184,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-quartz"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2200,7 +2200,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-quicklookthumbnailing"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2214,7 +2214,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-replaykit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2230,7 +2230,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-safariservices"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2246,7 +2246,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-safetykit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2263,7 +2263,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-scenekit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2280,7 +2280,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-screencapturekit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2297,7 +2297,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-screensaver"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2313,7 +2313,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-screentime"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2326,7 +2326,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-scriptingbridge"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2342,7 +2342,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-searchkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-coreservices" },
@@ -2355,7 +2355,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-security"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2371,7 +2371,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-securityfoundation"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2385,7 +2385,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-securityinterface"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2402,7 +2402,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-securityui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2416,7 +2416,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-sensitivecontentanalysis"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2430,7 +2430,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-servicemanagement"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2443,7 +2443,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-sharedwithyou"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-sharedwithyoucore" },
@@ -2459,7 +2459,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-sharedwithyoucore"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2475,7 +2475,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-shazamkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2491,7 +2491,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-social"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2504,7 +2504,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-soundanalysis"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2517,7 +2517,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-speech"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2533,7 +2533,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-spritekit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2550,7 +2550,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-storekit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2566,7 +2566,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-symbols"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2579,7 +2579,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-syncservices"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2596,7 +2596,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-systemconfiguration"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2612,7 +2612,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-systemextensions"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2628,7 +2628,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-threadnetwork"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2641,7 +2641,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-uniformtypeidentifiers"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2654,7 +2654,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-usernotifications"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2670,7 +2670,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-usernotificationsui"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2684,7 +2684,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-videosubscriberaccount"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2697,7 +2697,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-videotoolbox"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2715,7 +2715,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-virtualization"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2731,7 +2731,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-vision"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2749,7 +2749,7 @@ wheels = [
 [[package]]
 name = "pyobjc-framework-webkit"
 version = "11.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyobjc-core" },
     { name = "pyobjc-framework-cocoa" },
@@ -2765,7 +2765,7 @@ wheels = [
 [[package]]
 name = "pyside6"
 version = "6.9.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyside6-addons" },
     { name = "pyside6-essentials" },
@@ -2782,7 +2782,7 @@ wheels = [
 [[package]]
 name = "pyside6-addons"
 version = "6.9.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pyside6-essentials" },
     { name = "shiboken6" },
@@ -2798,7 +2798,7 @@ wheels = [
 [[package]]
 name = "pyside6-essentials"
 version = "6.9.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "shiboken6" },
 ]
@@ -2813,7 +2813,7 @@ wheels = [
 [[package]]
 name = "pyside6-fluent-widgets"
 version = "1.8.6"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "darkdetect" },
     { name = "pyside6" },
@@ -2834,7 +2834,7 @@ full = [
 [[package]]
 name = "pysidesix-frameless-window"
 version = "0.7.3"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pycocoa", marker = "sys_platform == 'darwin'" },
     { name = "pyobjc", marker = "sys_platform == 'darwin'" },
@@ -2848,7 +2848,7 @@ wheels = [
 [[package]]
 name = "pywin32"
 version = "311"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/a5/be/3fd5de0979fcb3994bfee0d65ed8ca9506a8a1260651b86174f6a86f52b3/pywin32-311-cp313-cp313-win32.whl", hash = "sha256:f95ba5a847cba10dd8c4d8fefa9f2a6cf283b8b88ed6178fa8a6c1ab16054d0d", size = 8705700, upload-time = "2025-07-14T20:13:26.471Z" },
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/e3/28/e0a1909523c6890208295a29e05c2adb2126364e289826c0a8bc7297bd5c/pywin32-311-cp313-cp313-win_amd64.whl", hash = "sha256:718a38f7e5b058e76aee1c56ddd06908116d35147e133427e59a3983f703a20d", size = 9494700, upload-time = "2025-07-14T20:13:28.243Z" },
@@ -2861,7 +2861,7 @@ wheels = [
 [[package]]
 name = "pyyaml"
 version = "6.0.2"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/54/ed/79a089b6be93607fa5cdaedf301d7dfb23af5f25c398d5ead2525b063e17/pyyaml-6.0.2.tar.gz", hash = "sha256:d584d9ec91ad65861cc08d42e834324ef890a082e591037abe114850ff7bbc3e", size = 130631, upload-time = "2024-08-06T20:33:50.674Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/ef/e3/3af305b830494fa85d95f6d95ef7fa73f2ee1cc8ef5b495c7c3269fb835f/PyYAML-6.0.2-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:efdca5630322a10774e8e98e1af481aad470dd62c3170801852d752aa7a783ba", size = 181309, upload-time = "2024-08-06T20:32:43.4Z" },
@@ -2878,7 +2878,7 @@ wheels = [
 [[package]]
 name = "scipy"
 version = "1.16.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "numpy" },
 ]
@@ -2925,7 +2925,7 @@ wheels = [
 [[package]]
 name = "shiboken6"
 version = "6.9.1"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/98/98/34d4d25b79055959b171420d47fcc10121aefcbb261c91d5491252830e31/shiboken6-6.9.1-cp39-abi3-macosx_12_0_universal2.whl", hash = "sha256:40e92afc88da06b5100c56b761e59837ff282166e9531268f3d910b6128e621e", size = 406159, upload-time = "2025-06-03T13:16:45.104Z" },
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/5a/07/53b2532ecd42ff925feb06b7bb16917f5f99f9c3470f0815c256789d818b/shiboken6-6.9.1-cp39-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:efcdfa8655d34aaf8d7a0c7724def3440bd46db02f5ad3b1785db5f6ccb0a8ff", size = 206756, upload-time = "2025-06-03T13:16:46.528Z" },
@@ -2935,18 +2935,18 @@ wheels = [
 ]
 
 [[package]]
-name = "toml"
-version = "0.10.2"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253, upload-time = "2020-11-01T01:40:22.204Z" }
+name = "tomlkit"
+version = "0.13.3"
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/cc/18/0bbf3884e9eaa38819ebe46a7bd25dcd56b67434402b66a58c4b8e552575/tomlkit-0.13.3.tar.gz", hash = "sha256:430cf247ee57df2b94ee3fbe588e71d362a941ebb545dec29b53961d61add2a1", size = 185207, upload-time = "2025-06-05T07:13:44.947Z" }
 wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588, upload-time = "2020-11-01T01:40:20.672Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/bd/75/8539d011f6be8e29f339c42e633aae3cb73bffa95dd0f9adec09b9c58e85/tomlkit-0.13.3-py3-none-any.whl", hash = "sha256:c89c649d79ee40629a9fda55f8ace8c6a1b42deb912b2a8fd8d942ddadb606b0", size = 38901, upload-time = "2025-06-05T07:13:43.546Z" },
 ]
 
 [[package]]
 name = "zstandard"
 version = "0.23.0"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple/" }
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "cffi", marker = "platform_python_implementation == 'PyPy'" },
 ]

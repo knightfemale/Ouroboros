@@ -14,6 +14,8 @@ group_style: str = yellow_style.get_groupbox_style()
 button_style: str = yellow_style.get_button_style()
 lable_style: str = yellow_style.get_lable_style()
 
+config_path: Path = config_util.config_path
+
 class NuitkaBuildInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent=parent)
@@ -68,27 +70,27 @@ class NuitkaBuildInterface(Interface):
         package_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "启用包", style=group_style)
         package_layout: QVBoxLayout = QVBoxLayout(package_group)
         self.packages_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, package_layout, "输入包名(例如: numpy)")
-        self.pip_add_btn: PushButton = gui_util.ButtonBuilder.create(self, package_layout, "添加包", slot=lambda: self.packages_container.add_row(""), style=green_style.get_button_style())
+        self.add_package_btn: PushButton = gui_util.ButtonBuilder.create(self, package_layout, "添加包", slot=lambda: self.packages_container.add_row(""), style=green_style.get_button_style())
         # 启用模块区域
-        module_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "启用包", style=group_style)
+        module_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "启用模块", style=group_style)
         module_layout: QVBoxLayout = QVBoxLayout(module_group)
         self.modules_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, module_layout, "输入模块名(例如: sys)")
-        self.pip_add_btn = gui_util.ButtonBuilder.create(self, module_layout, "添加模块", slot=lambda: self.modules_container.add_row(""), style=green_style.get_button_style())
+        self.add_module_btn = gui_util.ButtonBuilder.create(self, module_layout, "添加模块", slot=lambda: self.modules_container.add_row(""), style=green_style.get_button_style())
         # 启用插件区域
         plugin_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "启用插件", style=group_style)
         plugin_layout: QVBoxLayout = QVBoxLayout(plugin_group)
         self.plugins_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, plugin_layout, "输入插件名(例如: pyside6)")
-        self.pip_add_btn: PushButton = gui_util.ButtonBuilder.create(self, plugin_layout, "添加插件", slot=lambda: self.plugins_container.add_row(""), style=green_style.get_button_style())
+        self.add_plugin_btn: PushButton = gui_util.ButtonBuilder.create(self, plugin_layout, "添加插件", slot=lambda: self.plugins_container.add_row(""), style=green_style.get_button_style())
         # 包含文件区域
         file_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "包含文件", style=group_style)
         file_layout: QVBoxLayout = QVBoxLayout(file_group)
         self.files_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, file_layout, "输入文件路径(格式: 源文件=目标路径)")
-        self.pip_add_btn: PushButton = gui_util.ButtonBuilder.create(self, file_layout, "添加文件", slot=lambda: self.files_container.add_row(""), style=green_style.get_button_style())
+        self.add_file_btn: PushButton = gui_util.ButtonBuilder.create(self, file_layout, "添加文件", slot=lambda: self.files_container.add_row(""), style=green_style.get_button_style())
         # 包含目录区域
         dir_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "包含目录", style=group_style)
         dir_layout: QVBoxLayout = QVBoxLayout(dir_group)
         self.dirs_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, dir_layout, "输入目录路径(格式: 源目录=目标路径)")
-        self.pip_add_btn: PushButton = gui_util.ButtonBuilder.create(self, dir_layout, "添加目录", slot=lambda: self.dirs_container.add_row(""), style=green_style.get_button_style())
+        self.add_dir_btn: PushButton = gui_util.ButtonBuilder.create(self, dir_layout, "添加目录", slot=lambda: self.dirs_container.add_row(""), style=green_style.get_button_style())
         # 高级选项区域
         advanced_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "高级选项", style=group_style)
         advanced_layout: QVBoxLayout = QVBoxLayout(advanced_group)
@@ -99,11 +101,11 @@ class NuitkaBuildInterface(Interface):
         extra_args_group: QGroupBox = gui_util.GroupBuilder.create(self, advanced_layout, "额外参数", style=group_style)
         extra_args_layout: QVBoxLayout = QVBoxLayout(extra_args_group)
         self.extra_args_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, extra_args_layout, "输入额外参数(例如: --lto=yes)")
-        self.pip_add_btn: PushButton = gui_util.ButtonBuilder.create(self, extra_args_layout, "添加参数", slot=lambda: self.extra_args_container.add_row(""), style=green_style.get_button_style())
+        self.add_arg_btn: PushButton = gui_util.ButtonBuilder.create(self, extra_args_layout, "添加参数", slot=lambda: self.extra_args_container.add_row(""), style=green_style.get_button_style())
     
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
-        config: Dict[str, Any] = config_util.load_config().get("nuitka", {})
+        config: Dict[str, Any] = config_util.load_yaml(config_path).get("nuitka", {})
         # 固定字段
         self.entry_input.setText(config.get("entry", ""))
         self.output_name_input.setText(config.get("output_name", ""))
@@ -128,7 +130,7 @@ class NuitkaBuildInterface(Interface):
     
     def save_ui_to_config(self: Self) -> None:
         """保存UI状态到配置文件"""
-        config: Dict[str, Any] = config_util.load_config()
+        config: Dict[str, Any] = config_util.load_yaml(config_path)
         nuitka_config: Dict[str, Any] = config.setdefault("nuitka", {})
         # 固定字段
         nuitka_config.update({
@@ -147,7 +149,7 @@ class NuitkaBuildInterface(Interface):
         for field in ["plugins", "packages", "modules", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             nuitka_config[field] = container.get_items()
-        config_util.save_config(config)
+        config_util.save_yaml(config, config_path)
         gui_util.MessageDisplay.success(self, "保存配置成功")
     
     def start_packaging(self: Self) -> None:
@@ -217,7 +219,7 @@ class NuitkaBuildInterface(Interface):
         """获取可能的 Python 解释器路径"""
         possible_paths = [
             # conda 路径
-            Path.cwd() / f"{config_util.load_config().get('name')}/python.exe",
+            Path.cwd() / f"{config_util.load_yaml(config_path).get('name')}/python.exe",
             # uv 路径
             Path.cwd() / ".venv/Scripts/python.exe",
         ]

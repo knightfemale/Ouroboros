@@ -66,7 +66,7 @@ class UVManageInterface(Interface):
     
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
-        config: Dict[str, Any] = config_util.load_uv_config()
+        config: Dict[str, Any] = config_util.load_toml(config_path)
         # 加载项目版本
         if "project" in config and "version" in config["project"]:
             self.project_version_input.setText(config["project"]["version"])
@@ -90,7 +90,7 @@ class UVManageInterface(Interface):
         if not config_path.exists():
             self.init_project()
         # 加载现有配置
-        config: Dict[str, Any] = config_util.load_uv_config()
+        config: Dict[str, Any] = config_util.load_toml(config_path)
         # 更新项目版本
         config["project"]["version"] = self.get_project_version()
         # 更新 Python 版本
@@ -102,7 +102,7 @@ class UVManageInterface(Interface):
         elif "dependencies" in config["project"]:
             del config["project"]["dependencies"]
         # 写入文件
-        config_util.save_uv_config(config)
+        config_util.save_toml(config, config_path)
         self.load_config_to_ui()
         gui_util.MessageDisplay.success(self, "保存配置成功")
     
@@ -118,7 +118,7 @@ class UVManageInterface(Interface):
                 "name": f"{Path.cwd().name.lower()}",
             },
         }
-        config_util.save_uv_config(base_config)
+        config_util.save_toml(base_config, config_path)
         gui_util.MessageDisplay.success(self, "uv 配置文件初始化完成")
     
     def get_project_version(self: Self) -> str:

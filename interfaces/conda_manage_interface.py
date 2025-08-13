@@ -1,5 +1,6 @@
 # interfaces/conda_manage_interface.py
 import subprocess
+from pathlib import Path
 from qfluentwidgets import LineEdit, PushButton
 from typing import Any, Self, List, Dict, Optional
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
@@ -11,6 +12,8 @@ from utils import config_util, gui_util, delay_util
 group_style: str = green_style.get_groupbox_style()
 button_style: str = green_style.get_button_style()
 lable_style: str = green_style.get_lable_style()
+
+config_path: Path = config_util.config_path
 
 class CondaManageInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
@@ -68,7 +71,7 @@ class CondaManageInterface(Interface):
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
         # 加载配置
-        config: Dict[str, Any] = config_util.load_config()
+        config: Dict[str, Any] = config_util.load_yaml(config_path)
         # 设置环境名称
         env_name: str = config.get('name', '.venv')
         self.env_name_input.setText(env_name)
@@ -97,13 +100,13 @@ class CondaManageInterface(Interface):
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""
         # 先加载完整配置
-        full_config: Dict[str, Any] = config_util.load_config()
+        full_config: Dict[str, Any] = config_util.load_yaml(config_path)
         # 只更新环境构建部分
         full_config.update({
             "name": self.get_env_name(),
             "dependencies": self.collect_dependencies()
         })
-        config_util.save_config(full_config)
+        config_util.save_yaml(full_config, config_path)
         self.load_config_to_ui()
         gui_util.MessageDisplay.success(self, "保存配置成功")
     
