@@ -50,6 +50,7 @@ class NuitkaBuildInterface(Interface):
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
         self.build_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "编译打包", slot=self.start_packaging, style=button_style)
         self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
+        self.command_preview: LineEdit = gui_util.InputBuilder.create(self, action_layout, "命令预览", "生成的命令将显示在这里", lable_style=lable_style)
         # 基本选项区域
         options_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "基本选项", style=group_style)
         options_layout: QVBoxLayout = QVBoxLayout(options_group)
@@ -127,6 +128,8 @@ class NuitkaBuildInterface(Interface):
         for field in ["plugins", "packages", "modules", "no_imports", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             container.set_items(config.get(field, []))
+        # 更新预览命令
+        self.command_preview.setText(self.generate_command_string())
     
     def showEvent(self: Self, event: Any) -> None:
         """当界面显示时触发"""
@@ -156,12 +159,25 @@ class NuitkaBuildInterface(Interface):
             nuitka_config[field] = container.get_items()
         config_util.save_yaml(config, config_path)
         gui_util.MessageDisplay.success(self, "保存配置成功")
+        # 更新预览命令
+        self.command_preview.setText(self.generate_command_string())
     
     def start_packaging(self: Self) -> None:
         """执行打包命令"""
         # 保存到配置
         self.save_ui_to_config()
-        # 参数列表
+        # 获取命令字符串
+        command_str = self.generate_command_string()
+        # 执行命令
+        if command_str:
+            command: str = f"start \"NuitkaBuild\" cmd /k {command_str}"
+            gui_util.MessageDisplay.info(self, "开始编译打包")
+            subprocess.run(command, shell=True)
+        else:
+            gui_util.MessageDisplay.error(self, "未找到解释器")
+    
+    def generate_command_string(self: Self) -> str:
+        """生成命令字符串"""
         nuitka_args: List[str] = ["-m", "nuitka"]
         # 添加输入框参数
         INPUT_FIELDS = {
@@ -215,11 +231,9 @@ class NuitkaBuildInterface(Interface):
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             for item in container.get_items():
                 nuitka_args.append(f"{flag}{item}")
-        # 执行命令
         if python_path := self.get_python_path():
-            command: str = f"start \"NuitkaBuild\" cmd /k \"{python_path}\" {" ".join(nuitka_args)}"
-            gui_util.MessageDisplay.info(self, f"开始编译打包: {command}")
-            subprocess.run(command, shell=True)
+            return f"\"{python_path}\" {' '.join(nuitka_args)}"
+        return ""
     
     def get_python_path(self: Self) -> str:
         """获取可能的 Python 解释器路径"""
