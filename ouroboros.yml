@@ -9,16 +9,21 @@ name: .venv
 nuitka:
   assume_yes: true
   build_mode: 单文件模式
-  compiler: MSVC
+  compiler: Auto
   dirs: []
   disable_console: true
   entry: ./main.py
   extra_args:
   - --windows-icon-from-ico=resources/icons/icon.ico
-  - --nofollow-import-to=*.tests,nuitka,numpy,pillow,scipy
   files: []
   jobs: '11'
   modules: []
+  no_imports:
+  - scipy
+  - numpy
+  - nuitka
+  - pillow
+  - '*.tests'
   output_dir: output
   output_name: Ouroboros-v0.2.0
   packages: []

@@ -81,6 +81,11 @@ class NuitkaBuildInterface(Interface):
         plugin_layout: QVBoxLayout = QVBoxLayout(plugin_group)
         self.plugins_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, plugin_layout, "输入插件名(例如: pyside6)")
         self.add_plugin_btn: PushButton = gui_util.ButtonBuilder.create(self, plugin_layout, "添加插件", slot=lambda: self.plugins_container.add_row(""), style=green_style.get_button_style())
+        # 禁用导入项区域
+        no_import_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "禁用导入项", style=group_style)
+        no_import_layout: QVBoxLayout = QVBoxLayout(no_import_group)
+        self.no_imports_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, no_import_layout, "输入导入项名(例如: *.tests)")
+        self.add_no_import_btn: PushButton = gui_util.ButtonBuilder.create(self, no_import_layout, "添加导入项", slot=lambda: self.no_imports_container.add_row(""), style=green_style.get_button_style())
         # 包含文件区域
         file_group: QGroupBox = gui_util.GroupBuilder.create(self, import_layout, "包含文件", style=group_style)
         file_layout: QVBoxLayout = QVBoxLayout(file_group)
@@ -119,7 +124,7 @@ class NuitkaBuildInterface(Interface):
         self.compiler_combo.setCurrentText(config.get("compiler", "Auto"))
         self.jobs_combo.setCurrentText(config.get("jobs", self.default_job))
         # 动态字段
-        for field in ["plugins", "packages", "modules", "files", "dirs", "extra_args"]:
+        for field in ["plugins", "packages", "modules", "no_imports", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             container.set_items(config.get(field, []))
     
@@ -146,7 +151,7 @@ class NuitkaBuildInterface(Interface):
             "jobs": self.jobs_combo.currentText(),
         })
         # 动态字段
-        for field in ["plugins", "packages", "modules", "files", "dirs", "extra_args"]:
+        for field in ["plugins", "packages", "modules", "no_imports", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             nuitka_config[field] = container.get_items()
         config_util.save_yaml(config, config_path)
@@ -204,6 +209,7 @@ class NuitkaBuildInterface(Interface):
             ("modules", "--include-module="),
             ("files", "--include-data-files="),
             ("dirs", "--include-data-dir="),
+            ("no_imports", "--nofollow-import-to="),
             ("extra_args", ""),
         ]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
