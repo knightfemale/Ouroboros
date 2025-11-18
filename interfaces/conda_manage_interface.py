@@ -9,11 +9,13 @@ from utils.style_util import green_style
 from interfaces.interface import Interface
 from utils import config_util, gui_util, delay_util
 
+
 group_style: str = green_style.get_groupbox_style()
 button_style: str = green_style.get_button_style()
 lable_style: str = green_style.get_lable_style()
 
-config_path: Path = config_util.config_path
+config_path: Path = Path("./environment.yml")
+
 
 class CondaManageInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
@@ -35,7 +37,7 @@ class CondaManageInterface(Interface):
                 "operate": delay_util.set_label_text,
             },
         }
-    
+
     def init_ui(self: Self) -> None:
         """初始化 UI"""
         # 标题区域
@@ -67,49 +69,46 @@ class CondaManageInterface(Interface):
         conda_layout: QVBoxLayout = QVBoxLayout(conda_group)
         self.conda_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, conda_layout, "输入 conda 包名")
         self.conda_add_btn: PushButton = gui_util.ButtonBuilder.create(self, conda_layout, "添加", slot=lambda: self.conda_container.add_row(""), style=green_style.get_button_style())
-    
+
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
         # 加载配置
         config: Dict[str, Any] = config_util.load_yaml(config_path)
         # 设置环境名称
-        env_name: str = config.get('name', '.venv')
+        env_name: str = config.get("name", ".venv")
         self.env_name_input.setText(env_name)
         # 设置 Python 版本
         python_version: str = ""
-        for dep in config.get('dependencies', []):
-            if isinstance(dep, str) and dep.startswith('python='):
-                python_version: str = dep.split('=')[1]
+        for dep in config.get("dependencies", []):
+            if isinstance(dep, str) and dep.startswith("python="):
+                python_version: str = dep.split("=")[1]
                 break
         if python_version:
             self.python_version_input.setText(python_version)
         # 添加 conda 包
         conda_packages: Any[str] = []
-        for dep in config.get('dependencies', []):
-            if isinstance(dep, str) and not dep.startswith('python='):
+        for dep in config.get("dependencies", []):
+            if isinstance(dep, str) and not dep.startswith("python="):
                 conda_packages.append(dep)
         self.conda_container.set_items(conda_packages)
         # 添加 pip 包
         pip_packages: List[str] = []
-        for dep in config.get('dependencies', []):
-            if isinstance(dep, dict) and 'pip' in dep:
-                for pip_dep in dep['pip']:
+        for dep in config.get("dependencies", []):
+            if isinstance(dep, dict) and "pip" in dep:
+                for pip_dep in dep["pip"]:
                     pip_packages.append(pip_dep)
         self.pip_container.set_items(pip_packages)
-    
+
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""
         # 先加载完整配置
         full_config: Dict[str, Any] = config_util.load_yaml(config_path)
         # 只更新环境构建部分
-        full_config.update({
-            "name": self.get_env_name(),
-            "dependencies": self.collect_dependencies()
-        })
+        full_config.update({"name": self.get_env_name(), "dependencies": self.collect_dependencies()})
         config_util.save_yaml(full_config, config_path)
         self.load_config_to_ui()
         gui_util.MessageDisplay.success(self, "保存配置成功")
-    
+
     def collect_dependencies(self) -> list:
         """收集所有依赖项"""
         deps: List[Any] = [f"python={self.get_python_version()}"]
@@ -120,7 +119,7 @@ class CondaManageInterface(Interface):
         if pip_packages:
             deps.append({"pip": pip_packages})
         return deps
-    
+
     def build_env(self: Self) -> None:
         """构建环境"""
         # 获取参数
@@ -129,24 +128,24 @@ class CondaManageInterface(Interface):
         self.save_ui_to_config()
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始环境构建")
-        subprocess.run(f"start \"CondaBuild\" cmd /k conda env create --file {config_util.config_path} --prefix ./{env_name}", shell=True)
-    
+        subprocess.run(f'start "CondaBuild" cmd /k conda env create --file {config_path} --prefix ./{env_name}', shell=True)
+
     def activate_venv(self: Self) -> None:
         """激活环境"""
         # 获取参数
         env_name: str = self.get_env_name()
         # 执行命令
         gui_util.MessageDisplay.info(self, f"激活环境: {env_name}")
-        subprocess.run(f"start \"CondaActivate\" cmd /k call activate ./{env_name}", shell=True)
-    
+        subprocess.run(f'start "CondaActivate" cmd /k call activate ./{env_name}', shell=True)
+
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
         # 获取参数
         env_name: str = self.get_env_name()
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始导出 requirements.txt")
-        subprocess.Popen(f"\"./{env_name}/python\" -m pip freeze > ./requirements.txt", shell=True)
-    
+        subprocess.Popen(f'"./{env_name}/python" -m pip freeze > ./requirements.txt', shell=True)
+
     def export_environment(self: Self) -> None:
         """导出依赖 environment.yml"""
         # 获取参数
@@ -154,13 +153,13 @@ class CondaManageInterface(Interface):
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始导出 environment.yml")
         subprocess.Popen(f"conda env export -p ./{env_name} > ./environment.yml", shell=True)
-    
+
     def get_env_name(self: Self) -> str:
         """带默认参数地获取环境名"""
         env_name: str = self.env_name_input.text().strip()
-        return env_name if env_name else '.venv'
-    
+        return env_name if env_name else ".venv"
+
     def get_python_version(self: Self) -> str:
         """带默认参数地获取 Python 版本"""
         python_version: str = self.python_version_input.text().strip()
-        return python_version if python_version else '3.10'
+        return python_version if python_version else "3.10"

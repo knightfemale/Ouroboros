@@ -15,6 +15,7 @@ from interfaces.help_interface import HelpInterface
 from resources import icon
 from utils import icon_util
 
+
 class MainWindow(FluentWindow):
     def __init__(self: Self) -> None:
         super().__init__()
@@ -33,7 +34,7 @@ class MainWindow(FluentWindow):
         self.homeInterface.pack_button.clicked.connect(lambda: self.switchTo(self.nuitka_build_interface))
         self.homeInterface.env_button.clicked.connect(lambda: self.switchTo(self.conda_manage_interface))
         self.homeInterface.uv_button.clicked.connect(lambda: self.switchTo(self.uv_manage_interface))
-    
+
     def add_navigation_items(self: Self) -> None:
         # 添加主导航项
         self.addSubInterface(
@@ -58,15 +59,16 @@ class MainWindow(FluentWindow):
         )
         # 添加底部导航
         self.addSubInterface(
-            self.helpInterface, 
-            FluentIcon.HELP, 
+            self.helpInterface,
+            FluentIcon.HELP,
             "帮助与支持",
             position=NavigationItemPosition.BOTTOM,
         )
         # 默认选中首页
         self.switchTo(self.homeInterface)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app: QApplication = QApplication(sys.argv)
     window: MainWindow = MainWindow()
     window.show()

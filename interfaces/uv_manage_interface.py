@@ -13,7 +13,8 @@ group_style: str = purple_style.get_groupbox_style()
 button_style: str = purple_style.get_button_style()
 lable_style: str = purple_style.get_lable_style()
 
-config_path: Path = config_util.uv_config_path
+config_path: Path = config_util.config_path
+
 
 class UVManageInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
@@ -35,7 +36,7 @@ class UVManageInterface(Interface):
                 "operate": delay_util.set_label_text,
             },
         }
-    
+
     def init_ui(self: Self) -> None:
         """初始化 UI"""
         # 标题区域
@@ -57,13 +58,13 @@ class UVManageInterface(Interface):
         # 项目元数据区域
         metadata_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "项目元数据", style=group_style)
         metadata_layout: QVBoxLayout = QVBoxLayout(metadata_group)
-        self.project_version_input: LineEdit = gui_util.InputBuilder.create(self, metadata_layout, "项目版本", "输入项目版本(例如: 0.1.0)", lable_style=lable_style)
+        self.project_version_input: LineEdit = gui_util.InputBuilder.create(self, metadata_layout, "项目版本", "输入项目版本(例如: 0.0.1)", lable_style=lable_style)
         # pip 包管理区域
         pip_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "包管理", style=group_style)
         pip_layout: QVBoxLayout = QVBoxLayout(pip_group)
         self.pip_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, pip_layout, "输入包名")
         self.pip_add_btn: PushButton = gui_util.ButtonBuilder.create(self, pip_layout, "添加", slot=lambda: self.pip_container.add_row(""), style=green_style.get_button_style())
-    
+
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
         config: Dict[str, Any] = config_util.load_toml(config_path)
@@ -76,15 +77,15 @@ class UVManageInterface(Interface):
         # 加载依赖
         if "project" in config and "dependencies" in config["project"]:
             self.pip_container.set_items(config["project"]["dependencies"])
-    
+
     def sync_env(self: Self) -> None:
         """同步环境"""
         # 保存配置
         self.save_ui_to_config()
         # 执行同步命令
         gui_util.MessageDisplay.info(self, "开始同步环境")
-        subprocess.run(f"start \"UVSync\" cmd /k uv sync", shell=True)
-    
+        subprocess.run(f'start "UVSync" cmd /k uv sync', shell=True)
+
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""
         if not config_path.exists():
@@ -105,12 +106,12 @@ class UVManageInterface(Interface):
         config_util.save_toml(config, config_path)
         self.load_config_to_ui()
         gui_util.MessageDisplay.success(self, "保存配置成功")
-    
+
     def activate_venv(self: Self) -> None:
         """激活环境"""
         gui_util.MessageDisplay.info(self, "激活环境: .venv")
-        subprocess.run(f"start \"UVActivate\" cmd /k \".\\.venv\\Scripts\\activate\"", shell=True)
-    
+        subprocess.run(f'start "UVActivate" cmd /k ".\\.venv\\Scripts\\activate"', shell=True)
+
     def init_project(self: Self) -> None:
         """初始化 uv 配置文件"""
         base_config: Dict[str, Any] = {
@@ -120,13 +121,13 @@ class UVManageInterface(Interface):
         }
         config_util.save_toml(base_config, config_path)
         gui_util.MessageDisplay.success(self, "uv 配置文件初始化完成")
-    
+
     def get_project_version(self: Self) -> str:
         """带默认参数地获取项目版本"""
         project_version: str = self.project_version_input.text().strip()
-        return project_version if project_version else '0.1.0'
-    
+        return project_version if project_version else "0.0.1"
+
     def get_python_version(self: Self) -> str:
         """带默认参数地获取 Python 版本"""
         python_version: str = self.python_version_input.text().strip()
-        return python_version if python_version else '3.10'
+        return python_version if python_version else "3.10"

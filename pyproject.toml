@@ -1,10 +1,39 @@
 [project]
-name = "ouroborosuv"
-version = "0.2.0"
+name = "ouroboros"
+version = "0.3.0"
 requires-python = ">=3.13"
 dependencies = [
     "nuitka",
     "pyyaml",
     "tomlkit",
     "pyside6-fluent-widgets[full]",
+]
+
+[tool.ouroboros.nuitka]
+entry = "./main.py"
+output_name = "Ouroboros-v0.3.0"
+output_dir = "output"
+build_mode = "单文件模式"
+disable_console = true
+remove_output = true
+show_scons = false
+assume_yes = true
+compiler = "Auto"
+jobs = "11"
+plugins = [
+    "pyside6",
+]
+packages = []
+modules = []
+no_imports = [
+    "scipy",
+    "numpy",
+    "nuitka",
+    "pillow",
+    "*.tests",
+]
+files = []
+dirs = []
+extra_args = [
+    "--windows-icon-from-ico=resources/icons/icon.ico",
 ]

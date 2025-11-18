@@ -5,21 +5,22 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 
 from utils.style_util import yellow_style, green_style, purple_style
 
+
 class HomeInterface(QWidget):
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
         self.setObjectName("HomeInterface")
         self.init_ui()
-    
+
     def init_ui(self) -> None:
         layout = QVBoxLayout(self)
-        layout.setAlignment(Qt.AlignCenter) # pyright: ignore[reportAttributeAccessIssue]
+        layout.setAlignment(Qt.AlignCenter)  # pyright: ignore[reportAttributeAccessIssue]
         title = QLabel("Ouroboros - Python 项目自动化工具", self)
         title.setStyleSheet("font-size: 28px; font-weight: bold; color: #666666;")
         description = QLabel("一站式解决方案: 环境构建、打包部署、性能优化", self)
         description.setStyleSheet("font-size: 18px; color: #666666;")
         button_layout = QHBoxLayout()
-        button_layout.setAlignment(Qt.AlignCenter) # pyright: ignore[reportAttributeAccessIssue]
+        button_layout.setAlignment(Qt.AlignCenter)  # pyright: ignore[reportAttributeAccessIssue]
         self.pack_button = PrimaryPushButton("Nuitka 编译打包", self)
         self.pack_button.setFixedSize(180, 60)
         self.pack_button.setStyleSheet(yellow_style.get_button_style())

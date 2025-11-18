@@ -5,24 +5,26 @@ from pathlib import Path
 from typing import Any, Dict
 from tomlkit.items import Array, Table
 
+
 # 项目配置文件路径
-config_path: Path = Path("./ouroboros.yml")
-# uv 配置文件路径
-uv_config_path: Path = Path("./pyproject.toml")
+config_path: Path = Path("./pyproject.toml")
 # 全局配置文件路径
 global_config_path: Path = Path.home() / "ouroboros.toml"
+
 
 def load_yaml(file_path: Path) -> Dict[str, Any]:
     """加载 YAML 文件"""
     if file_path.exists():
-        with open(file_path, "r", encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f) or {}
     return {}
 
+
 def save_yaml(config: Dict, file_path: Path) -> None:
     """保存 YAML 文件"""
-    with open(file_path, "w", encoding='utf-8') as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         yaml.dump(config, f, allow_unicode=True)
+
 
 def load_toml(file_path: Path) -> Dict[str, Any]:
     """加载 TOML 文件"""
@@ -35,6 +37,7 @@ def load_toml(file_path: Path) -> Dict[str, Any]:
             return {}
     return {}
 
+
 def save_toml(config: Dict, file_path: Path) -> None:
     """保存 TOML 文件"""
     doc: tomlkit.TOMLDocument = tomlkit.document()
@@ -42,6 +45,7 @@ def save_toml(config: Dict, file_path: Path) -> None:
         doc[key] = process_value(value)
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(tomlkit.dumps(doc))
+
 
 def process_value(value) -> Array | Table | Any:
     """递归处理使所有数组都使用多行格式"""

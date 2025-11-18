@@ -10,11 +10,13 @@ from interfaces.interface import Interface
 from utils import config_util, gui_util, delay_util
 from utils.style_util import yellow_style, green_style
 
+
 group_style: str = yellow_style.get_groupbox_style()
 button_style: str = yellow_style.get_button_style()
 lable_style: str = yellow_style.get_lable_style()
 
 config_path: Path = config_util.config_path
+
 
 class NuitkaBuildInterface(Interface):
     def __init__(self: Self, parent: Optional[QWidget] = None) -> None:
@@ -36,7 +38,7 @@ class NuitkaBuildInterface(Interface):
                 "operate": delay_util.set_label_text,
             },
         }
-    
+
     def init_ui(self: Self) -> None:
         """初始化 UI"""
         # 标题区域
@@ -108,60 +110,62 @@ class NuitkaBuildInterface(Interface):
         extra_args_layout: QVBoxLayout = QVBoxLayout(extra_args_group)
         self.extra_args_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, extra_args_layout, "输入额外参数(例如: --lto=yes)")
         self.add_arg_btn: PushButton = gui_util.ButtonBuilder.create(self, extra_args_layout, "添加参数", slot=lambda: self.extra_args_container.add_row(""), style=green_style.get_button_style())
-    
+
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
-        config: Dict[str, Any] = config_util.load_yaml(config_path).get("nuitka", {})
+        nuitka_config: Dict[str, Any] = config_util.load_toml(config_path).get("tool", {}).get("ouroboros", {}).get("nuitka", {})
         # 固定字段
-        self.entry_input.setText(config.get("entry", ""))
-        self.output_name_input.setText(config.get("output_name", ""))
-        self.output_dir_input.setText(config.get("output_dir", ""))
-        build_mode: str = config.get("build_mode", "独立模式")
+        self.entry_input.setText(nuitka_config.get("entry", ""))
+        self.output_name_input.setText(nuitka_config.get("output_name", ""))
+        self.output_dir_input.setText(nuitka_config.get("output_dir", ""))
+        build_mode: str = nuitka_config.get("build_mode", "独立模式")
         self.build_mode_combo.setCurrentText(build_mode)
-        self.disable_console_switch.setChecked(config.get("disable_console", False))
-        self.remove_output_switch.setChecked(config.get("remove_output", True))
-        self.show_scons_switch.setChecked(config.get("show_scons", False))
-        self.assume_yes_switch.setChecked(config.get("assume_yes", True))
-        self.compiler_combo.setCurrentText(config.get("compiler", "Auto"))
-        self.jobs_combo.setCurrentText(config.get("jobs", self.default_job))
+        self.disable_console_switch.setChecked(nuitka_config.get("disable_console", False))
+        self.remove_output_switch.setChecked(nuitka_config.get("remove_output", True))
+        self.show_scons_switch.setChecked(nuitka_config.get("show_scons", False))
+        self.assume_yes_switch.setChecked(nuitka_config.get("assume_yes", True))
+        self.compiler_combo.setCurrentText(nuitka_config.get("compiler", "Auto"))
+        self.jobs_combo.setCurrentText(nuitka_config.get("jobs", self.default_job))
         # 动态字段
         for field in ["plugins", "packages", "modules", "no_imports", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
-            container.set_items(config.get(field, []))
+            container.set_items(nuitka_config.get(field, []))
         # 更新预览命令
         self.command_preview.setText(self.generate_command_string())
-    
+
     def showEvent(self: Self, event: Any) -> None:
         """当界面显示时触发"""
         self.delay_variables["nuitka_version"]["command"][0] = self.get_python_path()
         super().showEvent(event)
-    
+
     def save_ui_to_config(self: Self) -> None:
         """保存UI状态到配置文件"""
-        config: Dict[str, Any] = config_util.load_yaml(config_path)
-        nuitka_config: Dict[str, Any] = config.setdefault("nuitka", {})
+        config: Dict[str, Any] = config_util.load_toml(config_path)
+        nuitka_config: Dict[str, Any] = config.get("tool", {}).get("ouroboros", {}).get("nuitka", {})
         # 固定字段
-        nuitka_config.update({
-            "entry": self.entry_input.text().strip(),
-            "output_name": self.output_name_input.text().strip(),
-            "output_dir": self.output_dir_input.text().strip(),
-            "build_mode": self.build_mode_combo.currentText(),
-            "disable_console": self.disable_console_switch.isChecked(),
-            "remove_output": self.remove_output_switch.isChecked(),
-            "show_scons": self.show_scons_switch.isChecked(),
-            "assume_yes": self.assume_yes_switch.isChecked(),
-            "compiler": self.compiler_combo.currentText(),
-            "jobs": self.jobs_combo.currentText(),
-        })
+        nuitka_config.update(
+            {
+                "entry": self.entry_input.text().strip(),
+                "output_name": self.output_name_input.text().strip(),
+                "output_dir": self.output_dir_input.text().strip(),
+                "build_mode": self.build_mode_combo.currentText(),
+                "disable_console": self.disable_console_switch.isChecked(),
+                "remove_output": self.remove_output_switch.isChecked(),
+                "show_scons": self.show_scons_switch.isChecked(),
+                "assume_yes": self.assume_yes_switch.isChecked(),
+                "compiler": self.compiler_combo.currentText(),
+                "jobs": self.jobs_combo.currentText(),
+            }
+        )
         # 动态字段
         for field in ["plugins", "packages", "modules", "no_imports", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             nuitka_config[field] = container.get_items()
-        config_util.save_yaml(config, config_path)
+        config_util.save_toml(config, config_path)
         gui_util.MessageDisplay.success(self, "保存配置成功")
         # 更新预览命令
         self.command_preview.setText(self.generate_command_string())
-    
+
     def start_packaging(self: Self) -> None:
         """执行打包命令"""
         # 保存到配置
@@ -170,12 +174,12 @@ class NuitkaBuildInterface(Interface):
         command_str = self.generate_command_string()
         # 执行命令
         if command_str:
-            command: str = f"start \"NuitkaBuild\" cmd /k {command_str}"
+            command: str = f'start "NuitkaBuild" cmd /k {command_str}'
             gui_util.MessageDisplay.info(self, "开始编译打包")
             subprocess.run(command, shell=True)
         else:
             gui_util.MessageDisplay.error(self, "未找到解释器")
-    
+
     def generate_command_string(self: Self) -> str:
         """生成命令字符串"""
         nuitka_args: List[str] = ["-m", "nuitka"]
@@ -203,12 +207,12 @@ class NuitkaBuildInterface(Interface):
             "build_mode_combo": {
                 "独立模式": "--standalone",
                 "单文件模式": "--onefile",
-                "模块模式": "--module"
+                "模块模式": "--module",
             },
             "compiler_combo": {
                 "MSVC": "--msvc=latest",
                 "MinGW64": "--mingw64",
-                "Clang": "--clang"
+                "Clang": "--clang",
             },
         }
         for combo_name, mapping in COMBO_PARAMS.items():
@@ -234,12 +238,12 @@ class NuitkaBuildInterface(Interface):
         if python_path := self.get_python_path():
             return f"\"{python_path}\" {' '.join(nuitka_args)}"
         return ""
-    
+
     def get_python_path(self: Self) -> str:
         """获取可能的 Python 解释器路径"""
         possible_paths = [
             # conda 路径
-            Path.cwd() / f"{config_util.load_yaml(config_path).get('name')}/python.exe",
+            Path.cwd() / ".venv/python.exe",
             # uv 路径
             Path.cwd() / ".venv/Scripts/python.exe",
         ]
