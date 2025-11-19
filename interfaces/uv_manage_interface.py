@@ -76,7 +76,9 @@ class UVManageInterface(Interface):
                 self.project_version_input.setText(config["project"]["version"])
             # 加载 Python 版本
             if "project" in config and "requires-python" in config["project"]:
-                self.python_version_input.setText(config["project"]["requires-python"][2:])
+                requires_python = config["project"]["requires-python"]
+                # 保持原样显示
+                self.python_version_input.setText(requires_python)
             # 加载依赖
             if "project" in config and "dependencies" in config["project"]:
                 self.pip_container.set_items(config["project"]["dependencies"])
@@ -98,7 +100,14 @@ class UVManageInterface(Interface):
         # 更新项目版本
         config["project"]["version"] = self.get_project_version()
         # 更新 Python 版本
-        config["project"]["requires-python"] = f">={self.get_python_version()}"
+        python_version_input = self.python_version_input.text().strip()
+        if python_version_input and ("," in python_version_input or any(op in python_version_input for op in ["<", ">", "=", "~"])):
+            # 如果用户输入了范围约束(包含逗号或操作符), 则保持原样
+            config["project"]["requires-python"] = python_version_input
+        else:
+            # 否则使用默认的 >= 约束
+            python_version = self.get_python_version()
+            config["project"]["requires-python"] = f">={python_version}"
         # 更新依赖
         dependencies: List[str] = self.pip_container.get_items()
         if dependencies:
