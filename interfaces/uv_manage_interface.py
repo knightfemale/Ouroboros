@@ -51,6 +51,8 @@ class UVManageInterface(Interface):
         self.sync_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "同步环境", slot=self.sync_env, style=button_style)
         self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
         self.activate_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
+        self.export_pip_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖到 requirements.txt", slot=self.export_requirements, style=button_style)
+        self.update_deps_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "更新依赖", slot=self.update_dependencies, style=button_style)
         # 环境参数区域
         env_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "环境参数", style=group_style)
         env_layout: QVBoxLayout = QVBoxLayout(env_group)
@@ -67,16 +69,17 @@ class UVManageInterface(Interface):
 
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
-        config: Dict[str, Any] = config_util.load_toml(config_path)
-        # 加载项目版本
-        if "project" in config and "version" in config["project"]:
-            self.project_version_input.setText(config["project"]["version"])
-        # 加载 Python 版本
-        if "project" in config and "requires-python" in config["project"]:
-            self.python_version_input.setText(config["project"]["requires-python"][2:])
-        # 加载依赖
-        if "project" in config and "dependencies" in config["project"]:
-            self.pip_container.set_items(config["project"]["dependencies"])
+        if config_path.exists():
+            config: Dict[str, Any] = config_util.load_toml(config_path)
+            # 加载项目版本
+            if "project" in config and "version" in config["project"]:
+                self.project_version_input.setText(config["project"]["version"])
+            # 加载 Python 版本
+            if "project" in config and "requires-python" in config["project"]:
+                self.python_version_input.setText(config["project"]["requires-python"][2:])
+            # 加载依赖
+            if "project" in config and "dependencies" in config["project"]:
+                self.pip_container.set_items(config["project"]["dependencies"])
 
     def sync_env(self: Self) -> None:
         """同步环境"""
@@ -111,6 +114,17 @@ class UVManageInterface(Interface):
         """激活环境"""
         gui_util.MessageDisplay.info(self, "激活环境: .venv")
         subprocess.run(f'start "UVActivate" cmd /k ".\\.venv\\Scripts\\activate"', shell=True)
+
+    def export_requirements(self: Self) -> None:
+        """导出依赖 requirements.txt"""
+        # 执行命令
+        gui_util.MessageDisplay.info(self, "开始导出 requirements.txt")
+        subprocess.Popen(f"uv pip freeze > ./requirements.txt", shell=True)
+
+    def update_dependencies(self: Self) -> None:
+        """更新依赖"""
+        gui_util.MessageDisplay.info(self, "开始更新依赖")
+        subprocess.run(f'start "UVUpdate" cmd /k uv sync --upgrade', shell=True)
 
     def init_project(self: Self) -> None:
         """初始化 uv 配置文件"""
