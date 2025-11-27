@@ -24,7 +24,7 @@ class HelpInterface(QWidget):
         title.setStyleSheet(TITLE_STYLE)
         # 仓库链接跳转按钮
         gitee_btn: HyperlinkButton = HyperlinkButton(
-            "https://gitee.com/qishiji/Ouroboros",
+            "https://gitee.com/knightfemale/Ouroboros",
             "gitee 仓库",
             self,
         )

@@ -97,6 +97,9 @@ class UVManageInterface(Interface):
             self.init_project()
         # 加载现有配置
         config: Dict[str, Any] = config_util.load_toml(config_path)
+        # 确保 project 部分存在
+        if "project" not in config:
+            config["project"] = {}
         # 更新项目版本
         config["project"]["version"] = self.get_project_version()
         # 更新 Python 版本
