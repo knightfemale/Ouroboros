@@ -141,7 +141,13 @@ class NuitkaBuildInterface(Interface):
     def save_ui_to_config(self: Self) -> None:
         """保存UI状态到配置文件"""
         config: Dict[str, Any] = config_util.load_toml(config_path)
-        nuitka_config: Dict[str, Any] = config.get("tool", {}).get("ouroboros", {}).get("nuitka", {})
+        # 确保嵌套结构存在
+        if "tool" not in config:
+            config["tool"] = {}
+        if "ouroboros" not in config["tool"]:
+            config["tool"]["ouroboros"] = {}
+        # 获取或创建 nuitka 配置
+        nuitka_config: Dict[str, Any] = config["tool"]["ouroboros"].get("nuitka", {})
         # 固定字段
         nuitka_config.update(
             {
@@ -161,6 +167,8 @@ class NuitkaBuildInterface(Interface):
         for field in ["plugins", "packages", "modules", "no_imports", "files", "dirs", "extra_args"]:
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             nuitka_config[field] = container.get_items()
+        # 将更新后的配置设置回嵌套结构中
+        config["tool"]["ouroboros"]["nuitka"] = nuitka_config
         config_util.save_toml(config, config_path)
         gui_util.MessageDisplay.success(self, "保存配置成功")
         # 更新预览命令
