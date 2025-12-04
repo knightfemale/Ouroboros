@@ -126,11 +126,11 @@ wheels = [
 
 [[package]]
 name = "pycocoa"
-version = "25.4.8"
+version = "25.12.4"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/9b/37/b242899fa4852131f5df3f8e1aa25275a84e642e9352715d0ee8a7e89772/pycocoa-25.4.8.tar.gz", hash = "sha256:fbc66097abe55f63d082f513dc1ed8489736813b87b24a9ca6973860bdc73480", size = 557781, upload-time = "2025-04-08T16:41:02.285Z" }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/d2/f7/4d61927a6be0ce33129b35221751c844e925619f199567517dbf10377ba1/pycocoa-25.12.4.tar.gz", hash = "sha256:6b174e972da63657ddf1095e6504e4cad63e143046752b71aa496e14e8f27722", size = 558218, upload-time = "2025-12-03T21:11:24.551Z" }
 wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/33/0b/a814bd8f6776bfe57171b9e8785f8df134204721ca7d72d9e5abab84d889/pycocoa-25.4.8-py2.py3-none-any.whl", hash = "sha256:ba0c539981d79d6469c226323c94fe486b7732d5ef11e2bf5fdefef4e2de1c57", size = 227218, upload-time = "2025-04-08T16:41:04.122Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/58/f6/0b1b50967c878eae9c84b68dc098ee004cabf57d0d7a449001ddf04b8aaf/pycocoa-25.12.4-py2.py3-none-any.whl", hash = "sha256:189f08be6f3b479bad53711776eec5687a9eddc30e88c1ac24ed458e6053ba1b", size = 227487, upload-time = "2025-12-03T21:11:26.182Z" },
 ]
 
 [[package]]
