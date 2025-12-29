@@ -61,11 +61,16 @@ class UVManageInterface(Interface):
         metadata_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "项目元数据", style=group_style)
         metadata_layout: QVBoxLayout = QVBoxLayout(metadata_group)
         self.project_version_input: LineEdit = gui_util.InputBuilder.create(self, metadata_layout, "项目版本", "输入项目版本(例如: 0.0.1)", lable_style=lable_style)
-        # pip 包管理区域
+        # 依赖管理区域
         pip_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "包管理", style=group_style)
         pip_layout: QVBoxLayout = QVBoxLayout(pip_group)
         self.pip_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, pip_layout, "输入包名")
         self.pip_add_btn: PushButton = gui_util.ButtonBuilder.create(self, pip_layout, "添加", slot=lambda: self.pip_container.add_row(""), style=green_style.get_button_style())
+        # dev 依赖管理区域
+        dev_group: QGroupBox = gui_util.GroupBuilder.create(self, env_layout, "开发依赖", style=group_style)
+        dev_layout: QVBoxLayout = QVBoxLayout(dev_group)
+        self.dev_container: gui_util.DynamicInputContainer = gui_util.DynamicInputContainer(self, dev_layout, "输入开发依赖包名")
+        self.dev_add_btn: PushButton = gui_util.ButtonBuilder.create(self, dev_layout, "添加", slot=lambda: self.dev_container.add_row(""), style=green_style.get_button_style())
 
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
@@ -79,9 +84,12 @@ class UVManageInterface(Interface):
                 requires_python = config["project"]["requires-python"]
                 # 保持原样显示
                 self.python_version_input.setText(requires_python)
-            # 加载依赖
+            # 加载普通依赖
             if "project" in config and "dependencies" in config["project"]:
                 self.pip_container.set_items(config["project"]["dependencies"])
+            # 加载开发依赖
+            if "dependency-groups" in config and "dev" in config["dependency-groups"]:
+                self.dev_container.set_items(config["dependency-groups"]["dev"])
 
     def sync_env(self: Self) -> None:
         """同步环境"""
@@ -90,6 +98,24 @@ class UVManageInterface(Interface):
         # 执行同步命令
         gui_util.MessageDisplay.info(self, "开始同步环境")
         subprocess.run(f'start "UVSync" cmd /k uv sync', shell=True)
+
+    def activate_venv(self: Self) -> None:
+        """激活环境"""
+        gui_util.MessageDisplay.info(self, "激活环境: .venv")
+        subprocess.run(f'start "UVActivate" cmd /k ".\\.venv\\Scripts\\activate"', shell=True)
+
+    def export_requirements(self: Self) -> None:
+        """导出依赖 requirements.txt"""
+        # 执行命令
+        gui_util.MessageDisplay.info(self, "开始导出 requirements.txt")
+        subprocess.Popen(f"uv pip freeze > ./requirements.txt", shell=True)
+
+    def update_dependencies(self: Self) -> None:
+        """更新依赖"""
+        # 保存配置
+        self.save_ui_to_config()
+        gui_util.MessageDisplay.info(self, "开始更新依赖")
+        subprocess.run(f'start "UVUpdate" cmd /k uv sync --upgrade', shell=True)
 
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""
@@ -111,32 +137,28 @@ class UVManageInterface(Interface):
             # 否则使用默认的 >= 约束
             python_version = self.get_python_version()
             config["project"]["requires-python"] = f">={python_version}"
-        # 更新依赖
+        # 更新普通依赖
         dependencies: List[str] = self.pip_container.get_items()
         if dependencies:
             config["project"]["dependencies"] = dependencies
         elif "dependencies" in config["project"]:
             del config["project"]["dependencies"]
+        # 更新开发依赖
+        dev_dependencies: List[str] = self.dev_container.get_items()
+        if dev_dependencies:
+            # 确保 dependency-groups 部分存在
+            if "dependency-groups" not in config:
+                config["dependency-groups"] = {}
+            config["dependency-groups"]["dev"] = dev_dependencies
+        elif "dependency-groups" in config and "dev" in config["dependency-groups"]:
+            del config["dependency-groups"]["dev"]
+            # 如果 dependency-groups 为空, 删除整个部分
+            if not config["dependency-groups"]:
+                del config["dependency-groups"]
         # 写入文件
         config_util.save_toml(config, config_path)
         self.load_config_to_ui()
         gui_util.MessageDisplay.success(self, "保存配置成功")
-
-    def activate_venv(self: Self) -> None:
-        """激活环境"""
-        gui_util.MessageDisplay.info(self, "激活环境: .venv")
-        subprocess.run(f'start "UVActivate" cmd /k ".\\.venv\\Scripts\\activate"', shell=True)
-
-    def export_requirements(self: Self) -> None:
-        """导出依赖 requirements.txt"""
-        # 执行命令
-        gui_util.MessageDisplay.info(self, "开始导出 requirements.txt")
-        subprocess.Popen(f"uv pip freeze > ./requirements.txt", shell=True)
-
-    def update_dependencies(self: Self) -> None:
-        """更新依赖"""
-        gui_util.MessageDisplay.info(self, "开始更新依赖")
-        subprocess.run(f'start "UVUpdate" cmd /k uv sync --upgrade', shell=True)
 
     def init_project(self: Self) -> None:
         """初始化 uv 配置文件"""

@@ -3,11 +3,19 @@ name = "ouroboros"
 version = "0.3.0"
 requires-python = ">=3.13,<3.14"
 dependencies = [
-    "nuitka",
     "pyyaml",
     "tomlkit",
     "pyside6-fluent-widgets[full]",
 ]
+
+[dependency-groups]
+dev = [
+    "nuitka",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
 
 [tool.ouroboros.nuitka]
 entry = "./main.py"
