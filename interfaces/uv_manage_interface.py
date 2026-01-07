@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 from qfluentwidgets import LineEdit, PushButton
 from typing import Any, Self, List, Dict, Optional
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 
 from utils import config_util, gui_util, delay_util
 from interfaces.interface import Interface
@@ -48,11 +48,15 @@ class UVManageInterface(Interface):
         # 操作区域
         action_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "操作", style=group_style)
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
-        self.sync_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "同步环境", slot=self.sync_env, style=button_style)
-        self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
-        self.activate_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
-        self.export_pip_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖到 requirements.txt", slot=self.export_requirements, style=button_style)
-        self.update_deps_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "更新依赖", slot=self.update_dependencies, style=button_style)
+        action_btn_layout: QHBoxLayout = QHBoxLayout()
+        action_layout.addLayout(action_btn_layout)
+        action_btn_layout.addStretch()
+        self.sync_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "同步环境", slot=self.sync_env, style=button_style)
+        self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
+        self.activate_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "激活环境", slot=self.activate_venv, style=button_style)
+        self.export_pip_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "导出 requirements.txt", slot=self.export_requirements, style=button_style)
+        self.update_deps_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "更新依赖", slot=self.update_dependencies, style=button_style)
+        action_btn_layout.addStretch()
         # 环境参数区域
         env_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "环境参数", style=group_style)
         env_layout: QVBoxLayout = QVBoxLayout(env_group)

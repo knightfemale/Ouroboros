@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 from qfluentwidgets import LineEdit, PushButton
 from typing import Any, Self, List, Dict, Optional
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 
 from utils.style_util import green_style
 from interfaces.interface import Interface
@@ -50,11 +50,15 @@ class CondaManageInterface(Interface):
         # 操作区域
         action_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "操作", style=group_style)
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
-        self.build_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "构建环境", slot=self.build_env, style=button_style)
-        self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
-        self.activate_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "激活环境", slot=self.activate_venv, style=button_style)
-        self.export_pip_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 requirements.txt", slot=self.export_requirements, style=button_style)
-        self.export_conda_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "导出依赖 environment.yml", slot=self.export_environment, style=button_style)
+        action_btn_layout: QHBoxLayout = QHBoxLayout()
+        action_layout.addLayout(action_btn_layout)
+        action_btn_layout.addStretch()
+        self.build_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "构建环境", slot=self.build_env, style=button_style)
+        self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
+        self.activate_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "激活环境", slot=self.activate_venv, style=button_style)
+        self.export_pip_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "导出 requirements", slot=self.export_requirements, style=button_style)
+        self.export_conda_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "导出 environment.yml", slot=self.export_environment, style=button_style)
+        action_btn_layout.addStretch()
         # 环境参数区域
         env_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "环境参数", style=group_style)
         env_layout: QVBoxLayout = QVBoxLayout(env_group)

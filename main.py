@@ -10,6 +10,7 @@ from interfaces.home_interface import HomeInterface
 from interfaces.nuitka_build_interface import NuitkaBuildInterface
 from interfaces.conda_manage_interface import CondaManageInterface
 from interfaces.uv_manage_interface import UVManageInterface
+from interfaces.setting_interface import SettingInterface
 from interfaces.help_interface import HelpInterface
 
 from resources import icon
@@ -27,6 +28,7 @@ class MainWindow(FluentWindow):
         self.nuitka_build_interface: NuitkaBuildInterface = NuitkaBuildInterface(self)
         self.conda_manage_interface: CondaManageInterface = CondaManageInterface(self)
         self.uv_manage_interface = UVManageInterface(self)
+        self.settingInterface: SettingInterface = SettingInterface(self)
         self.helpInterface: HelpInterface = HelpInterface(self)
         # 添加导航项
         self.add_navigation_items()
@@ -56,6 +58,12 @@ class MainWindow(FluentWindow):
             self.uv_manage_interface,
             icon_util.FluentIcon.UV,
             "UV 环境管理",
+        )
+        self.addSubInterface(
+            self.settingInterface,
+            FluentIcon.SETTING,
+            "设置",
+            position=NavigationItemPosition.BOTTOM,
         )
         # 添加底部导航
         self.addSubInterface(

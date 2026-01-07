@@ -3,7 +3,7 @@ import subprocess
 import multiprocessing
 from pathlib import Path
 from typing import Any, Self, List, Dict, Optional
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 from qfluentwidgets import LineEdit, ModelComboBox, SwitchButton, PushButton
 
 from interfaces.interface import Interface
@@ -50,9 +50,12 @@ class NuitkaBuildInterface(Interface):
         # 操作区域
         action_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "操作", style=group_style)
         action_layout: QVBoxLayout = QVBoxLayout(action_group)
-        self.build_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "编译打包", slot=self.start_packaging, style=button_style)
-        self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
-        self.clean_cache_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_layout, "清理缓存", slot=self.clean_caches, style=button_style)
+        action_btn_layout: QHBoxLayout = QHBoxLayout()
+        action_layout.addLayout(action_btn_layout)
+        action_btn_layout.addStretch()
+        self.build_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "编译打包", slot=self.start_packaging, style=button_style)
+        self.save_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, action_btn_layout, "保存配置", slot=self.save_ui_to_config, style=button_style)
+        action_btn_layout.addStretch()
         self.command_preview: LineEdit = gui_util.InputBuilder.create(self, action_layout, "命令预览", "生成的命令将显示在这里", lable_style=lable_style)
         # 基本选项区域
         options_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "基本选项", style=group_style)
@@ -188,12 +191,6 @@ class NuitkaBuildInterface(Interface):
             subprocess.run(command, shell=True)
         else:
             gui_util.MessageDisplay.error(self, "未找到解释器")
-
-    def clean_caches(self: Self) -> None:
-        """清理 Nuitka 缓存"""
-        command: str = f'start "NuitkaBuild" cmd /k "{self.get_python_path()}" -m nuitka --clean-cache=all'
-        gui_util.MessageDisplay.info(self, "开始清理缓存")
-        subprocess.run(command, shell=True)
 
     def generate_command_string(self: Self) -> str:
         """生成命令字符串"""
