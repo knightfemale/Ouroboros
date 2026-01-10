@@ -40,7 +40,7 @@ class UVManageInterface(Interface):
     def init_ui(self: Self) -> None:
         """初始化 UI"""
         # 标题区域
-        self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="UV 环境构建")
+        self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="UV 环境管理")
         # 信息区域
         info_group: QGroupBox = gui_util.GroupBuilder.create(self, self.main_layout, "信息", style=group_style)
         info_layout: QVBoxLayout = QVBoxLayout(info_group)

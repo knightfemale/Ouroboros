@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>icons/Nuitka.svg</file>
         <file>icons/Conda.svg</file>
+        <file>icons/Docker.svg</file>
         <file>icons/UV.svg</file>
     </qresource>
 </RCC>
