@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayo
 
 from utils import gui_util
 from interfaces.interface import Interface
-from utils.style_util import blue_style, yellow_style, green_style, purple_style
+from utils.style_util import yellow_style, green_style, blue_style, purple_style
 
 
 group_style: str = blue_style.get_groupbox_style()
@@ -23,6 +23,9 @@ conda_button_style: str = green_style.get_button_style()
 
 uv_group_style: str = purple_style.get_groupbox_style()
 uv_button_style: str = purple_style.get_button_style()
+
+docker_group_style: str = blue_style.get_groupbox_style()
+docker_button_style: str = blue_style.get_button_style()
 
 
 class SettingInterface(Interface):
@@ -60,6 +63,15 @@ class SettingInterface(Interface):
         self.clean_conda_cache_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, conda_btn_layout, "清理 conda 缓存", slot=self.clean_conda_cache, style=conda_button_style)
         self.clean_pip_cache_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, conda_btn_layout, "清理 pip 缓存", slot=self.clean_pip_cache, style=conda_button_style)
         conda_btn_layout.addStretch()
+
+        # Docker 设置
+        docker_group: QGroupBox = gui_util.GroupBuilder.create(self, dev_layout, "Docker", style=docker_group_style)
+        docker_layout: QVBoxLayout = QVBoxLayout(docker_group)
+        docker_btn_layout: QHBoxLayout = QHBoxLayout()
+        docker_layout.addLayout(docker_btn_layout)
+        docker_btn_layout.addStretch()
+        self.clean_docker_cache_btn: PushButton = gui_util.PrimaryButtonBuilder.create(self, docker_btn_layout, "清理构建缓存", slot=self.clean_docker_cache, style=docker_button_style)
+        docker_btn_layout.addStretch()
 
         # UV 设置
         uv_group: QGroupBox = gui_util.GroupBuilder.create(self, dev_layout, "UV", style=uv_group_style)
@@ -125,4 +137,10 @@ class SettingInterface(Interface):
         """更新 python"""
         command: str = f'start "UVPythonUpgrade" cmd /k uv python upgrade --preview-features python-upgrade'
         gui_util.MessageDisplay.info(self, "开始更新 python")
+        subprocess.run(command, shell=True)
+
+    def clean_docker_cache(self: Self) -> None:
+        """清理 Docker 构建缓存"""
+        command: str = f'start "DockerClean" cmd /k "docker system df && docker builder prune --all --force && docker system df"'
+        gui_util.MessageDisplay.info(self, "开始清理 Docker 构建缓存")
         subprocess.run(command, shell=True)
