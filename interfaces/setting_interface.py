@@ -8,12 +8,12 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayo
 
 from utils import gui_util
 from interfaces.interface import Interface
-from utils.style_util import yellow_style, green_style, blue_style, purple_style
+from utils.style_util import default_style, yellow_style, green_style, blue_style, purple_style
 
 
-group_style: str = blue_style.get_groupbox_style()
-button_style: str = blue_style.get_button_style()
-lable_style: str = blue_style.get_lable_style()
+group_style: str = default_style.get_groupbox_style()
+button_style: str = default_style.get_button_style()
+lable_style: str = default_style.get_lable_style()
 
 nuitka_group_style: str = yellow_style.get_groupbox_style()
 nuitka_button_style: str = yellow_style.get_button_style()
