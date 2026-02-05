@@ -1,15 +1,14 @@
 # interfaces/nuitka_build_interface.py
-import platform
 import subprocess
 import multiprocessing
 from pathlib import Path
 from typing import Any, Self, List, Dict, Optional
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 from qfluentwidgets import LineEdit, ModelComboBox, SwitchButton, PushButton
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 
 from interfaces.interface import Interface
-from utils import config_util, gui_util, delay_util, python_path_util
 from utils.style_util import yellow_style, green_style
+from utils import config_util, gui_util, delay_util, platform_util, python_path_util
 
 
 group_style: str = yellow_style.get_groupbox_style()
@@ -193,10 +192,10 @@ class NuitkaBuildInterface(Interface):
         # 执行命令
         if command_str:
             gui_util.MessageDisplay.info(self, "开始编译打包")
-            if platform.system() == "Windows":
+            if platform_util.is_windows():
                 subprocess.run(f'start "NuitkaBuild" cmd /k {command_str}', shell=True)
-            elif platform.system() == "Linux":
-                subprocess.run(f'x-terminal-emulator -e bash -c "{command_str}; read"', shell=True)
+            elif platform_util.is_linux():
+                platform_util.run_in_terminal("NuitkaBuild", command_str)
         else:
             gui_util.MessageDisplay.error(self, "未找到解释器")
 

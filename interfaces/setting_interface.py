@@ -1,15 +1,13 @@
 # interfaces/setting_interface.py
-import platform
 import subprocess
-from pathlib import Path
 from typing import Self, Optional
 
 from qfluentwidgets import PushButton
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 
 from utils import gui_util
-from utils import python_path_util
 from interfaces.interface import Interface
+from utils import platform_util, python_path_util
 from utils.style_util import default_style, yellow_style, green_style, blue_style, purple_style
 
 
@@ -91,77 +89,77 @@ class SettingInterface(Interface):
             return
         command: str = f'"{python_path}" -m nuitka --clean-cache=all'
         gui_util.MessageDisplay.info(self, "开始清理缓存")
-        if platform.system() == "Windows":
+        if platform_util.is_windows():
             subprocess.run(f'start "NuitkaBuild" cmd /k {command}', shell=True)
-        elif platform.system() == "Linux":
-            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
+        elif platform_util.is_linux():
+            platform_util.run_in_terminal("NuitkaBuild", command)
 
     def clean_conda_cache(self: Self) -> None:
         """清理 conda 缓存"""
 
         command: str = "conda clean --all -y"
         gui_util.MessageDisplay.info(self, "开始清理 conda 缓存")
-        if platform.system() == "Windows":
+        if platform_util.is_windows():
             subprocess.run(f'start "CondaClean" cmd /k {command}', shell=True)
-        elif platform.system() == "Linux":
-            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
+        elif platform_util.is_linux():
+            platform_util.run_in_terminal("CondaClean", command)
 
     def clean_pip_cache(self: Self) -> None:
         """清理 pip 缓存"""
 
         command: str = "python -m pip cache purge"
         gui_util.MessageDisplay.info(self, "开始清理 pip 缓存")
-        if platform.system() == "Windows":
+        if platform_util.is_windows():
             subprocess.run(f'start "PipClean" cmd /k {command}', shell=True)
-        elif platform.system() == "Linux":
-            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
+        elif platform_util.is_linux():
+            platform_util.run_in_terminal("PipClean", command)
 
     def uv_prune_cache(self: Self) -> None:
         """清理未使用缓存"""
 
         command: str = "uv cache prune"
         gui_util.MessageDisplay.info(self, "开始清理未使用缓存")
-        if platform.system() == "Windows":
+        if platform_util.is_windows():
             subprocess.run(f'start "UVPrune" cmd /k {command}', shell=True)
-        elif platform.system() == "Linux":
-            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
+        elif platform_util.is_linux():
+            platform_util.run_in_terminal("UVPrune", command)
 
     def uv_clean_cache(self: Self) -> None:
         """清理全部缓存"""
 
         command: str = "uv cache clean"
         gui_util.MessageDisplay.info(self, "开始清理全部缓存")
-        if platform.system() == "Windows":
+        if platform_util.is_windows():
             subprocess.run(f'start "UVClean" cmd /k {command}', shell=True)
-        elif platform.system() == "Linux":
-            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
+        elif platform_util.is_linux():
+            platform_util.run_in_terminal("UVClean", command)
 
     def uv_update(self: Self) -> None:
         """更新 uv"""
 
         command: str = "uv self update"
         gui_util.MessageDisplay.info(self, "开始更新 uv")
-        if platform.system() == "Windows":
+        if platform_util.is_windows():
             subprocess.run(f'start "UVUpdate" cmd /k {command}', shell=True)
-        elif platform.system() == "Linux":
-            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
+        elif platform_util.is_linux():
+            platform_util.run_in_terminal("UVUpdate", command)
 
     def uv_upgrade_python(self: Self) -> None:
         """更新 python"""
 
         command: str = "uv python upgrade --preview-features python-upgrade"
         gui_util.MessageDisplay.info(self, "开始更新 python")
-        if platform.system() == "Windows":
+        if platform_util.is_windows():
             subprocess.run(f'start "UVPythonUpgrade" cmd /k {command}', shell=True)
-        elif platform.system() == "Linux":
-            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
+        elif platform_util.is_linux():
+            platform_util.run_in_terminal("UVPythonUpgrade", command)
 
     def clean_docker_cache(self: Self) -> None:
         """清理 Docker 构建缓存"""
 
         command: str = "docker system df && docker builder prune --all --force && docker system df"
         gui_util.MessageDisplay.info(self, "开始清理 Docker 构建缓存")
-        if platform.system() == "Windows":
+        if platform_util.is_windows():
             subprocess.run(f'start "DockerClean" cmd /k {command}', shell=True)
-        elif platform.system() == "Linux":
-            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
+        elif platform_util.is_linux():
+            platform_util.run_in_terminal("DockerClean", command)
