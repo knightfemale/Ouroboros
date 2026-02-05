@@ -6,8 +6,10 @@ from typing import Any, Self, List, Dict, Optional
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 
 from interfaces.interface import Interface
+from utils import config_util, gui_util, delay_util
 from utils.style_util import green_style, purple_style
-from utils import config_util, gui_util, delay_util, platform_util
+from utils.platform_util import is_windows, is_linux, run_in_terminal
+
 
 group_style: str = purple_style.get_groupbox_style()
 button_style: str = purple_style.get_button_style()
@@ -104,19 +106,19 @@ class UVManageInterface(Interface):
         self.save_ui_to_config()
         # 执行同步命令
         gui_util.MessageDisplay.info(self, "开始同步环境")
-        if platform_util.is_windows():
+        if is_windows():
             subprocess.run(f'start "UVSync" cmd /k uv sync', shell=True)
-        elif platform_util.is_linux():
-            platform_util.run_in_terminal("UVSync", "uv sync")
+        elif is_linux():
+            run_in_terminal("UVSync", "uv sync")
 
     def activate_venv(self: Self) -> None:
         """激活环境"""
 
         gui_util.MessageDisplay.info(self, "激活环境: .venv")
-        if platform_util.is_windows():
+        if is_windows():
             subprocess.run(f'start "UVActivate" cmd /k ".\\.venv\\Scripts\\activate"', shell=True)
-        elif platform_util.is_linux():
-            platform_util.run_in_terminal("UVActivate", "source ./.venv/bin/activate")
+        elif is_linux():
+            run_in_terminal("UVActivate", "source ./.venv/bin/activate")
 
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
@@ -131,10 +133,10 @@ class UVManageInterface(Interface):
         # 保存配置
         self.save_ui_to_config()
         gui_util.MessageDisplay.info(self, "开始更新依赖")
-        if platform_util.is_windows():
+        if is_windows():
             subprocess.run(f'start "UVUpdate" cmd /k uv sync --upgrade', shell=True)
-        elif platform_util.is_linux():
-            platform_util.run_in_terminal("UVUpdate", "uv sync --upgrade")
+        elif is_linux():
+            run_in_terminal("UVUpdate", "uv sync --upgrade")
 
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""

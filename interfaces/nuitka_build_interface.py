@@ -8,7 +8,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayo
 
 from interfaces.interface import Interface
 from utils.style_util import yellow_style, green_style
-from utils import config_util, gui_util, delay_util, platform_util, python_path_util
+from utils import config_util, gui_util, delay_util, python_path_util
+from utils.platform_util import is_windows, is_linux, run_in_terminal
 
 
 group_style: str = yellow_style.get_groupbox_style()
@@ -192,10 +193,10 @@ class NuitkaBuildInterface(Interface):
         # 执行命令
         if command_str:
             gui_util.MessageDisplay.info(self, "开始编译打包")
-            if platform_util.is_windows():
+            if is_windows():
                 subprocess.run(f'start "NuitkaBuild" cmd /k {command_str}', shell=True)
-            elif platform_util.is_linux():
-                platform_util.run_in_terminal("NuitkaBuild", command_str)
+            elif is_linux():
+                run_in_terminal("NuitkaBuild", command_str)
         else:
             gui_util.MessageDisplay.error(self, "未找到解释器")
 

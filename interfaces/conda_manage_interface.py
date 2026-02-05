@@ -7,7 +7,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayo
 
 from utils.style_util import green_style
 from interfaces.interface import Interface
-from utils import config_util, gui_util, delay_util, platform_util
+from utils import config_util, gui_util, delay_util
+from utils.platform_util import is_windows, is_linux, run_in_terminal
 
 
 group_style: str = green_style.get_groupbox_style()
@@ -156,12 +157,12 @@ class CondaManageInterface(Interface):
         self.save_ui_to_config()
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始环境构建")
-        if platform_util.is_windows():
+        if is_windows():
             command: str = f'conda env create --file "{environment_yaml_path}" --prefix ".\\{env_name}"'
             subprocess.run(f'start "CondaBuild" cmd /k {command}', shell=True)
-        elif platform_util.is_linux():
+        elif is_linux():
             command: str = f'conda env create --file "{environment_yaml_path}" --prefix "./{env_name}"'
-            platform_util.run_in_terminal("CondaBuild", command)
+            run_in_terminal("CondaBuild", command)
 
     def activate_venv(self: Self) -> None:
         """激活环境"""
@@ -170,17 +171,17 @@ class CondaManageInterface(Interface):
         env_name: str = self.get_env_name()
         # 执行命令
         gui_util.MessageDisplay.info(self, f"激活环境: {env_name}")
-        if platform_util.is_windows():
+        if is_windows():
             command: str = f'call activate ".\\{env_name}"'
             subprocess.run(f'start "CondaActivate" cmd /k {command}', shell=True)
-        elif platform_util.is_linux():
+        elif is_linux():
             conda_envs: Path = Path.home() / ".conda" / "envs" / env_name
             if conda_envs.exists():
                 script: Path = conda_envs / "bin" / "activate"
             else:
                 script: Path = Path.cwd() / env_name / "bin" / "activate"
             command: str = f'source "{script}"'
-            platform_util.run_in_terminal("CondaActivate", command)
+            run_in_terminal("CondaActivate", command)
 
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
@@ -188,10 +189,10 @@ class CondaManageInterface(Interface):
         env_name: str = self.get_env_name()
         gui_util.MessageDisplay.info(self, "开始导出 requirements.txt")
         command: str = ""
-        if platform_util.is_windows():
+        if is_windows():
             python_path: Path = Path.cwd() / env_name / "Scripts" / "python.exe"
             command: str = f'"{python_path}" -m pip freeze > ./requirements.txt'
-        elif platform_util.is_linux():
+        elif is_linux():
             conda_envs: Path = Path.home() / ".conda" / "envs" / env_name
             if conda_envs.exists():
                 python_path: Path = conda_envs / "bin" / "python"
@@ -208,9 +209,9 @@ class CondaManageInterface(Interface):
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始导出 environment.yml")
         command: str = ""
-        if platform_util.is_windows():
+        if is_windows():
             command: str = f'conda env export -p ".\\{env_name}" > ./environment.yml'
-        elif platform_util.is_linux():
+        elif is_linux():
             command: str = f'conda env export -p "./{env_name}" > ./environment.yml'
         subprocess.Popen(command, shell=True)
 
