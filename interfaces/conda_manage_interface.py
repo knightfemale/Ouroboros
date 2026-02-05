@@ -1,4 +1,5 @@
 # interfaces/conda_manage_interface.py
+import platform
 import subprocess
 from pathlib import Path
 from qfluentwidgets import LineEdit, PushButton
@@ -41,6 +42,7 @@ class CondaManageInterface(Interface):
 
     def init_ui(self: Self) -> None:
         """初始化 UI"""
+
         # 标题区域
         self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="Conda 环境管理")
         # 信息区域
@@ -81,13 +83,13 @@ class CondaManageInterface(Interface):
 
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
+
         # 加载项目元数据
         if config_path.exists():
             config: Dict[str, Any] = config_util.load_toml(config_path)
             # 加载项目版本
             if "project" in config and "version" in config["project"]:
                 self.project_version_input.setText(config["project"]["version"])
-
         # 加载环境配置
         if environment_yaml_path.exists():
             config: Dict[str, Any] = config_util.load_yaml(environment_yaml_path)
@@ -118,6 +120,7 @@ class CondaManageInterface(Interface):
 
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""
+
         # 保存项目元数据到 pyproject.toml
         if not config_path.exists():
             self.init_project()
@@ -135,6 +138,7 @@ class CondaManageInterface(Interface):
 
     def collect_dependencies(self) -> list:
         """收集所有依赖项"""
+
         deps: List[Any] = [f"python={self.get_python_version()}"]
         # 添加conda包
         deps.extend(self.conda_container.get_items())
@@ -146,40 +150,74 @@ class CondaManageInterface(Interface):
 
     def build_env(self: Self) -> None:
         """构建环境"""
+
         # 获取参数
         env_name: str = self.get_env_name()
         # 保存到配置
         self.save_ui_to_config()
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始环境构建")
-        subprocess.run(f'start "CondaBuild" cmd /k conda env create --file {environment_yaml_path} --prefix ./{env_name}', shell=True)
+        if platform.system() == "Windows":
+            command: str = f'conda env create --file "{environment_yaml_path}" --prefix ".\\{env_name}"'
+            subprocess.run(f'start "CondaBuild" cmd /k {command}', shell=True)
+        elif platform.system() == "Linux":
+            command: str = f'conda env create --file "{environment_yaml_path}" --prefix "./{env_name}"'
+            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
 
     def activate_venv(self: Self) -> None:
         """激活环境"""
+
         # 获取参数
         env_name: str = self.get_env_name()
         # 执行命令
         gui_util.MessageDisplay.info(self, f"激活环境: {env_name}")
-        subprocess.run(f'start "CondaActivate" cmd /k call activate ./{env_name}', shell=True)
+        if platform.system() == "Windows":
+            command: str = f'call activate ".\\{env_name}"'
+            subprocess.run(f'start "CondaActivate" cmd /k {command}', shell=True)
+        elif platform.system() == "Linux":
+            conda_envs: Path = Path.home() / ".conda" / "envs" / env_name
+            if conda_envs.exists():
+                script: Path = conda_envs / "bin" / "activate"
+            else:
+                script: Path = Path.cwd() / env_name / "bin" / "activate"
+            command: str = f'source "{script}"'
+            subprocess.run(f'x-terminal-emulator -e bash -c "{command}; read"', shell=True)
 
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
-        # 获取参数
+
         env_name: str = self.get_env_name()
-        # 执行命令
         gui_util.MessageDisplay.info(self, "开始导出 requirements.txt")
-        subprocess.Popen(f'"./{env_name}/python" -m pip freeze > ./requirements.txt', shell=True)
+        command: str = ""
+        if platform.system() == "Windows":
+            python_path: Path = Path.cwd() / env_name / "Scripts" / "python.exe"
+            command: str = f'"{python_path}" -m pip freeze > ./requirements.txt'
+        elif platform.system() == "Linux":
+            conda_envs: Path = Path.home() / ".conda" / "envs" / env_name
+            if conda_envs.exists():
+                python_path: Path = conda_envs / "bin" / "python"
+            else:
+                python_path: Path = Path.cwd() / env_name / "bin" / "python"
+            command: str = f'"{python_path}" -m pip freeze > ./requirements.txt'
+        subprocess.Popen(command, shell=True)
 
     def export_environment(self: Self) -> None:
         """导出依赖 environment.yml"""
+
         # 获取参数
         env_name: str = self.get_env_name()
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始导出 environment.yml")
-        subprocess.Popen(f"conda env export -p ./{env_name} > ./environment.yml", shell=True)
+        command: str = ""
+        if platform.system() == "Windows":
+            command: str = f'conda env export -p ".\\{env_name}" > ./environment.yml'
+        elif platform.system() == "Linux":
+            command: str = f'conda env export -p "./{env_name}" > ./environment.yml'
+        subprocess.Popen(command, shell=True)
 
     def init_project(self: Self) -> None:
         """初始化 uv 配置文件"""
+
         base_config: Dict[str, Any] = {
             "project": {
                 "name": f"{Path.cwd().name.lower()}",
@@ -190,15 +228,18 @@ class CondaManageInterface(Interface):
 
     def get_env_name(self: Self) -> str:
         """带默认参数地获取环境名"""
+
         env_name: str = self.env_name_input.text().strip()
         return env_name if env_name else ".venv"
 
     def get_python_version(self: Self) -> str:
         """带默认参数地获取 Python 版本"""
+
         python_version: str = self.python_version_input.text().strip()
         return python_version if python_version else "3.10"
 
     def get_project_version(self: Self) -> str:
         """带默认参数地获取项目版本"""
+
         project_version: str = self.project_version_input.text().strip()
         return project_version if project_version else "0.0.1"

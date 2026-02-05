@@ -1,4 +1,5 @@
 # interfaces/nuitka_build_interface.py
+import platform
 import subprocess
 import multiprocessing
 from pathlib import Path
@@ -7,7 +8,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayo
 from qfluentwidgets import LineEdit, ModelComboBox, SwitchButton, PushButton
 
 from interfaces.interface import Interface
-from utils import config_util, gui_util, delay_util
+from utils import config_util, gui_util, delay_util, python_path_util
 from utils.style_util import yellow_style, green_style
 
 
@@ -41,6 +42,7 @@ class NuitkaBuildInterface(Interface):
 
     def init_ui(self: Self) -> None:
         """初始化 UI"""
+
         # 标题区域
         self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="Nuitka 编译打包")
         # 信息区域
@@ -117,6 +119,7 @@ class NuitkaBuildInterface(Interface):
 
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
+
         nuitka_config: Dict[str, Any] = config_util.load_toml(config_path).get("tool", {}).get("ouroboros", {}).get("nuitka", {})
         # 固定字段
         self.entry_input.setText(nuitka_config.get("entry", ""))
@@ -139,11 +142,13 @@ class NuitkaBuildInterface(Interface):
 
     def showEvent(self: Self, event: Any) -> None:
         """当界面显示时触发"""
-        self.delay_variables["nuitka_version"]["command"][0] = self.get_python_path()
+
+        self.delay_variables["nuitka_version"]["command"][0] = python_path_util.get_python_path()
         super().showEvent(event)
 
     def save_ui_to_config(self: Self) -> None:
         """保存UI状态到配置文件"""
+
         config: Dict[str, Any] = config_util.load_toml(config_path)
         # 确保嵌套结构存在
         if "tool" not in config:
@@ -180,20 +185,24 @@ class NuitkaBuildInterface(Interface):
 
     def start_packaging(self: Self) -> None:
         """执行打包命令"""
+
         # 保存到配置
         self.save_ui_to_config()
         # 获取命令字符串
         command_str = self.generate_command_string()
         # 执行命令
         if command_str:
-            command: str = f'start "NuitkaBuild" cmd /k {command_str}'
             gui_util.MessageDisplay.info(self, "开始编译打包")
-            subprocess.run(command, shell=True)
+            if platform.system() == "Windows":
+                subprocess.run(f'start "NuitkaBuild" cmd /k {command_str}', shell=True)
+            elif platform.system() == "Linux":
+                subprocess.run(f'x-terminal-emulator -e bash -c "{command_str}; read"', shell=True)
         else:
             gui_util.MessageDisplay.error(self, "未找到解释器")
 
     def generate_command_string(self: Self) -> str:
         """生成命令字符串"""
+
         nuitka_args: List[str] = ["-m", "nuitka"]
         # 添加输入框参数
         INPUT_FIELDS = {
@@ -247,21 +256,6 @@ class NuitkaBuildInterface(Interface):
             container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
             for item in container.get_items():
                 nuitka_args.append(f"{flag}{item}")
-        if python_path := self.get_python_path():
-            return f"\"{python_path}\" {' '.join(nuitka_args)}"
-        return ""
-
-    def get_python_path(self: Self) -> str:
-        """获取可能的 Python 解释器路径"""
-        possible_paths = [
-            # conda 路径
-            Path.cwd() / ".venv/python.exe",
-            # uv 路径
-            Path.cwd() / ".venv/Scripts/python.exe",
-        ]
-        # 检查路径是否存在
-        for path in possible_paths:
-            if path.exists():
-                return str(path)
-        gui_util.MessageDisplay.error(self, "未找到可用解释器")
+        if python_path := python_path_util.get_python_path():
+            return f'"{python_path}" {" ".join(nuitka_args)}'
         return ""

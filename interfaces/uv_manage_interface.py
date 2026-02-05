@@ -1,4 +1,5 @@
 # interfaces/uv_manage_interface.py
+import platform
 import subprocess
 from pathlib import Path
 from qfluentwidgets import LineEdit, PushButton
@@ -39,6 +40,7 @@ class UVManageInterface(Interface):
 
     def init_ui(self: Self) -> None:
         """初始化 UI"""
+
         # 标题区域
         self.title_label: QLabel = gui_util.LabelBuilder.create(self.content_widget, self.main_layout, content="UV 环境管理")
         # 信息区域
@@ -78,6 +80,7 @@ class UVManageInterface(Interface):
 
     def load_config_to_ui(self: Self) -> None:
         """从配置文件加载数据到 UI"""
+
         if config_path.exists():
             config: Dict[str, Any] = config_util.load_toml(config_path)
             # 加载项目版本
@@ -97,32 +100,46 @@ class UVManageInterface(Interface):
 
     def sync_env(self: Self) -> None:
         """同步环境"""
+
         # 保存配置
         self.save_ui_to_config()
         # 执行同步命令
         gui_util.MessageDisplay.info(self, "开始同步环境")
-        subprocess.run(f'start "UVSync" cmd /k uv sync', shell=True)
+        if platform.system() == "Windows":
+            subprocess.run(f'start "UVSync" cmd /k uv sync', shell=True)
+        elif platform.system() == "Linux":
+            subprocess.run(f'x-terminal-emulator -e bash -c "uv sync; read"', shell=True)
 
     def activate_venv(self: Self) -> None:
         """激活环境"""
+
         gui_util.MessageDisplay.info(self, "激活环境: .venv")
-        subprocess.run(f'start "UVActivate" cmd /k ".\\.venv\\Scripts\\activate"', shell=True)
+        if platform.system() == "Windows":
+            subprocess.run(f'start "UVActivate" cmd /k ".\\.venv\\Scripts\\activate"', shell=True)
+        elif platform.system() == "Linux":
+            subprocess.run(f'x-terminal-emulator -e bash -c "source ./.venv/bin/activate; read"', shell=True)
 
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
+
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始导出 requirements.txt")
         subprocess.Popen(f"uv pip freeze > ./requirements.txt", shell=True)
 
     def update_dependencies(self: Self) -> None:
         """更新依赖"""
+
         # 保存配置
         self.save_ui_to_config()
         gui_util.MessageDisplay.info(self, "开始更新依赖")
-        subprocess.run(f'start "UVUpdate" cmd /k uv sync --upgrade', shell=True)
+        if platform.system() == "Windows":
+            subprocess.run(f'start "UVUpdate" cmd /k uv sync --upgrade', shell=True)
+        elif platform.system() == "Linux":
+            subprocess.run(f'x-terminal-emulator -e bash -c "uv sync --upgrade; read"', shell=True)
 
     def save_ui_to_config(self: Self) -> None:
         """将当前UI状态保存到配置文件"""
+
         if not config_path.exists():
             self.init_project()
         # 加载现有配置
@@ -166,6 +183,7 @@ class UVManageInterface(Interface):
 
     def init_project(self: Self) -> None:
         """初始化 uv 配置文件"""
+
         base_config: Dict[str, Any] = {
             "project": {
                 "name": f"{Path.cwd().name.lower()}",
@@ -176,10 +194,12 @@ class UVManageInterface(Interface):
 
     def get_project_version(self: Self) -> str:
         """带默认参数地获取项目版本"""
+
         project_version: str = self.project_version_input.text().strip()
         return project_version if project_version else "0.0.1"
 
     def get_python_version(self: Self) -> str:
         """带默认参数地获取 Python 版本"""
+
         python_version: str = self.python_version_input.text().strip()
         return python_version if python_version else "3.10"
