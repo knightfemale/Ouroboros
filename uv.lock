@@ -25,13 +25,9 @@ wheels = [
 
 [[package]]
 name = "nuitka"
-version = "2.8.10"
+version = "4.0"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
-dependencies = [
-    { name = "ordered-set" },
-    { name = "zstandard" },
-]
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/a6/b8/5c58a2c4d66631ec12eb641c08b7a31116d972c4ccbb0a340a047db51238/nuitka-2.8.10.tar.gz", hash = "sha256:03e4d0756d8a11cb2627da3a2d9b518c802d031bf4f2c629e0a7b8c773497452", size = 4331977, upload-time = "2026-01-23T09:54:56.396Z" }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/e5/d6/477dc84457fc07885f5fd020da4920e8a2787b2c04563ad444ac98f7d3eb/nuitka-4.0.tar.gz", hash = "sha256:0f404f292c3c2cc808d186d05a6d06a4b0aeca93f299cdfd5e33ddbcd19ab560", size = 4410008, upload-time = "2026-02-05T20:52:39.747Z" }
 
 [[package]]
 name = "numpy"
@@ -63,15 +59,6 @@ wheels = [
 ]
 
 [[package]]
-name = "ordered-set"
-version = "4.1.0"
-source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/4c/ca/bfac8bc689799bcca4157e0e0ced07e70ce125193fc2e166d2e685b7e2fe/ordered-set-4.1.0.tar.gz", hash = "sha256:694a8e44c87657c59292ede72891eb91d34131f6531463aab3009191c77364a8", size = 12826, upload-time = "2022-01-26T14:38:56.6Z" }
-wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/33/55/af02708f230eb77084a299d7b08175cff006dea4f2721074b92cdb0296c0/ordered_set-4.1.0-py3-none-any.whl", hash = "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562", size = 7634, upload-time = "2022-01-26T14:38:48.677Z" },
-]
-
-[[package]]
 name = "ouroboros"
 version = "0.3.0"
 source = { virtual = "." }
@@ -79,6 +66,7 @@ dependencies = [
     { name = "pyside6-fluent-widgets", extra = ["full"] },
     { name = "pyyaml" },
     { name = "tomlkit" },
+    { name = "zstandard" },
 ]
 
 [package.dev-dependencies]
@@ -91,6 +79,7 @@ requires-dist = [
     { name = "pyside6-fluent-widgets", extras = ["full"] },
     { name = "pyyaml" },
     { name = "tomlkit" },
+    { name = "zstandard" },
 ]
 
 [package.metadata.requires-dev]
@@ -2595,16 +2584,16 @@ wheels = [
 
 [[package]]
 name = "pyside6-fluent-widgets"
-version = "1.11.0"
+version = "1.11.1"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "darkdetect" },
     { name = "pyside6" },
     { name = "pysidesix-frameless-window" },
 ]
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/f7/79/89ede298a98552317b71c199f7001f728401ea5e5f05ccece5cb390f71f6/pyside6_fluent_widgets-1.11.0.tar.gz", hash = "sha256:ac74b7d08fd78b06304416ac6d62cc47818949d79605899eb64c53bd99c6c322", size = 1456773, upload-time = "2026-01-18T09:17:24.486Z" }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/9e/5f/da3f4f4b89cde08fa8f945d96b5f8b16203bcdab41b583538e24c30804ed/pyside6_fluent_widgets-1.11.1.tar.gz", hash = "sha256:8da3b1bb1a888e760c33d1b964653f8308ba512da8243d4abbe6e93623eac269", size = 1456786, upload-time = "2026-02-07T08:41:29.075Z" }
 wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/3e/4a/49d2b3b7bb35e006de4a3a2192c78a005cd1d44bd18e33ae12fc6cb3672c/pyside6_fluent_widgets-1.11.0-py3-none-any.whl", hash = "sha256:d13763304137fb843b955dbaad9e0ffafca306018769d0ea9094b9f707ff7938", size = 1550202, upload-time = "2026-01-18T09:17:22.617Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/b0/94/528a7e7d2fbb6c464a4f31d16c234e6799ca5d95400a0ef7a1a9548362fa/pyside6_fluent_widgets-1.11.1-py3-none-any.whl", hash = "sha256:72655744b41cea212a6ea32d1457e9acfc17d50d41d3780dc67ad4fa36ba7ac4", size = 1550257, upload-time = "2026-02-07T08:41:26.425Z" },
 ]
 
 [package.optional-dependencies]
@@ -2616,16 +2605,16 @@ full = [
 
 [[package]]
 name = "pysidesix-frameless-window"
-version = "0.7.7"
+version = "0.8.0"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "pycocoa", marker = "sys_platform == 'darwin'" },
     { name = "pyobjc", marker = "sys_platform == 'darwin'" },
     { name = "pywin32", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/cf/ba/c41e25e8884224d15b14ffad34c921f350a6b0cfce823f150a514a0d3788/pysidesix_frameless_window-0.7.7.tar.gz", hash = "sha256:4f975bae89a6ebd8babeed693341f242b268c94816e81602e026eb95703d4eb4", size = 22960, upload-time = "2026-01-18T12:00:10.46Z" }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/da/96/cf1ce5673b6239d79251a458d9acd8a789f7f1be496f0b8880dd66cc41cf/pysidesix_frameless_window-0.8.0.tar.gz", hash = "sha256:e200e4b68edb1b2e03aa00d76d0e8b8d1daf6f289a5b91fba974578b6700ad94", size = 23286, upload-time = "2026-02-07T07:44:37.677Z" }
 wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/70/e2/fb1e36cbd8ed5c0db161ace24ad40b5278ac9af6fecc9bcd6ab68712fb1c/pysidesix_frameless_window-0.7.7-py3-none-any.whl", hash = "sha256:cd6b2961cc30d9290f84462bc59de674bea6a72df5d36fb57d5fb49d660c13e8", size = 30779, upload-time = "2026-01-18T12:00:09.099Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/51/ea/a7c4890cbc441a6fb543579e092eaaaed72843419cfd80ce8664508e940f/pysidesix_frameless_window-0.8.0-py3-none-any.whl", hash = "sha256:7bf011cf3e3c6edaa23b3578daaaa6e0e361a3fbf9a5317e0e037aaf4c8fe107", size = 31186, upload-time = "2026-02-07T07:44:36.731Z" },
 ]
 
 [[package]]
