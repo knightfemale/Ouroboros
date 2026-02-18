@@ -30,6 +30,7 @@ assume_yes = true
 compiler = "Auto"
 jobs = "11"
 plugins = [
+    "upx",
     "pyside6",
 ]
 packages = []
@@ -40,9 +41,12 @@ no_imports = [
     "nuitka",
     "pillow",
     "*.tests",
+    "zstandard",
 ]
 files = []
 dirs = []
 extra_args = [
+    "--onefile-no-compression",
+    "--include-windows-runtime-dlls=no",
     "--windows-icon-from-ico=resources/icons/icon.ico",
 ]
