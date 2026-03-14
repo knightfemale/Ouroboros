@@ -196,62 +196,59 @@ class NuitkaBuildInterface(Interface):
         else:
             gui_util.MessageDisplay.error(self, "未找到解释器")
 
-    def generate_command_string(self: Self) -> str:
+    @staticmethod
+    def generate_command_string() -> str:
         """生成命令字符串"""
 
+        nuitka_config: Dict[str, Any] = config_util.load_toml(config_path).get("tool", {}).get("ouroboros", {}).get("nuitka", {})
         nuitka_args: List[str] = ["-m", "nuitka"]
-        # 添加输入框参数
-        INPUT_FIELDS = {
-            "entry_input": "",
-            "output_name_input": "--output-filename=",
-            "output_dir_input": "--output-dir=",
+        if entry := nuitka_config.get("entry"):
+            nuitka_args.append(entry)
+        if output_name := nuitka_config.get("output_name"):
+            nuitka_args.append(f"--output-filename={output_name}")
+        if output_dir := nuitka_config.get("output_dir"):
+            nuitka_args.append(f"--output-dir={output_dir}")
+        build_mode: str = nuitka_config.get("build_mode", "独立模式")
+        mode_map: Dict[str, str] = {
+            "独立模式": "--standalone",
+            "单文件模式": "--onefile",
+            "模块模式": "--module",
         }
-        for attr, flag in INPUT_FIELDS.items():
-            if value := getattr(self, attr).text().strip():
-                nuitka_args.append(f"{flag}{value}")
-        # 添加开关参数
-        STITCH: Dict[str, Any] = {
-            "disable_console": "--windows-console-mode=disable",
-            "remove_output": "--remove-output",
-            "show_scons": "--show-scons",
-            "assume_yes": "--assume-yes-for-downloads",
+        if build_mode in mode_map:
+            nuitka_args.append(mode_map[build_mode])
+        if nuitka_config.get("disable_console"):
+            nuitka_args.append("--windows-console-mode=disable")
+        if nuitka_config.get("remove_output"):
+            nuitka_args.append("--remove-output")
+        if nuitka_config.get("show_scons"):
+            nuitka_args.append("--show-scons")
+        if nuitka_config.get("assume_yes"):
+            nuitka_args.append("--assume-yes-for-downloads")
+        compiler: str = nuitka_config.get("compiler", "Auto")
+        compiler_map: Dict[str, str] = {
+            "MSVC": "--msvc=latest",
+            "MinGW64": "--mingw64",
+            "Clang": "--clang",
         }
-        for attr, flag in STITCH.items():
-            if getattr(self, f"{attr}_switch").isChecked():
-                nuitka_args.append(flag)
-        # 添加下拉框参数
-        COMBO_PARAMS = {
-            "build_mode_combo": {
-                "独立模式": "--standalone",
-                "单文件模式": "--onefile",
-                "模块模式": "--module",
-            },
-            "compiler_combo": {
-                "MSVC": "--msvc=latest",
-                "MinGW64": "--mingw64",
-                "Clang": "--clang",
-            },
-        }
-        for combo_name, mapping in COMBO_PARAMS.items():
-            combo = getattr(self, combo_name)
-            current_text = combo.currentText()
-            if current_text in mapping:
-                nuitka_args.append(mapping[current_text])
-        if jobs := self.jobs_combo.currentText().strip():
+        if compiler in compiler_map:
+            nuitka_args.append(compiler_map[compiler])
+        if jobs := nuitka_config.get("jobs"):
             nuitka_args.append(f"--jobs={jobs}")
-        # 添加动态输入框参数
-        for field, flag in [
-            ("plugins", "--enable-plugin="),
-            ("packages", "--include-package="),
-            ("modules", "--include-module="),
-            ("files", "--include-data-files="),
-            ("dirs", "--include-data-dir="),
-            ("no_imports", "--nofollow-import-to="),
-            ("extra_args", ""),
-        ]:
-            container: gui_util.DynamicInputContainer = getattr(self, f"{field}_container")
-            for item in container.get_items():
-                nuitka_args.append(f"{flag}{item}")
-        if python_path := python_path_util.get_python_path():
+        for plugin in nuitka_config.get("plugins", []):
+            nuitka_args.append(f"--enable-plugin={plugin}")
+        for pkg in nuitka_config.get("packages", []):
+            nuitka_args.append(f"--include-package={pkg}")
+        for module in nuitka_config.get("modules", []):
+            nuitka_args.append(f"--include-module={module}")
+        for no_import in nuitka_config.get("no_imports", []):
+            nuitka_args.append(f"--nofollow-import-to={no_import}")
+        for file_item in nuitka_config.get("files", []):
+            nuitka_args.append(f"--include-data-files={file_item}")
+        for dir_item in nuitka_config.get("dirs", []):
+            nuitka_args.append(f"--include-data-dir={dir_item}")
+        for extra_arg in nuitka_config.get("extra_args", []):
+            nuitka_args.append(extra_arg)
+        python_path: str | None = python_path_util.get_python_path()
+        if python_path:
             return f'"{python_path}" {" ".join(nuitka_args)}'
         return ""

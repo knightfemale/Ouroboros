@@ -1,5 +1,6 @@
 # main.py
 import sys
+import argparse
 from typing import Self
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
@@ -84,8 +85,31 @@ class MainWindow(FluentWindow):
         self.switchTo(self.homeInterface)
 
 
+def main() -> None:
+    parser = argparse.ArgumentParser(add_help=False)
+    # 创建一个互斥组
+    group: argparse._MutuallyExclusiveGroup = parser.add_mutually_exclusive_group(required=False)
+    group.add_argument("-h", "--help", action="store_true", help="显示帮助信息")
+    group.add_argument("-g", "--gui", action="store_true", help="打开 GUI 界面")
+    group.add_argument("-b", "--build", action="store_true", help="调用 Nuitka 打包")
+    args: argparse.Namespace = parser.parse_args()
+    if args.gui:
+        app: QApplication = QApplication(sys.argv)
+        window: MainWindow = MainWindow()
+        window.show()
+        sys.exit(app.exec())
+    elif args.build:
+        from utils.platform_util import run_command
+        from interfaces.nuitka_build_interface import NuitkaBuildInterface
+
+        command_str: str = NuitkaBuildInterface.generate_command_string()
+        if command_str:
+            run_command(command_str)
+        else:
+            print("未找到解释器!")
+    else:
+        parser.print_help()
+
+
 if __name__ == "__main__":
-    app: QApplication = QApplication(sys.argv)
-    window: MainWindow = MainWindow()
-    window.show()
-    sys.exit(app.exec())
+    main()
