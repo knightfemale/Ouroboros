@@ -5,13 +5,13 @@ requires-python = ">=3.13,<3.14"
 dependencies = [
     "pyyaml",
     "tomlkit",
-    "zstandard",
-    "pyside6-fluent-widgets[full]",
+    "pyside6-fluent-widgets",
 ]
 
 [dependency-groups]
 dev = [
     "nuitka",
+    "zstandard",
 ]
 
 [[tool.uv.index]]
@@ -36,10 +36,7 @@ plugins = [
 packages = []
 modules = []
 no_imports = [
-    "scipy",
-    "numpy",
     "nuitka",
-    "pillow",
     "*.tests",
     "zstandard",
 ]
