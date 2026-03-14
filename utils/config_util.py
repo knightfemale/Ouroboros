@@ -7,8 +7,8 @@ from tomlkit.items import Array, Table
 from tomlkit import TOMLDocument, parse, document, dumps
 
 
-# 项目配置文件路径
-config_path: Path = Path("./pyproject.toml")
+# 项目配置文件路径(从当前工作目录读取)
+config_path: Path = Path.cwd() / "pyproject.toml"
 # 全局配置文件路径
 global_config_path: Path = Path.home() / "ouroboros.toml"
 

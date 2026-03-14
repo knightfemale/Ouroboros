@@ -1,5 +1,4 @@
 # interfaces/nuitka_build_interface.py
-import subprocess
 import multiprocessing
 from pathlib import Path
 from typing import Any, Self, List, Dict, Optional
@@ -7,9 +6,9 @@ from qfluentwidgets import LineEdit, ModelComboBox, SwitchButton, PushButton
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayout
 
 from interfaces.interface import Interface
+from utils.platform_util import run_command
 from utils.style_util import yellow_style, green_style
 from utils import config_util, gui_util, delay_util, python_path_util
-from utils.platform_util import is_windows, is_linux, run_in_terminal
 
 
 group_style: str = yellow_style.get_groupbox_style()
@@ -65,9 +64,9 @@ class NuitkaBuildInterface(Interface):
         self.entry_input: LineEdit = gui_util.InputBuilder.create(self, options_layout, "Python 入口文件", "输入 Python 入口文件(例如: ./main.py)", lable_style=lable_style)
         self.output_name_input: LineEdit = gui_util.InputBuilder.create(self, options_layout, "输出文件名", "输出文件名(默认: 入口文件名)", lable_style=lable_style)
         self.output_dir_input: LineEdit = gui_util.InputBuilder.create(self, options_layout, "输出目录", "输出目录(默认: 根目录)", lable_style=lable_style)
-        cpu_count = multiprocessing.cpu_count()
-        jobs_options = [str(i) for i in range(1, cpu_count + 1)]
-        self.default_job = str(cpu_count - 1) if cpu_count > 1 else "1"
+        cpu_count: int = multiprocessing.cpu_count()
+        jobs_options: List[str] = [str(i) for i in range(1, cpu_count + 1)]
+        self.default_job: str = str(cpu_count - 1) if cpu_count > 1 else "1"
         self.jobs_combo: ModelComboBox = gui_util.ComboBoxBuilder.create(self, options_layout, "并行任务数", jobs_options, current_text=self.default_job, lable_style=lable_style)
         self.build_mode_combo: ModelComboBox = gui_util.ComboBoxBuilder.create(self, options_layout, "构建模式", ["独立模式", "单文件模式", "模块模式"], lable_style=lable_style)
         self.disable_console_switch: SwitchButton = gui_util.SwitchBuilder.create(self, options_layout, "禁用控制台", lable_style=lable_style)
@@ -193,10 +192,7 @@ class NuitkaBuildInterface(Interface):
         # 执行命令
         if command_str:
             gui_util.MessageDisplay.info(self, "开始编译打包")
-            if is_windows():
-                subprocess.run(f'start "NuitkaBuild" cmd /k {command_str}', shell=True)
-            elif is_linux():
-                run_in_terminal("NuitkaBuild", command_str)
+            run_command(command_str)
         else:
             gui_util.MessageDisplay.error(self, "未找到解释器")
 

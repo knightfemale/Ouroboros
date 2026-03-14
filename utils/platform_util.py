@@ -1,8 +1,8 @@
 # utils/platform_util.py
-import shutil
+import os
 import platform
 import subprocess
-from typing import Optional, List, Tuple
+from typing import Optional
 
 
 _system: Optional[str] = None
@@ -29,21 +29,7 @@ def is_linux() -> bool:
     return get_system() == "Linux"
 
 
-def run_in_terminal(title: str, command: str) -> None:
-    """在新终端中执行命令(仅 Linux)"""
+def run_command(command: str) -> None:
+    """在后台线程中执行命令, GUI 退出后命令会继续运行"""
 
-    terminals: List[Tuple[str, List[str]]] = [
-        ("konsole", ["konsole", "--new-tab", "-e", "bash", "-c", f"{command}; read"]),
-        ("gnome-terminal", ["gnome-terminal", "--", "bash", "-c", f"{command}; read"]),
-        ("xfce4-terminal", ["xfce4-terminal", "-e", f"bash -c '{command}; read'"]),
-        ("xterm", ["xterm", "-e", "bash", "-c", f"{command}; read"]),
-        ("eterm", ["eterm", "-e", "bash", "-c", f"{command}; read"]),
-        ("urxvt", ["urxvt", "-e", "bash", "-c", f"{command}; read"]),
-        ("lxterminal", ["lxterminal", "-e", "bash", "-c", f"{command}; read"]),
-        ("mate-terminal", ["mate-terminal", "--", "bash", "-c", f"{command}; read"]),
-    ]
-    for name, args in terminals:
-        if shutil.which(name):
-            subprocess.Popen(args)
-            return
-    subprocess.Popen(["bash", "-c", f"{command}; read"])
+    subprocess.Popen(command, shell=True, cwd=os.getcwd())

@@ -11,7 +11,6 @@ dependencies = [
 [dependency-groups]
 dev = [
     "nuitka",
-    "zstandard",
 ]
 
 [[tool.uv.index]]
@@ -20,17 +19,16 @@ default = true
 
 [tool.ouroboros.nuitka]
 entry = "./main.py"
-output_name = "Ouroboros-v0.3.0"
+output_name = "ouroboros"
 output_dir = "output"
-build_mode = "单文件模式"
-disable_console = true
+build_mode = "独立模式"
+disable_console = false
 remove_output = true
 show_scons = false
 assume_yes = true
 compiler = "Auto"
 jobs = "11"
 plugins = [
-    "upx",
     "pyside6",
 ]
 packages = []
@@ -38,12 +36,10 @@ modules = []
 no_imports = [
     "nuitka",
     "*.tests",
-    "zstandard",
 ]
 files = []
 dirs = []
 extra_args = [
-    "--onefile-no-compression",
     "--include-windows-runtime-dlls=no",
     "--windows-icon-from-ico=resources/icons/icon.ico",
 ]

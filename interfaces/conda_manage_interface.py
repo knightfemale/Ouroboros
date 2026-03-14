@@ -1,5 +1,4 @@
 # interfaces/conda_manage_interface.py
-import subprocess
 from pathlib import Path
 from qfluentwidgets import LineEdit, PushButton
 from typing import Any, Self, List, Dict, Optional
@@ -8,7 +7,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QHBoxLayo
 from utils.style_util import green_style
 from interfaces.interface import Interface
 from utils import config_util, gui_util, delay_util
-from utils.platform_util import is_windows, is_linux, run_in_terminal
+from utils.platform_util import is_windows, is_linux, run_command
 
 
 group_style: str = green_style.get_groupbox_style()
@@ -157,12 +156,12 @@ class CondaManageInterface(Interface):
         self.save_ui_to_config()
         # 执行命令
         gui_util.MessageDisplay.info(self, "开始环境构建")
+        command: str = ""
         if is_windows():
-            command: str = f'conda env create --file "{environment_yaml_path}" --prefix ".\\{env_name}"'
-            subprocess.run(f'start "CondaBuild" cmd /k {command}', shell=True)
+            command = f'conda env create --file "{environment_yaml_path}" --prefix ".\\{env_name}"'
         elif is_linux():
-            command: str = f'conda env create --file "{environment_yaml_path}" --prefix "./{env_name}"'
-            run_in_terminal("CondaBuild", command)
+            command = f'conda env create --file "{environment_yaml_path}" --prefix "./{env_name}"'
+        run_command(command)
 
     def activate_venv(self: Self) -> None:
         """激活环境"""
@@ -171,17 +170,17 @@ class CondaManageInterface(Interface):
         env_name: str = self.get_env_name()
         # 执行命令
         gui_util.MessageDisplay.info(self, f"激活环境: {env_name}")
+        command: str = ""
         if is_windows():
-            command: str = f'call activate ".\\{env_name}"'
-            subprocess.run(f'start "CondaActivate" cmd /k {command}', shell=True)
+            command = f'call activate ".\\{env_name}"'
         elif is_linux():
             conda_envs: Path = Path.home() / ".conda" / "envs" / env_name
             if conda_envs.exists():
                 script: Path = conda_envs / "bin" / "activate"
             else:
                 script: Path = Path.cwd() / env_name / "bin" / "activate"
-            command: str = f'source "{script}"'
-            run_in_terminal("CondaActivate", command)
+            command = f'source "{script}"'
+        run_command(command)
 
     def export_requirements(self: Self) -> None:
         """导出依赖 requirements.txt"""
@@ -191,15 +190,15 @@ class CondaManageInterface(Interface):
         command: str = ""
         if is_windows():
             python_path: Path = Path.cwd() / env_name / "Scripts" / "python.exe"
-            command: str = f'"{python_path}" -m pip freeze > ./requirements.txt'
+            command = f'"{python_path}" -m pip freeze > ./requirements.txt'
         elif is_linux():
             conda_envs: Path = Path.home() / ".conda" / "envs" / env_name
             if conda_envs.exists():
                 python_path: Path = conda_envs / "bin" / "python"
             else:
                 python_path: Path = Path.cwd() / env_name / "bin" / "python"
-            command: str = f'"{python_path}" -m pip freeze > ./requirements.txt'
-        subprocess.Popen(command, shell=True)
+            command = f'"{python_path}" -m pip freeze > ./requirements.txt'
+        run_command(command)
 
     def export_environment(self: Self) -> None:
         """导出依赖 environment.yml"""
@@ -210,10 +209,10 @@ class CondaManageInterface(Interface):
         gui_util.MessageDisplay.info(self, "开始导出 environment.yml")
         command: str = ""
         if is_windows():
-            command: str = f'conda env export -p ".\\{env_name}" > ./environment.yml'
+            command = f'conda env export -p ".\\{env_name}" > ./environment.yml'
         elif is_linux():
-            command: str = f'conda env export -p "./{env_name}" > ./environment.yml'
-        subprocess.Popen(command, shell=True)
+            command = f'conda env export -p "./{env_name}" > ./environment.yml'
+        run_command(command)
 
     def init_project(self: Self) -> None:
         """初始化 uv 配置文件"""
